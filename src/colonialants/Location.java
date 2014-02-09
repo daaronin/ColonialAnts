@@ -14,8 +14,10 @@ public class Location {
     private int x = 0;
     private int y = 0;
     
+    Terrain t;
+    
     public Location(){
-        //I think this should init to the origin of the colony
+        
     }
     
     public Location(int x, int y){
@@ -37,6 +39,10 @@ public class Location {
 
     public void setY(int y) {
         this.y = y;
+    }
+    
+    public void changeTerrain(){
+        
     }
 
 }

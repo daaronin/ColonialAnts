@@ -1,3 +1,7 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 package colonialants;
 
@@ -7,7 +11,7 @@ package colonialants;
  */
 public class Ant {
     
-    Location location;
+    private Location location;
     
     public Ant(){
         location = new Location();
@@ -15,6 +19,10 @@ public class Ant {
     
     public Ant(int x, int y){
         location = new Location(x,y);
+    }
+    
+    public void move(Location[] square){
+        
     }
 
 }
