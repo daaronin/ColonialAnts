@@ -10,5 +10,11 @@ package colonialants;
  * @author George McDaid
  */
 public class Sand implements Terrain{
-
+    
+    @Override
+    public String toString(){
+        String s = "O";
+        
+        return s;
+    }
 }

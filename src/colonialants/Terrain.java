@@ -10,5 +10,12 @@ package colonialants;
  * @author George McDaid
  */
 public interface Terrain {
-
+    
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String toString();
+  
 }

@@ -51,13 +51,7 @@ public class Location {
      */
     @Override
     public String toString(){
-        String s = "";
-        if(Sand.class.equals(t.getClass())){
-            s = "S";
-        }else{
-            s = "N";
-        }
-        return s;
+        return t.toString();
     }
 
 }

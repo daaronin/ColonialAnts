@@ -12,4 +12,10 @@ package colonialants;
  */
 public class Leaf implements Terrain {
     
+    @Override
+    public String toString(){
+        String s = "L";
+        
+        return s;
+    }
 }

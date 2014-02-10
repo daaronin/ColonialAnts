@@ -28,7 +28,12 @@ public class Environment {
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
                 locations[i][j] = new Location(i,j);
-                locations[i][j].setTerrain((Terrain) new Sand());
+                if(i==2){
+                    locations[i][j].setTerrain((Terrain) new Leaf());
+                }else{
+                    locations[i][j].setTerrain((Terrain) new Sand());
+                }
+                
             }
         }
     }
@@ -50,7 +55,6 @@ public class Environment {
                 System.out.print(locations[j][i].toString() + " ");
             }
             System.out.println();
-            
         }
         return s;
     }
