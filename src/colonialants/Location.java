@@ -14,7 +14,7 @@ public class Location {
     private int x = 0;
     private int y = 0;
     
-    Terrain t;
+    private Terrain t;
     
     public Location(){
         
@@ -41,8 +41,23 @@ public class Location {
         this.y = y;
     }
     
-    public void changeTerrain(){
-        
+    public void setTerrain(Terrain t){
+        this.t = t;
+    }
+    
+    /**
+     *
+     * @return
+     */
+    @Override
+    public String toString(){
+        String s = "";
+        if(Sand.class.equals(t.getClass())){
+            s = "S";
+        }else{
+            s = "N";
+        }
+        return s;
     }
 
 }
