@@ -10,5 +10,11 @@ package colonialants;
  * @author George McDaid
  */
 public class Stream implements Terrain{
-
+    
+    @Override
+    public String toString(){
+        String s = "S";
+        
+        return s;
+    }
 }
