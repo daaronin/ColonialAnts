@@ -38,6 +38,10 @@ public class Environment {
         }
     }
     
+    public Location[][] getLocations(){
+        return locations;
+    }
+    
     public Location[] getSquare(Location location){
         
         return null;
