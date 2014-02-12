@@ -34,7 +34,18 @@ public class AntDisplay {
     Canvas canvas;    
     
     Environment e;
+    
+    private int          x               = 0;
+    private int          y               = 0;
+    private int          r               = 15;    
+    
+    // The timer interval in milliseconds
+    private static final int    TIMER_INTERVAL  = 10;
+    
+    Runnable drawThread;
 
+    boolean forward = true;
+    
     protected void initView(){
         display = new Display();
         shell = new Shell(display);
@@ -48,7 +59,7 @@ public class AntDisplay {
         group.setText("The Colonial Ants");
         group.setLayout(new FillLayout(SWT.HORIZONTAL));
         
-        canvas = new Canvas(group, SWT.NONE);
+        canvas = new Canvas(group, SWT.DOUBLE_BUFFERED);
         
         //final Image image = new Image(display, "src/swtDemo/angryBird.jpg");
         
@@ -59,12 +70,41 @@ public class AntDisplay {
             public void handleEvent(Event event) {
 
                 renderModel(event);
+                
+                Color c3 = new Color(event.display, 85, 60, 245);
+                event.gc.setBackground(c3);
+                
+                if(x==400&&y==400){
+                    forward = false;
+                    event.gc.fillOval(x--, y--, r, r);
+                }else if(x==0&&y==0){
+                    forward = true;
+                    event.gc.fillOval(x++, y++, r, r);
+                }
+                
+                if(forward){
+                    event.gc.fillOval(x++, y++, r, r);
+                }else{
+                    event.gc.fillOval(x--, y--, r, r);
+                }
+                
                 //event.gc.drawImage(image, 200, 200);
 
             }
 
         });
         
+        drawThread = new Runnable(){
+            @Override
+            public void run()
+            {
+                canvas.redraw();
+
+                display.timerExec(TIMER_INTERVAL, this);
+            }
+        };
+        
+        display.timerExec(TIMER_INTERVAL, drawThread);
         
     }
         
@@ -77,7 +117,12 @@ public class AntDisplay {
             }
         }
 
+        // Kill the timer
+        display.timerExec(-1, drawThread);
+        
         display.dispose();
+        
+        
     }
     
     protected void initModel(){
