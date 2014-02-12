@@ -3,110 +3,121 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package colonialswt;
 
 import colonialants.Environment;
-import org.eclipse.swt.graphics.Rectangle;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import colonialants.Leaf;
+import colonialants.Location;
+import colonialants.Sand;
+import colonialants.Stream;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  *
  * @author George McDaid
  */
-public class AntDisplay extends SkelGL{
+public class AntDisplay {
 
-    Environment e;
+    Display display;
+    Shell shell;
+    Composite composite;
+    Group group;
+    Canvas canvas;    
     
-    //Inits models here
-    @Override
-    protected void initGL() {
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
+    Environment e;
 
-        float aspect = WIDTH / (float) HEIGHT;
-        GLU.gluPerspective(fovy, aspect, zNear, zFar);
-        GLU.gluLookAt(0, 0.5f, eyez, 0, 0, 0, 0, 1, 0);
+    protected void initView(){
+        display = new Display();
+        shell = new Shell(display);
+        
+        shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+        
+        composite = new Composite(shell, SWT.NONE);
+        composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+        
+        group = new Group(composite, SWT.SHADOW_ETCHED_IN);
+        group.setText("The Colonial Ants");
+        group.setLayout(new FillLayout(SWT.HORIZONTAL));
+        
+        canvas = new Canvas(group, SWT.NONE);
+        
+        //final Image image = new Image(display, "src/swtDemo/angryBird.jpg");
+        
+        canvas.addListener(SWT.Paint, new Listener() {
 
-        GL11.glViewport(0, 0, WIDTH, HEIGHT);
+            @Override
 
-        GL11.glEnable(GL11.GL_NORMALIZE);
-        GL11.glClearColor(1, 1, 1, 0);
+            public void handleEvent(Event event) {
+
+                renderModel(event);
+                //event.gc.drawImage(image, 200, 200);
+
+            }
+
+        });
+        
+        
+    }
+        
+    protected void showView(){
+        shell.open();
+
+        while (!shell.isDisposed()) {
+            if (!display.readAndDispatch()) {
+                display.sleep();
+            }
+        }
+
+        display.dispose();
+    }
+    
+    protected void initModel(){
         e = new Environment();
         e.initEmptyField();
     }
-
-    @Override
-    protected void update(int delta) {
-    }
-
-    @Override
-    protected void resetGL() {
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-
-        Rectangle bounds = canvas.getBounds();
-        float aspectRatio = (float) bounds.width / bounds.height;
-
-        GLU.gluPerspective(fovy, aspectRatio, zNear, zFar);
-        GLU.gluLookAt(eyex, eyey, eyez, 0, 0, 0, 0, 1, 0);
-        GL11.glViewport(0, 0, bounds.width, bounds.height);
-
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
-    }
-
     
-    //Render models here
-    @Override
-    protected void renderGL() {
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-
-        Rectangle bounds = canvas.getBounds();
-        float aspectRatio = (float) bounds.width / bounds.height;
-
-        GLU.gluPerspective(fovy, aspectRatio, zNear, zFar);
-        GLU.gluLookAt(eyex, eyey, eyez, 0, 0, 0, 0, 1, 0);
-        GL11.glViewport(0, 0, bounds.width, bounds.height);
-
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        for(int i = 0;i<e.getLocations().length;i++){
-            for(int j = 0;j<e.getLocations()[i].length;j++){
-                if (e.getLocations()[i][j].toString().equals("O")) {
-                    GL11.glColor3f(.647059f, .164706f, .164706f);
-                } else if (e.getLocations()[i][j].toString().equals("L")) {
-                    GL11.glColor3f(0, 1, 0);
-                }
-                //GL11.glColor3f(2, 171, 16);
-                int cx = i+1;
-                int cy = j+1;
-                GL11.glBegin(GL11.GL_TRIANGLES);
-                GL11.glVertex2f(cx-1, cy+1);
-                GL11.glVertex2f(cx-1, cy-1);
-                GL11.glVertex2f(cx+1, cy-1);
+    protected void renderModel(Event event){
+        for (Location[] location : e.getLocations()) {
+            for (Location space : location) {
+                int s = e.getSpaceSize();
+                double cx = space.getX();
+                double cy = space.getY();
                 
-                GL11.glVertex2f(cx-1, cy+1);
-                GL11.glVertex2f(cx+1, cy+1);
-                GL11.glVertex2f(cx+1, cy-1);
-                GL11.glEnd();
+                Color c3;
+                
+                if(space.getTerrain() instanceof Sand){
+                    c3 = new Color(event.display, 217, 209, 128);
+                }else if(space.getTerrain() instanceof Leaf){
+                    c3 = new Color(event.display, 15, 186, 9);
+                }else if(space.getTerrain() instanceof Stream){
+                    c3 = new Color(event.display, 85, 60, 245);
+                }else{
+                    c3 = new Color(event.display, 33, 200, 100);
+                }
+                
+                event.gc.setBackground(c3);
+                event.gc.fillRectangle((int)(cx-s), (int)(cy-s), s, s);
             }
         }
-        
     }
     
-    public void renderColony(){
-        
-    }
-
-    @Override
-    protected void initTextures() {
+    protected void start(){
+        initModel();
+        initView();
+        showView();
     }
     
-    public static void main(String [] args){
+    public static void main(String[] args) {
         AntDisplay ad = new AntDisplay();
         ad.start();
     }

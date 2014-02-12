@@ -41,6 +41,10 @@ public class Location {
         this.y = y;
     }
     
+    public Terrain getTerrain(){
+        return t;
+    }
+    
     public void setTerrain(Terrain t){
         this.t = t;
     }

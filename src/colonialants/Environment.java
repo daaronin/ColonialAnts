@@ -11,7 +11,9 @@ package colonialants;
  */
 public class Environment {
     
-    private int dimension = 10;
+    private int spaceSize = 20;
+    
+    private int dimension = 35;
     
     private Location[][] locations;
     
@@ -27,7 +29,7 @@ public class Environment {
     public void initEmptyField(){
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                locations[i][j] = new Location(i,j);
+                locations[i][j] = new Location((int)(spaceSize*(i+1)-(spaceSize/2)),(int)(spaceSize*(j+1)-(spaceSize/2)));
                 if(i==2){
                     locations[i][j].setTerrain((Terrain) new Leaf());
                 }else{
@@ -61,5 +63,9 @@ public class Environment {
             System.out.println();
         }
         return s;
+    }
+    
+    public int getSpaceSize(){
+        return spaceSize;
     }
 }
