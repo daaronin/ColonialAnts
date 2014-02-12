@@ -5,6 +5,8 @@
 
 package colonialants;
 
+import java.util.Random;
+
 /**
  *
  * @author George McDaid
@@ -29,14 +31,16 @@ public class Environment {
     public void initEmptyField(){
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                locations[i][j] = new Location((int)(spaceSize*(i+1)-(spaceSize/2)),(int)(spaceSize*(j+1)-(spaceSize/2)));
-                if(i==2){
+                locations[i][j] = new Location((int)(spaceSize*(i+1)+(spaceSize/2)),(int)(spaceSize*(j+1)+(spaceSize/2)));
+                Random r = new Random();
+                if(r.nextInt(100)<5){
                     locations[i][j].setTerrain((Terrain) new Leaf());
                 }else{
                     locations[i][j].setTerrain((Terrain) new Sand());
                 }
-                
+                System.out.print("("+locations[i][j].getX()+","+locations[i][j].getY()+") ");
             }
+            System.out.println();
         }
     }
     
