@@ -5,6 +5,7 @@
  */
 package colonialswt;
 
+import colonialants.Ant;
 import colonialants.Environment;
 import colonialants.Leaf;
 import colonialants.Location;
@@ -70,28 +71,12 @@ public class AntDisplay {
             public void handleEvent(Event event) {
 
                 renderModel(event);
-                
-                Color c3 = new Color(event.display, 85, 60, 245);
-                event.gc.setBackground(c3);
-                
-                if(x==400&&y==400){
-                    forward = false;
-                    event.gc.fillOval(x--, y--, r, r);
-                }else if(x==0&&y==0){
-                    forward = true;
-                    event.gc.fillOval(x++, y++, r, r);
-                }
-                
-                if(forward){
-                    event.gc.fillOval(x++, y++, r, r);
-                }else{
-                    event.gc.fillOval(x--, y--, r, r);
-                }
-                
+                renderCircle(event);
+                renderAnt(event);               
                 //event.gc.drawImage(image, 200, 200);
 
             }
-
+            
         });
         
         drawThread = new Runnable(){
@@ -128,6 +113,7 @@ public class AntDisplay {
     protected void initModel(){
         e = new Environment();
         e.initEmptyField();
+        e.addTestAnt();
     }
     
     protected void renderModel(Event event){
@@ -150,9 +136,37 @@ public class AntDisplay {
                 }
                 
                 event.gc.setBackground(c3);
-                event.gc.fillRectangle((int)(cx-s), (int)(cy-s), s, s);
+                event.gc.fillRectangle((int)(cx-s/2), (int)(cy-s/2), s, s);
             }
         }
+    }
+    
+    private void renderCircle(Event event) {
+        Color c3 = new Color(event.display, 85, 60, 245);
+        event.gc.setBackground(c3);
+
+        if(x==400&&y==400){
+            forward = false;
+            event.gc.fillOval(x--, y--, r, r);
+        }else if(x==0&&y==0){
+            forward = true;
+            event.gc.fillOval(x++, y++, r, r);
+        }
+
+        if(forward){
+            event.gc.fillOval(x++, y++, r, r);
+        }else{
+            event.gc.fillOval(x--, y--, r, r);
+        }
+    }
+    
+    private void renderAnt(Event event) {
+        Ant a = e.getTestAnt();
+        Color c3 = new Color(event.display, 0, 0, 0);
+        event.gc.setBackground(c3);
+        event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        e.getSquare(a.getLocation());
+                
     }
     
     protected void start(){

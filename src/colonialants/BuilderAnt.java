@@ -10,5 +10,5 @@ package colonialants;
  * @author George McDaid
  */
 public class BuilderAnt extends Ant{
-
+    
 }

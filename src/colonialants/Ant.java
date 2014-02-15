@@ -13,16 +13,29 @@ public class Ant {
     
     private Location location;
     
-    public Ant(){
-        location = new Location();
+    public enum State{
+        MOVING, IDLE
     }
     
-    public Ant(int x, int y){
-        location = new Location(x,y);
+    State state;
+    
+    public Ant(){
+        location = new Location();
+        this.state = State.MOVING;
+    }
+    
+    public Ant(Location location){
+        this.location = location;
+    }
+    
+    public Location getLocation(){
+        return location;
     }
     
     public void move(Location[] square){
-        
+        if(state != State.MOVING){
+            state = State.MOVING;
+        }
     }
 
 }
