@@ -162,7 +162,8 @@ public class AntDisplay {
     
     private void renderCircle(Event event) {
         //Color c3 = new Color(event.display, 85, 60, 245);
-        //event.gc.setBackground(c3); 
+        //event.gc.setBackground(c3);
+        ant = new Image(display, "src/colonialimages/ant.png");
         
         if(x==400&&y==400){
             forward = false;
@@ -181,6 +182,7 @@ public class AntDisplay {
             //event.gc.fillOval(x--, y--, r, r);
             event.gc.drawImage(ant,x--, y--);
         }
+        ant.dispose();
     }
     
     private void renderAnt(Event event) {
@@ -198,7 +200,6 @@ public class AntDisplay {
     protected void start(){
         initModel();
         initView();
-        initImages();
         showView();
     }
     
@@ -206,13 +207,4 @@ public class AntDisplay {
         AntDisplay ad = new AntDisplay();
         ad.start();
     }
-
-    private void initImages() {        
-        
-        
-        
-        
-        ant = new Image(display, "src/colonialimages/ant.png");
-    }
-
 }
