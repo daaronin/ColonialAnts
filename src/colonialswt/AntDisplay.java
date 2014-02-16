@@ -13,6 +13,7 @@ import colonialants.Sand;
 import colonialants.Stream;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -117,54 +118,75 @@ public class AntDisplay {
     }
     
     protected void renderModel(Event event){
+        
+        Image sand,dirt,stream,leaf;
+                
+        sand = new Image(display, "src/colonialimages/Sand.png");
+        leaf = new Image(display, "src/colonialimages/Leaf.png");
+        stream = new Image(display, "src/colonialimages/Water.png");
+        dirt = new Image(display, "src/colonialimages/Dirt.png");
+        
         for (Location[] location : e.getLocations()) {
             for (Location space : location) {
                 int s = e.getSpaceSize();
                 double cx = space.getX();
                 double cy = space.getY();
                 
-                Color c3;
+                //Color c3;
+                Image i3;
                 
                 if(space.getTerrain() instanceof Sand){
-                    c3 = new Color(event.display, 217, 209, 128);
+                    //c3 = new Color(event.display, 217, 209, 128);
+                    i3 = sand;
                 }else if(space.getTerrain() instanceof Leaf){
-                    c3 = new Color(event.display, 15, 186, 9);
+                    //c3 = new Color(event.display, 15, 186, 9);
+                    i3 = leaf;
                 }else if(space.getTerrain() instanceof Stream){
-                    c3 = new Color(event.display, 85, 60, 245);
+                    //c3 = new Color(event.display, 85, 60, 245);
+                    i3 = stream;
                 }else{
-                    c3 = new Color(event.display, 33, 200, 100);
+                    //c3 = new Color(event.display, 33, 200, 100);
+                    i3 = dirt;
                 }
                 
-                event.gc.setBackground(c3);
-                event.gc.fillRectangle((int)(cx-s/2), (int)(cy-s/2), s, s);
+                //event.gc.setBackground(c3);
+                //event.gc.fillRectangle((int)(cx-s/2), (int)(cy-s/2), s, s);
+                event.gc.drawImage(i3, (int)(cx-s), (int)(cy-s));
             }
         }
     }
     
     private void renderCircle(Event event) {
-        Color c3 = new Color(event.display, 85, 60, 245);
-        event.gc.setBackground(c3);
-
+        //Color c3 = new Color(event.display, 85, 60, 245);
+        //event.gc.setBackground(c3);
+        Image ant = new Image(display, "src/colonialimages/ant.png");
+        
         if(x==400&&y==400){
             forward = false;
-            event.gc.fillOval(x--, y--, r, r);
+            //event.gc.fillOval(x--, y--, r, r);
+            event.gc.drawImage(ant,0,0,50,50,x--, y--, r, r);
         }else if(x==0&&y==0){
             forward = true;
-            event.gc.fillOval(x++, y++, r, r);
+            //event.gc.fillOval(x++, y++, r, r);
+            event.gc.drawImage(ant,0,0,50,50,x++, y++, r, r);
         }
 
         if(forward){
-            event.gc.fillOval(x++, y++, r, r);
+            //event.gc.fillOval(x++, y++, r, r);
+            event.gc.drawImage(ant,0,0,50,50,x++, y++, r, r);
         }else{
-            event.gc.fillOval(x--, y--, r, r);
+            //event.gc.fillOval(x--, y--, r, r);
+            event.gc.drawImage(ant,0,0,50,50,x--, y--, r, r);
         }
     }
     
     private void renderAnt(Event event) {
         Ant a = e.getTestAnt();
-        Color c3 = new Color(event.display, 0, 0, 0);
-        event.gc.setBackground(c3);
-        event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        Image ant = new Image(display, "src/colonialimages/ant.png");
+        //Color c3 = new Color(event.display, 0, 0, 0);
+        //event.gc.setBackground(c3);
+        //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        event.gc.drawImage(ant,0,0,50,50, a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
         e.getSquare(a.getLocation());
                 
     }
