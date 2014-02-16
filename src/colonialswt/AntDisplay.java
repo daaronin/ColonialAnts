@@ -12,6 +12,7 @@ import colonialants.Location;
 import colonialants.Sand;
 import colonialants.Stream;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.DeviceData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
@@ -54,7 +55,11 @@ public class AntDisplay {
     boolean forward = true;
     
     protected void initView(){
-        display = new Display();
+        DeviceData data = new DeviceData();
+        data.tracking = true;
+        display = new Display(data);
+        Sleak sleak = new Sleak();
+        sleak.open();
         shell = new Shell(display);
         
         shell.setLayout(new FillLayout(SWT.HORIZONTAL));
