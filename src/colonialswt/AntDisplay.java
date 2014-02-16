@@ -36,7 +36,7 @@ public class AntDisplay {
     
     Environment e;
     
-    Image sand,dirt,stream,leaf;
+    Image sand,dirt,stream,leaf,ant;
     
     private int          x               = 0;
     private int          y               = 0;
@@ -151,8 +151,7 @@ public class AntDisplay {
     
     private void renderCircle(Event event) {
         //Color c3 = new Color(event.display, 85, 60, 245);
-        //event.gc.setBackground(c3);
-        Image ant = new Image(display, "src/colonialimages/ant.png");
+        //event.gc.setBackground(c3); 
         
         if(x==400&&y==400){
             forward = false;
@@ -201,6 +200,7 @@ public class AntDisplay {
         leaf = new Image(display, "src/colonialimages/Leaf.png");
         stream = new Image(display, "src/colonialimages/Water.png");
         dirt = new Image(display, "src/colonialimages/Dirt.png");
+        ant = new Image(display, "src/colonialimages/ant.png");
     }
 
 }
