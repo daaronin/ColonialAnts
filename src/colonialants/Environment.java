@@ -19,25 +19,25 @@ public class Environment {
     
     private int dimension = 36;
     
-    private Location[][] locations;
+    private GridLocation[][] locations;
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
     //Envionment has a Swarm
     private Ant ant;
     
     public Environment(){
-        locations = new Location[dimension][dimension];
+        locations = new GridLocation[dimension][dimension];
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
-        locations = new Location[dimension][dimension];
+        locations = new GridLocation[dimension][dimension];
     }
     
     public void initEmptyField(){
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                locations[i][j] = new Location((int)(spaceSize*(i)+(spaceSize/2)),(int)(spaceSize*(j)+(spaceSize/2)));
+                locations[i][j] = new GridLocation((int)(spaceSize*(i)+(spaceSize/2)),(int)(spaceSize*(j)+(spaceSize/2)));
                 Random r = new Random();
                 if(r.nextInt(100)<5){
                     locations[i][j].setTerrain((Terrain) new Leaf());
@@ -51,24 +51,23 @@ public class Environment {
     }
     
     public void addTestAnt(){
-        ant = new Ant(locations[0][0]);
+        ant = new Ant(new FineLocation(locations[0][0].getX(),locations[0][0].getY()));
     }
     
     public Ant getTestAnt(){
         return ant;
     }
     
-    public Location[][] getLocations(){
+    public GridLocation[][] getLocations(){
         return locations;
     }
     
-    public ArrayList<Location> getSquare(Location location){
+    public ArrayList<Location> getSquare(GridLocation location){
         ArrayList<Location> square  = new ArrayList<Location>();
         
         int ox = location.getX();
         int oy = location.getY();
 
-        System.out.println("*********************");
         for(int i = -1;i<=1;i++){
             int x = (int)((ox-spaceSize/2)/spaceSize);
             x = x+i;
@@ -81,13 +80,11 @@ public class Environment {
                             continue;
                         }
                         square.add(locations[x][y]);
-                        System.out.println(locations[x][y].getX()+" "+locations[x][y].getY());
                     }
                 }
             }
         }
-        System.out.println("*********************");
-        
+                
         return square;
     }
     

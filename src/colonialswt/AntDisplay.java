@@ -7,6 +7,7 @@ package colonialswt;
 
 import colonialants.Ant;
 import colonialants.Environment;
+import colonialants.GridLocation;
 import colonialants.Leaf;
 import colonialants.Location;
 import colonialants.Sand;
@@ -132,8 +133,8 @@ public class AntDisplay {
         leaf = new Image(display, "src/colonialimages/Leaf.png");
         stream = new Image(display, "src/colonialimages/Water.png");
         dirt = new Image(display, "src/colonialimages/Dirt.png");
-        for (Location[] location : e.getLocations()) {
-            for (Location space : location) {
+        for (GridLocation[] location : e.getLocations()) {
+            for (GridLocation space : location) {
                 int s = e.getSpaceSize();
                 double cx = space.getX();
                 double cy = space.getY();
@@ -192,14 +193,16 @@ public class AntDisplay {
     
     private void renderAnt(Event event) {
         Ant a = e.getTestAnt();
-        Image ant = new Image(event.display, "src/colonialimages/ant.png");
+        Image antImg = new Image(event.display, "src/colonialimages/ant.png");
         //Color c3 = new Color(event.display, 0, 0, 0);
         //event.gc.setBackground(c3);
         //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
-        event.gc.drawImage(ant, a.getLocation().getX(), a.getLocation().getY());
-        ant.dispose();
-        e.getSquare(a.getLocation());
-                
+        event.gc.drawImage(antImg, a.getLocation().getX(), a.getLocation().getY());
+        antImg.dispose();
+        if(!a.isMoving()){
+            a.changeDest(e.getSquare(new GridLocation(a.getLocation().getX(),a.getLocation().getY())));
+        }
+        a.update();
     }
     
     protected void start(){

@@ -11,11 +11,9 @@ package colonialants;
  */
 public class Location {
 
-    private int x = 0;
-    private int y = 0;
-    
-    private Terrain t;
-    
+    protected int x = 0;
+    protected int y = 0;
+            
     public Location(){
         
     }
@@ -29,33 +27,12 @@ public class Location {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
-
-    public void setY(int y) {
-        this.y = y;
-    }
     
-    public Terrain getTerrain(){
-        return t;
-    }
-    
-    public void setTerrain(Terrain t){
-        this.t = t;
-    }
-    
-    /**
-     *
-     * @return
-     */
-    @Override
-    public String toString(){
-        return t.toString();
+    public boolean equals(Location l){
+        return (this.getX()==l.getX())&&(this.getY()==l.getY());
     }
 
 }
