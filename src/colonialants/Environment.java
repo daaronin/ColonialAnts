@@ -67,7 +67,7 @@ public class Environment {
         return scent;
     }
     
-    public Location[][] getLocations(){
+    public GridLocation[][] getLocations(){
         return locations;
     }
     

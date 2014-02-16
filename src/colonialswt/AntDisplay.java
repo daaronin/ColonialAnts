@@ -87,7 +87,7 @@ public class AntDisplay {
                 renderModel(event);
                 renderCircle(event);
                 renderAnt(event);
-                renderPheromone(event);
+                //renderPheromone(event);
                 //event.gc.drawImage(image, 200, 200);
 
             }
