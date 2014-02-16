@@ -36,7 +36,11 @@ public class AntDisplay {
     
     Environment e;
     
-    Image sand,dirt,stream,leaf,ant;
+    Image sand,
+          dirt,
+          stream,
+          leaf,
+          ant;
     
     private int          x               = 0;
     private int          y               = 0;
@@ -119,6 +123,10 @@ public class AntDisplay {
     }
     
     protected void renderModel(Event event){
+        sand = new Image(display, "src/colonialimages/Sand.png");
+        leaf = new Image(display, "src/colonialimages/Leaf.png");
+        stream = new Image(display, "src/colonialimages/Water.png");
+        dirt = new Image(display, "src/colonialimages/Dirt.png");
         for (Location[] location : e.getLocations()) {
             for (Location space : location) {
                 int s = e.getSpaceSize();
@@ -126,27 +134,30 @@ public class AntDisplay {
                 double cy = space.getY();
                 
                 //Color c3;
-                Image i3;
                 
                 if(space.getTerrain() instanceof Sand){
                     //c3 = new Color(event.display, 217, 209, 128);
-                    i3 = sand;
+                    event.gc.drawImage(sand, (int)(cx-s), (int)(cy-s));
                 }else if(space.getTerrain() instanceof Leaf){
                     //c3 = new Color(event.display, 15, 186, 9);
-                    i3 = leaf;
+                    event.gc.drawImage(leaf, (int)(cx-s), (int)(cy-s));
                 }else if(space.getTerrain() instanceof Stream){
                     //c3 = new Color(event.display, 85, 60, 245);
-                    i3 = stream;
+                    event.gc.drawImage(stream, (int)(cx-s), (int)(cy-s));
                 }else{
                     //c3 = new Color(event.display, 33, 200, 100);
-                    i3 = dirt;
+                    event.gc.drawImage(dirt, (int)(cx-s), (int)(cy-s));
                 }
                 
                 //event.gc.setBackground(c3);
                 //event.gc.fillRectangle((int)(cx-s/2), (int)(cy-s/2), s, s);
-                event.gc.drawImage(i3, (int)(cx-s), (int)(cy-s));
+                
             }
         }
+        sand.dispose();
+        leaf.dispose();
+        stream.dispose();
+        dirt.dispose();
     }
     
     private void renderCircle(Event event) {
@@ -156,29 +167,30 @@ public class AntDisplay {
         if(x==400&&y==400){
             forward = false;
             //event.gc.fillOval(x--, y--, r, r);
-            event.gc.drawImage(ant,0,0,50,50,x--, y--, r, r);
+            event.gc.drawImage(ant,x--, y--);
         }else if(x==0&&y==0){
             forward = true;
             //event.gc.fillOval(x++, y++, r, r);
-            event.gc.drawImage(ant,0,0,50,50,x++, y++, r, r);
+            event.gc.drawImage(ant,x++, y++);
         }
 
         if(forward){
             //event.gc.fillOval(x++, y++, r, r);
-            event.gc.drawImage(ant,0,0,50,50,x++, y++, r, r);
+            event.gc.drawImage(ant,x++, y++);
         }else{
             //event.gc.fillOval(x--, y--, r, r);
-            event.gc.drawImage(ant,0,0,50,50,x--, y--, r, r);
+            event.gc.drawImage(ant,x--, y--);
         }
     }
     
     private void renderAnt(Event event) {
         Ant a = e.getTestAnt();
-        Image ant = new Image(display, "src/colonialimages/ant.png");
+        Image ant = new Image(event.display, "src/colonialimages/ant.png");
         //Color c3 = new Color(event.display, 0, 0, 0);
         //event.gc.setBackground(c3);
         //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
-        event.gc.drawImage(ant,0,0,50,50, a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        event.gc.drawImage(ant, a.getLocation().getX(), a.getLocation().getY());
+        ant.dispose();
         e.getSquare(a.getLocation());
                 
     }
@@ -196,10 +208,10 @@ public class AntDisplay {
     }
 
     private void initImages() {        
-        sand = new Image(display, "src/colonialimages/Sand.png");
-        leaf = new Image(display, "src/colonialimages/Leaf.png");
-        stream = new Image(display, "src/colonialimages/Water.png");
-        dirt = new Image(display, "src/colonialimages/Dirt.png");
+        
+        
+        
+        
         ant = new Image(display, "src/colonialimages/ant.png");
     }
 
