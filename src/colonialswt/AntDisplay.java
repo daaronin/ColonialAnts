@@ -6,6 +6,7 @@
 package colonialswt;
 
 import colonialants.Ant;
+import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.Leaf;
 import colonialants.Location;
@@ -41,7 +42,8 @@ public class AntDisplay {
           dirt,
           stream,
           leaf,
-          ant;
+          ant,
+          scent;
     
     private int          x               = 0;
     private int          y               = 0;
@@ -83,7 +85,8 @@ public class AntDisplay {
 
                 renderModel(event);
                 renderCircle(event);
-                renderAnt(event);               
+                renderAnt(event);
+                renderPheromone(event);
                 //event.gc.drawImage(image, 200, 200);
 
             }
@@ -125,6 +128,7 @@ public class AntDisplay {
         e = new Environment();
         e.initEmptyField();
         e.addTestAnt();
+        e.addTestScent();
     }
     
     protected void renderModel(Event event){
@@ -168,7 +172,7 @@ public class AntDisplay {
     private void renderCircle(Event event) {
         //Color c3 = new Color(event.display, 85, 60, 245);
         //event.gc.setBackground(c3);
-        ant = new Image(display, "src/colonialimages/ant.png");
+        ant = new Image(display, "src/colonialimages/AntBitNoMandibles.png");
         
         if(x==400&&y==400){
             forward = false;
@@ -192,14 +196,24 @@ public class AntDisplay {
     
     private void renderAnt(Event event) {
         Ant a = e.getTestAnt();
-        Image ant = new Image(event.display, "src/colonialimages/ant.png");
+        Image ant = new Image(event.display, "src/colonialimages/AntBit.png");
         //Color c3 = new Color(event.display, 0, 0, 0);
         //event.gc.setBackground(c3);
         //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
         event.gc.drawImage(ant, a.getLocation().getX(), a.getLocation().getY());
         ant.dispose();
-        e.getSquare(a.getLocation());
-                
+        e.getSquare(a.getLocation());                
+    }
+    
+    private void renderPheromone(Event event) {
+        CommonScents s = e.getTestScent();
+        Image scent = new Image(event.display, "src/colonialimages/PheromoneNone.png");
+        //Color c3 = new Color(event.display, 0, 0, 0);
+        //event.gc.setBackground(c3);
+        //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        event.gc.drawImage(scent, s.getLocation().getX(), s.getLocation().getY());
+        scent.dispose();
+        e.getSquare(s.getLocation());                
     }
     
     protected void start(){
