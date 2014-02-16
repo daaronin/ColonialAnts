@@ -36,6 +36,8 @@ public class AntDisplay {
     
     Environment e;
     
+    Image sand,dirt,stream,leaf;
+    
     private int          x               = 0;
     private int          y               = 0;
     private int          r               = 15;    
@@ -117,14 +119,6 @@ public class AntDisplay {
     }
     
     protected void renderModel(Event event){
-        
-        Image sand,dirt,stream,leaf;
-                
-        sand = new Image(display, "src/colonialimages/Sand.png");
-        leaf = new Image(display, "src/colonialimages/Leaf.png");
-        stream = new Image(display, "src/colonialimages/Water.png");
-        dirt = new Image(display, "src/colonialimages/Dirt.png");
-        
         for (Location[] location : e.getLocations()) {
             for (Location space : location) {
                 int s = e.getSpaceSize();
@@ -193,12 +187,20 @@ public class AntDisplay {
     protected void start(){
         initModel();
         initView();
+        initImages();
         showView();
     }
     
     public static void main(String[] args) {
         AntDisplay ad = new AntDisplay();
         ad.start();
+    }
+
+    private void initImages() {        
+        sand = new Image(display, "src/colonialimages/Sand.png");
+        leaf = new Image(display, "src/colonialimages/Leaf.png");
+        stream = new Image(display, "src/colonialimages/Water.png");
+        dirt = new Image(display, "src/colonialimages/Dirt.png");
     }
 
 }
