@@ -197,7 +197,7 @@ public class AntDisplay {
     
     private void renderAnt(Event event) {
         Ant a = e.getTestAnt();
-        Image antImg = new Image(event.display, "src/colonialimages/ant.png");
+        Image antImg = new Image(event.display, "src/colonialimages/AntBitNoMandibles.png");
         //Color c3 = new Color(event.display, 0, 0, 0);
         //event.gc.setBackground(c3);
         //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
