@@ -6,6 +6,7 @@
 package colonialswt;
 
 import colonialants.Ant;
+import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.GridLocation;
 import colonialants.Leaf;
@@ -42,7 +43,8 @@ public class AntDisplay {
           dirt,
           stream,
           leaf,
-          ant;
+          ant,
+          scent;
     
     private int          x               = 0;
     private int          y               = 0;
@@ -84,7 +86,8 @@ public class AntDisplay {
 
                 renderModel(event);
                 renderCircle(event);
-                renderAnt(event);               
+                renderAnt(event);
+                renderPheromone(event);
                 //event.gc.drawImage(image, 200, 200);
 
             }
@@ -126,6 +129,7 @@ public class AntDisplay {
         e = new Environment();
         e.initEmptyField();
         e.addTestAnt();
+        e.addTestScent();
     }
     
     protected void renderModel(Event event){
@@ -169,7 +173,7 @@ public class AntDisplay {
     private void renderCircle(Event event) {
         //Color c3 = new Color(event.display, 85, 60, 245);
         //event.gc.setBackground(c3);
-        ant = new Image(display, "src/colonialimages/ant.png");
+        ant = new Image(display, "src/colonialimages/AntBitNoMandibles.png");
         
         if(x==400&&y==400){
             forward = false;

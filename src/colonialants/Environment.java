@@ -24,6 +24,7 @@ public class Environment {
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
     //Envionment has a Swarm
     private Ant ant;
+    private CommonScents scent;
     
     public Environment(){
         locations = new GridLocation[dimension][dimension];
@@ -58,7 +59,15 @@ public class Environment {
         return ant;
     }
     
-    public GridLocation[][] getLocations(){
+    public void addTestScent(){
+        scent = new CommonScents(locations[4][4]);
+    }
+    
+    public CommonScents getTestScent(){
+        return scent;
+    }
+    
+    public Location[][] getLocations(){
         return locations;
     }
     
