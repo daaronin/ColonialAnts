@@ -85,7 +85,7 @@ public class AntDisplay {
             public void handleEvent(Event event) {
 
                 renderModel(event);
-                renderCircle(event);
+                //renderCircle(event);
                 renderAnt(event);
                 //renderPheromone(event);
                 //event.gc.drawImage(image, 200, 200);
@@ -128,7 +128,7 @@ public class AntDisplay {
     protected void initModel(){
         e = new Environment();
         e.initEmptyField();
-        e.addTestAnt();
+        e.addTestAnts();
         e.addTestScent();
     }
     
@@ -196,17 +196,24 @@ public class AntDisplay {
     }
     
     private void renderAnt(Event event) {
-        Ant a = e.getTestAnt();
+        Ant[] ants = e.getTestAnts();
         Image antImg = new Image(event.display, "src/colonialimages/AntBitNoMandibles.png");
+        for (Ant a : ants) {
+            event.gc.drawImage(antImg, a.getLocation().getX(), a.getLocation().getY());
+            
+            if(!a.isMoving()){
+                a.changeDest(e.getSquare(new GridLocation(a.getLocation().getX(),a.getLocation().getY())));
+            }
+            
+            a.update();
+        }
+        antImg.dispose();
         //Color c3 = new Color(event.display, 0, 0, 0);
         //event.gc.setBackground(c3);
         //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
-        event.gc.drawImage(antImg, a.getLocation().getX(), a.getLocation().getY());
-        antImg.dispose();
-        if(!a.isMoving()){
-            a.changeDest(e.getSquare(new GridLocation(a.getLocation().getX(),a.getLocation().getY())));
-        }
-        a.update();
+        
+        
+        
     }
     
     protected void start(){

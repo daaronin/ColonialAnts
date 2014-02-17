@@ -23,7 +23,7 @@ public class Environment {
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
     //Envionment has a Swarm
-    private Ant ant;
+    private Ant[] ant;
     private CommonScents scent;
     
     public Environment(){
@@ -51,11 +51,14 @@ public class Environment {
         }
     }
     
-    public void addTestAnt(){
-        ant = new Ant(new FineLocation(locations[0][0].getX(),locations[0][0].getY()));
+    public void addTestAnts(){
+        ant = new Ant[250];
+        for(int i = 0;i<250;i++){
+            ant[i] = new Ant(new FineLocation(locations[35][35].getX(),locations[35][35].getY()));
+        }
     }
     
-    public Ant getTestAnt(){
+    public Ant[] getTestAnts(){
         return ant;
     }
     

@@ -16,6 +16,7 @@ public class Ant {
     
     private FineLocation location;
     private GridLocation destination = null;
+    Random r = new Random();
     
     public enum State{
         MOVING, IDLE
@@ -46,7 +47,6 @@ public class Ant {
             state = State.MOVING;
         }
         
-        Random r = new Random();
         int pick = r.nextInt(square.size()-1);
 
         destination = new GridLocation(square.get(pick).getX(),square.get(pick).getY());
