@@ -47,7 +47,7 @@ public class Ant {
             state = State.MOVING;
         }
         
-        int pick = r.nextInt(square.size()-1);
+        int pick = r.nextInt(square.size());
 
         destination = new GridLocation(square.get(pick).getX(),square.get(pick).getY());
         

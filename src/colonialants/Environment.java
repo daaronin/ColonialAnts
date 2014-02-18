@@ -52,9 +52,9 @@ public class Environment {
     }
     
     public void addTestAnts(){
-        ant = new Ant[250];
-        for(int i = 0;i<250;i++){
-            ant[i] = new Ant(new FineLocation(locations[35][35].getX(),locations[35][35].getY()));
+        ant = new Ant[200];
+        for(int i = 0;i<200;i++){
+            ant[i] = new Ant(new FineLocation(locations[0][0].getX(),locations[0][0].getY()));
         }
     }
     

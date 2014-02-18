@@ -87,7 +87,7 @@ public class AntDisplay {
                 renderModel(event);
                 //renderCircle(event);
                 renderAnt(event);
-                //renderPheromone(event);
+                renderPheromone(event);
                 //event.gc.drawImage(image, 200, 200);
 
             }
@@ -215,6 +215,17 @@ public class AntDisplay {
         
         
     }
+    
+    private void renderPheromone(Event event) {
+        CommonScents s = e.getTestScent();
+        Image scentImg = new Image(event.display, "src/colonialimages/PheromoneNone.png");
+        //Color c3 = new Color(event.display, 0, 0, 0);
+        //event.gc.setBackground(c3);
+        //event.gc.fillOval(a.getLocation().getX(), a.getLocation().getY(), r*2, r*2);
+        event.gc.drawImage(scentImg, s.getLocation().getX(), s.getLocation().getY());
+        scentImg.dispose();
+        //e.getSquare(s.getLocation());                
+      }
     
     protected void start(){
         initModel();
