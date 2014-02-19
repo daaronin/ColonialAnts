@@ -5,30 +5,34 @@
 
 package colonialants;
 
+import org.eclipse.swt.graphics.Point;
+
 /**
  *
  * @author George McDaid
  */
 public class Location {
 
-    protected int x = 0;
-    protected int y = 0;
+    protected Point p;
             
     public Location(){
         
     }
     
     public Location(int x, int y){
-        this.x = x;
-        this.y = y;
+        p = new Point(x, y);
     }
     
     public int getX() {
-        return x;
+        return p.x;
     }
 
     public int getY() {
-        return y;
+        return p.y;
+    }
+    
+    public Point getPoint(){
+        return p;
     }
     
     public boolean equals(Location l){

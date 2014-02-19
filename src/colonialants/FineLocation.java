@@ -21,28 +21,28 @@ public class FineLocation extends Location{
     }
     
     public void setX(int x) {
-        this.x = x;
+        this.p.x = x;
     }
     
     public void setY(int y) {
-        this.y = y;
+        this.p.y = y;
     }
       
     
     public void incX(){
-        x++;
+        p.x++;
     }
     
     public void incY(){
-        y++;
+        p.y++;
     }
     
     public void decX(){
-        x--;
+        p.x--;
     }
     
     public void decY(){
-        y--;
+        p.y--;
     }
     
     

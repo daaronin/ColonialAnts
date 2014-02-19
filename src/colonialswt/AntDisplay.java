@@ -10,7 +10,6 @@ import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.GridLocation;
 import colonialants.Leaf;
-import colonialants.Location;
 import colonialants.Sand;
 import colonialants.Stream;
 import org.eclipse.swt.SWT;
@@ -66,6 +65,7 @@ public class AntDisplay {
         shell = new Shell(display);
         
         shell.setLayout(new FillLayout(SWT.HORIZONTAL));
+        shell.setSize(770, 770);
         
         composite = new Composite(shell, SWT.NONE);
         composite.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -137,9 +137,10 @@ public class AntDisplay {
         leaf = new Image(display, "src/colonialimages/Leaf.png");
         stream = new Image(display, "src/colonialimages/Water.png");
         dirt = new Image(display, "src/colonialimages/Dirt.png");
+        
         for (GridLocation[] location : e.getLocations()) {
             for (GridLocation space : location) {
-                int s = e.getSpaceSize();
+                int s = (int)(e.getSpaceSize()/2);
                 double cx = space.getX();
                 double cy = space.getY();
                 
@@ -164,35 +165,11 @@ public class AntDisplay {
                 
             }
         }
+        
         sand.dispose();
         leaf.dispose();
         stream.dispose();
         dirt.dispose();
-    }
-    
-    private void renderCircle(Event event) {
-        //Color c3 = new Color(event.display, 85, 60, 245);
-        //event.gc.setBackground(c3);
-        ant = new Image(display, "src/colonialimages/AntBitNoMandibles.png");
-        
-        if(x==400&&y==400){
-            forward = false;
-            //event.gc.fillOval(x--, y--, r, r);
-            event.gc.drawImage(ant,x--, y--);
-        }else if(x==0&&y==0){
-            forward = true;
-            //event.gc.fillOval(x++, y++, r, r);
-            event.gc.drawImage(ant,x++, y++);
-        }
-
-        if(forward){
-            //event.gc.fillOval(x++, y++, r, r);
-            event.gc.drawImage(ant,x++, y++);
-        }else{
-            //event.gc.fillOval(x--, y--, r, r);
-            event.gc.drawImage(ant,x--, y--);
-        }
-        ant.dispose();
     }
     
     private void renderAnt(Event event) {
@@ -202,7 +179,7 @@ public class AntDisplay {
             event.gc.drawImage(antImg, a.getLocation().getX(), a.getLocation().getY());
             
             if(!a.isMoving()){
-                a.changeDest(e.getSquare(new GridLocation(a.getLocation().getX(),a.getLocation().getY())));
+                a.changeDest(e.getSquare(a.getLocation().getPoint()));
             }
             
             a.update();

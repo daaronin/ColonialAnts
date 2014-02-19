@@ -7,6 +7,7 @@ package colonialants;
 
 import java.util.ArrayList;
 import java.util.Random;
+import org.eclipse.swt.graphics.Point;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.Random;
 public class Environment {
     
     //Needs to be a multiple of 2 for now
-    private int spaceSize = 20;
+    private final int spaceSize = 20;
     
     private int dimension = 36;
     
@@ -74,11 +75,11 @@ public class Environment {
         return locations;
     }
     
-    public ArrayList<Location> getSquare(GridLocation location){
-        ArrayList<Location> square  = new ArrayList<Location>();
+    public ArrayList<GridLocation> getSquare(Point p){
+        ArrayList<GridLocation> square  = new ArrayList<GridLocation>();
         
-        int ox = location.getX();
-        int oy = location.getY();
+        int ox = p.x;
+        int oy = p.y;
 
         for(int i = -1;i<=1;i++){
             int x = (int)((ox-spaceSize/2)/spaceSize);

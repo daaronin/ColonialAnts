@@ -42,14 +42,14 @@ public class Ant {
         return state==State.MOVING;
     }
     
-    public void changeDest(ArrayList<Location> square){
+    public void changeDest(ArrayList<GridLocation> square){
         if(!isMoving()){
             state = State.MOVING;
         }
         
         int pick = r.nextInt(square.size());
 
-        destination = new GridLocation(square.get(pick).getX(),square.get(pick).getY());
+        destination = square.get(pick);
         
     }
     
