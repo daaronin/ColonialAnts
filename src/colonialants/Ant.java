@@ -22,7 +22,7 @@ public class Ant {
         MOVING, IDLE
     }
     
-    State state;
+    private State state;
     
     public Ant(){
         location = new FineLocation();
@@ -45,6 +45,12 @@ public class Ant {
     public void changeDest(ArrayList<GridLocation> square){
         if(!isMoving()){
             state = State.MOVING;
+        }
+        
+        for(int i = 0;i<square.size();i++){
+            if(!(square.get(i).getTerrain() instanceof AntHill)){
+                square.remove(i);
+            }
         }
         
         int pick = r.nextInt(square.size());
