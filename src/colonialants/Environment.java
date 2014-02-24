@@ -28,16 +28,19 @@ public class Environment {
     private Ant[] ant;
     private CommonScents scent;
     private Colony colony;
+    private int population;
     
     public Environment(){
         locations = new GridLocation[dimension][dimension];
         colony = new Colony();
+        population = 5;
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
         locations = new GridLocation[dimension][dimension];
         colony = new Colony();
+        population = 5;
     }
     
     private void initAntHill(){
@@ -103,8 +106,8 @@ public class Environment {
     }
     
     public void addTestAnts(){
-        ant = new Ant[200];
-        for(int i = 0;i<200;i++){
+        ant = new Ant[population];
+        for(int i = 0;i<population;i++){
             ant[i] = new Ant(new FineLocation(locations[0][0].getX(),locations[0][0].getY()));
         }
     }
