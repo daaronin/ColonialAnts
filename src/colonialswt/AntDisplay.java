@@ -60,8 +60,8 @@ public class AntDisplay {
         DeviceData data = new DeviceData();
         data.tracking = true;
         display = new Display(data);
-        Sleak sleak = new Sleak();
-        sleak.open();
+        //Sleak sleak = new Sleak();
+        //sleak.open();
         shell = new Shell(display);
         
         shell.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -136,7 +136,7 @@ public class AntDisplay {
         sand = new Image(display, "src/colonialimages/Sand.png");
         leaf = new Image(display, "src/colonialimages/Leaf.png");
         stream = new Image(display, "src/colonialimages/Water.png");
-        dirt = new Image(display, "src/colonialimages/Dirt.png");
+        dirt = new Image(display, "src/colonialimages/CrackedEarth.png");
         
         for (GridLocation[] location : e.getLocations()) {
             for (GridLocation space : location) {

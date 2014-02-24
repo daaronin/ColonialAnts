@@ -5,6 +5,7 @@
 
 package colonialants;
 
+import colonialants.Colony.ColLoc;
 import java.util.ArrayList;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
@@ -23,22 +24,66 @@ public class Environment {
     private GridLocation[][] locations;
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
-    //Envionment has a Swarm
+    //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
     private Ant[] ant;
     private CommonScents scent;
+    private Colony colony;
     
     public Environment(){
         locations = new GridLocation[dimension][dimension];
+        colony = new Colony();
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
         locations = new GridLocation[dimension][dimension];
+        colony = new Colony();
+    }
+    
+    private void initAntHill(){
+        int is = 0;
+        int ib = 0;
+        
+        int js = 0;
+        int jb = 0;
+        
+        if(colony.getLocation() == ColLoc.TR){
+            is = dimension-colony.getDimension();
+            ib = dimension;
+            
+            js = 0;
+            jb = 0+colony.getDimension();
+        }else if(colony.getLocation() == ColLoc.TL){
+            is = 0;
+            ib = 0+colony.getDimension();
+            
+            js = 0;
+            jb = 0+colony.getDimension();
+        }else if(colony.getLocation() == ColLoc.BR){
+            is = dimension-colony.getDimension();
+            ib = dimension;
+            
+            js = dimension-colony.getDimension();
+            jb = dimension;
+        }else if(colony.getLocation() == ColLoc.BL){
+            is = 0;
+            ib = 0+colony.getDimension();
+            
+            js = dimension-colony.getDimension();
+            jb = dimension;
+        }
+        
+        for(int i = is;i<ib;i++){
+            for(int j = js;j<jb;j++){
+                locations[i][j].setTerrain((Terrain) new AntHill());
+            }
+        }
     }
     
     public void initEmptyField(){
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
+                
                 locations[i][j] = new GridLocation((int)(spaceSize*(i)+(spaceSize/2)),(int)(spaceSize*(j)+(spaceSize/2)));
                 Random r = new Random();
                 if(r.nextInt(100)<5){
@@ -46,10 +91,15 @@ public class Environment {
                 }else{
                     locations[i][j].setTerrain((Terrain) new Sand());
                 }
+                
+                
                 //System.out.print("("+locations[i][j].getX()+","+locations[i][j].getY()+") ");
             }
             //System.out.println();
         }
+        
+        initAntHill();
+        
     }
     
     public void addTestAnts(){
