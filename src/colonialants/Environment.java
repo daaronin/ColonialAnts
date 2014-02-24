@@ -64,7 +64,7 @@ public class Environment {
     }
     
     public void addTestScent(){
-        scent = new CommonScents(locations[4][4]);
+        scent = new CommonScents(new GridLocation(locations[5][5].getX(),locations[5][5].getY()));
     }
     
     public CommonScents getTestScent(){

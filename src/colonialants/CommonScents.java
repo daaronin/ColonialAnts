@@ -12,7 +12,7 @@ package colonialants;
  */
 public class CommonScents {
     
-    private Location location;
+    private GridLocation location = null;
     
     public enum Direction{
         NORTH, NORTHEAST, EAST, SOUTHEAST, SOUTH, SOUTHWEST, WEST, NORTHWEST, NONE
@@ -21,16 +21,16 @@ public class CommonScents {
     Direction direction;
     
     public CommonScents(){
-        location = new Location();
+        location = new GridLocation();
         this.direction = Direction.NONE;
     }
     
-    public CommonScents(Location location){
+    public CommonScents(GridLocation location){
         this.location = location;
         this.direction = Direction.NONE;
     }
     
-    public CommonScents(Location location, Direction direction){
+    public CommonScents(GridLocation location, Direction direction){
         this.location = location;
         this.direction = direction;
     }
