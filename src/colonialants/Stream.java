@@ -11,10 +11,22 @@ package colonialants;
  */
 public class Stream implements Terrain{
     
+    String texture;
+    
     @Override
     public String toString(){
         String s = "S";
         
         return s;
+    }
+    
+    @Override
+    public String getTexture() {
+        return texture;
+    }
+
+    @Override
+    public void setTexture(String s) {
+        texture = s;
     }
 }

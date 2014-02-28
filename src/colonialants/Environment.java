@@ -19,9 +19,9 @@ public class Environment {
     //Needs to be a multiple of 2 for now
     private final int spaceSize = 20;
     
-    private int dimension = 36;
+    private int dimension = 20;
     
-    private GridLocation[][] locations;
+    private TerrainLocation[][] terrain;
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
@@ -31,14 +31,14 @@ public class Environment {
     private int population;
     
     public Environment(){
-        locations = new GridLocation[dimension][dimension];
+        terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 5;
+        population = 250;
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
-        locations = new GridLocation[dimension][dimension];
+        terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
         population = 5;
     }
@@ -78,7 +78,7 @@ public class Environment {
         
         for(int i = is;i<ib;i++){
             for(int j = js;j<jb;j++){
-                locations[i][j].setTerrain((Terrain) new AntHill());
+                terrain[i][j].setTerrain((Terrain) new AntHill());
             }
         }
     }
@@ -87,12 +87,12 @@ public class Environment {
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
                 
-                locations[i][j] = new GridLocation((int)(spaceSize*(i)+(spaceSize/2)),(int)(spaceSize*(j)+(spaceSize/2)));
+                terrain[i][j] = new TerrainLocation(i,j);
                 Random r = new Random();
                 if(r.nextInt(100)<5){
-                    locations[i][j].setTerrain((Terrain) new Leaf());
+                    terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
                 }else{
-                    locations[i][j].setTerrain((Terrain) new Sand());
+                    terrain[i][j].setTerrain((Terrain) new Sand("sand"));
                 }
                 
                 
@@ -108,7 +108,7 @@ public class Environment {
     public void addTestAnts(){
         ant = new Ant[population];
         for(int i = 0;i<population;i++){
-            ant[i] = new Ant(new FineLocation(locations[0][0].getX(),locations[0][0].getY()));
+            ant[i] = new Ant(new FineLocation(terrain[0][0].getX(),terrain[0][0].getY()));
         }
     }
     
@@ -117,19 +117,19 @@ public class Environment {
     }
     
     public void addTestScent(){
-        scent = new CommonScents(new GridLocation(locations[5][5].getX(),locations[5][5].getY()));
+        //scent = new CommonScents(new GridLocation(terrain[5][5].getX(),terrain[5][5].getY()));
     }
     
     public CommonScents getTestScent(){
         return scent;
     }
     
-    public GridLocation[][] getLocations(){
-        return locations;
+    public TerrainLocation[][] getLocations(){
+        return terrain;
     }
     
-    public ArrayList<GridLocation> getSquare(Point p){
-        ArrayList<GridLocation> square  = new ArrayList<GridLocation>();
+    public ArrayList<Location> getSquare(Point p){
+        ArrayList<Location> square  = new ArrayList<Location>();
         
         int ox = p.x;
         int oy = p.y;
@@ -145,7 +145,7 @@ public class Environment {
                         if((i==0)&&(j==0)){
                             continue;
                         }
-                        square.add(locations[x][y]);
+                        square.add(terrain[x][y]);
                     }
                 }
             }
@@ -154,6 +154,7 @@ public class Environment {
         return square;
     }
     
+        
     /**
      *
      * @return
@@ -163,7 +164,7 @@ public class Environment {
         String s = "";
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                System.out.print(locations[j][i].toString() + " ");
+                System.out.print(terrain[j][i].toString() + " ");
             }
             System.out.println();
         }

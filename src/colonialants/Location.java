@@ -6,6 +6,7 @@
 package colonialants;
 
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 /**
  *
@@ -13,26 +14,41 @@ import org.eclipse.swt.graphics.Point;
  */
 public class Location {
 
-    protected Point p;
+    public static final int LOCATION_DIMENSION = 20;
+       
+    protected Point gridLocation;
+    
+    protected Rectangle pixelLocation = new Rectangle(0, 0, 
+			LOCATION_DIMENSION, LOCATION_DIMENSION);
             
     public Location(){
         
     }
     
     public Location(int x, int y){
-        p = new Point(x, y);
+        gridLocation = new Point(x, y);
+        
+        pixelLocation.x = gridLocation.y * pixelLocation.width;
+	pixelLocation.y = gridLocation.x * pixelLocation.height;
+    }
+    
+    public Location(Point p){
+        gridLocation = p;
+        
+        pixelLocation.x = gridLocation.y * pixelLocation.width;
+	pixelLocation.y = gridLocation.x * pixelLocation.height;
     }
     
     public int getX() {
-        return p.x;
+        return pixelLocation.x;
     }
 
     public int getY() {
-        return p.y;
+        return pixelLocation.y;
     }
     
-    public Point getPoint(){
-        return p;
+    public Rectangle getBoundry(){
+        return pixelLocation;
     }
     
     public boolean equals(Location l){

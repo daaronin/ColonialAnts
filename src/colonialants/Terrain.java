@@ -18,4 +18,8 @@ public interface Terrain {
     @Override
     public String toString();
   
+    public String getTexture();
+    
+    public void setTexture(String s);
+    
 }

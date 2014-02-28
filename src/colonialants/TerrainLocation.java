@@ -6,19 +6,24 @@
 
 package colonialants;
 
+import org.lwjgl.util.Point;
+
 /**
  *
  * @author George McDaid
  */
-public class GridLocation extends Location{
+public class TerrainLocation extends Location{
+    
+    //protected Location[] neighbors = new Block[8];
     
     private Terrain t;
+    Point gridPoint;
     
-    public GridLocation(){
+    public TerrainLocation(){
         
     }
     
-    public GridLocation(int x, int y){
+    public TerrainLocation(int x, int y){
         super(x,y);
     }
     

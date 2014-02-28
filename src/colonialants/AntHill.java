@@ -12,4 +12,21 @@ package colonialants;
  */
 public class AntHill implements Terrain{
 
+    String texture;
+    
+    @Override
+    public String toString(){
+        return "AH";
+    }
+    
+    @Override
+    public String getTexture() {
+        return texture;
+    }
+
+    @Override
+    public void setTexture(String s) {
+        texture = s;
+    }
+    
 }

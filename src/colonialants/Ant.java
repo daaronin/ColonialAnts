@@ -15,7 +15,7 @@ import java.util.Random;
 public class Ant {
     
     private FineLocation location;
-    private GridLocation destination = null;
+    private TerrainLocation destination = null;
     Random r = new Random();
     
     public enum State{
@@ -42,7 +42,7 @@ public class Ant {
         return state==State.MOVING;
     }
     
-    public void changeDest(ArrayList<GridLocation> square){
+    public void changeDest(ArrayList<TerrainLocation> square){
         if(!isMoving()){
             state = State.MOVING;
         }
@@ -50,12 +50,15 @@ public class Ant {
         for(int i = 0;i<square.size();i++){
             if(!(square.get(i).getTerrain() instanceof AntHill)){
                 square.remove(i);
+                i = 0;
             }
         }
         
         int pick = r.nextInt(square.size());
 
         destination = square.get(pick);
+        
+        destination.toString();
         
     }
     
