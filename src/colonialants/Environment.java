@@ -6,6 +6,7 @@
 package colonialants;
 
 import colonialants.Colony.ColLoc;
+import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
@@ -19,13 +20,13 @@ public class Environment {
     //Needs to be a multiple of 2 for now
     private final int spaceSize = 20;
     
-    private int dimension = 20;
+    private int dimension = 30;
     
     private TerrainLocation[][] terrain;
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
-    private Ant[] ant;
+    private Ant[] ants;
     private CommonScents scent;
     private Colony colony;
     private int population;
@@ -33,14 +34,14 @@ public class Environment {
     public Environment(){
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 250;
+        population = 1000;
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 5;
+        population = 1000;
     }
     
     private void initAntHill(){
@@ -87,7 +88,7 @@ public class Environment {
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
                 
-                terrain[i][j] = new TerrainLocation(i,j);
+                terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
                 if(r.nextInt(100)<5){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
@@ -95,25 +96,77 @@ public class Environment {
                     terrain[i][j].setTerrain((Terrain) new Sand("sand"));
                 }
                 
-                
                 //System.out.print("("+locations[i][j].getX()+","+locations[i][j].getY()+") ");
             }
             //System.out.println();
         }
         
-        initAntHill();
+        for(int i = 0;i < dimension;i++){
+            for(int j = 0;j < dimension;j++){
+                this.setNeighbors(terrain[i][j]);
+            }
+        }
+        
+        //this.dumpNeighborList();
+        
+        //initAntHill();
         
     }
     
+    public void dumpNeighborList() {
+
+		String list = "";
+		for (int i = 0; i < dimension; i++) {
+			for (int j = 0; j < dimension; j++) {
+				TerrainLocation[] nbrs = getNeighbors(terrain[i][j]);
+				for (TerrainLocation blk : nbrs) {
+					list += (blk.toString() + " ");
+				}
+				list += "|\n";
+			}
+			list += "||\n";
+
+		}
+		System.out.println(list);
+	}
+    
+    public TerrainLocation[] getNeighbors(TerrainLocation block) {
+
+		ArrayList<TerrainLocation> squares = new ArrayList<TerrainLocation>();
+
+		Point loc = block.getIdices();
+
+		for (int i = -1; i <= 1; i++) {
+
+			int x = loc.x + i;
+			if (x >= 0 && x < dimension) {
+				for (int j = -1; j <= 1; j++) {
+					if ((i == 0) && (j == 0))
+						continue;
+
+					int y = loc.y + j;
+					if (y >= 0 && y < dimension)
+						squares.add(terrain[x][y]);
+				}
+			}
+		}
+		TerrainLocation[] blk = new TerrainLocation[squares.size()];
+		for (int i = 0; i < squares.size(); i++) {
+			blk[i] = (TerrainLocation) squares.get(i);
+		}
+		return blk;
+	}
+    
     public void addTestAnts(){
-        ant = new Ant[population];
-        for(int i = 0;i<population;i++){
-            ant[i] = new Ant(new FineLocation(terrain[0][0].getX(),terrain[0][0].getY()));
+        ants = new Ant[population];
+        for(int i = 0;i<(population);i++){
+            ants[i] = new Ant(new Point(i%(dimension-1),i%(dimension-1)), terrain[i%(dimension-1)][i%(dimension-1)]);
         }
+        //ants[dimension-1] = new Ant(new Point(dimension-1, dimension-1), terrain[(dimension-1)][(dimension-1)]);
     }
     
     public Ant[] getTestAnts(){
-        return ant;
+        return ants;
     }
     
     public void addTestScent(){
@@ -127,6 +180,56 @@ public class Environment {
     public TerrainLocation[][] getLocations(){
         return terrain;
     }
+    
+    public void setNeighbors(TerrainLocation block) {
+
+		Point coords = block.getIdices();
+
+		for (int xoff = -1; xoff <= 1; xoff++) {
+
+			int x = coords.x + xoff;
+
+			if (x >= 0 && x < dimension) {
+
+				for (int yoff = -1; yoff <= 1; yoff++) {
+
+					if ((xoff == 0) && (yoff == 0))
+						// Don't count current block
+						continue;
+
+					int y = coords.y + yoff;
+					if (y >= 0 && y < dimension) {
+
+						Direction dir = null;
+						switch (xoff) {
+						case -1:
+							if (yoff == -1)
+								dir = Direction.NORTWEST;
+							if (yoff == 0)
+								dir = Direction.NORTH;
+							if (yoff == 1)
+								dir = Direction.NORTHEAST;
+							break;
+						case 1:
+							if (yoff == -1)
+								dir = Direction.SOUTHWEST;
+							if (yoff == 0)
+								dir = Direction.SOUTH;
+							if (yoff == 1)
+								dir = Direction.SOUTHEAST;
+							break;
+						default:
+							if (yoff == -1)
+								dir = Direction.WEST;
+							if (yoff == 1)
+								dir = Direction.EAST;
+						}
+						block.addNeighbor(terrain[x][y], dir);
+					}
+				}
+			}
+		}
+	}
     
     public ArrayList<Location> getSquare(Point p){
         ArrayList<Location> square  = new ArrayList<Location>();
@@ -173,6 +276,12 @@ public class Environment {
     
     public int getSpaceSize(){
         return spaceSize;
+    }
+
+    public void onClockTick(int delta) {
+        for(int i = 0;i<ants.length;i++){
+            ants[i].onClockTick();
+        }
     }
 
 }

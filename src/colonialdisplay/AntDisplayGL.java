@@ -6,6 +6,7 @@
 
 package colonialdisplay;
 
+import colonialants.Ant;
 import colonialants.Environment;
 import colonialants.TerrainLocation;
 import org.eclipse.swt.graphics.Rectangle;
@@ -29,7 +30,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
 		tmap = new TextureMapper();
 
-		tmap.createTexture("src/colonialimages/Sand.png", "PNG", "sand");
+		tmap.createTexture("src/colonialimages/Sand_1.png", "PNG", "sand");
 		tmap.createTexture("src/colonialimages/AntBit.png", "PNG", "ant");
 		tmap.createTexture("src/colonialimages/Leaf.png", "PNG", "leaf");
 //		tmap.createTexture("src/images/Ant_E.png", "PNG", "antEast");
@@ -65,7 +66,7 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void createModel() {
         e = new Environment();
         e.initEmptyField();
-        //e.addTestAnts();
+        e.addTestAnts();
         //e.addTestScent();
     }
     
@@ -77,7 +78,7 @@ public class AntDisplayGL extends SkelLWJGL{
             GL11.glPushMatrix();
             {
                     drawBackground();
-                    //drawForeGround();
+                    drawForeGround();
             }
             GL11.glPopMatrix();
     }
@@ -87,13 +88,31 @@ public class AntDisplayGL extends SkelLWJGL{
             for (TerrainLocation[] locations : gridlocations) {
                 for (TerrainLocation location : locations) {
                     String texture = "sand";
-                    Rectangle bounds = location.getBoundry();
+                    Rectangle bounds = location.getScreenLocaiton();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                     tmap.getTextureID(texture));
                     drawTile(bounds);
                 }
             }
          }
+        
+        private void drawForeGround() {
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glEnable(GL11.GL_BLEND);
+            Ant[] ants = e.getTestAnts();
+            for(Ant ant : ants){
+                    String texture = "ant";
+                    Rectangle bounds = ant.getScreenPosition();
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+                    tmap.getTextureID(texture));
+
+                    drawTile(bounds);
+             }
+                            
+                        
+        }
+
+	
         
         
         private void drawTile(Rectangle bounds) {
@@ -119,13 +138,14 @@ public class AntDisplayGL extends SkelLWJGL{
 	protected void onClockTick(int delta) {
 		if (!animate)
 			return;
-		//e.onClockTick(delta);
+		e.onClockTick(delta);
 		updateFPS(); // update FPS Counter
 	}
 
 	@Override
 	protected void resetGL() {
-		// TODO Auto-generated method stub
+            Rectangle bounds = canvas.getClientArea();
+            GL11.glViewport(bounds.x, bounds.y, bounds.width, bounds.height);
 
 	}
 

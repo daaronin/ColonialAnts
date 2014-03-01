@@ -6,7 +6,10 @@
 
 package colonialants;
 
-import org.lwjgl.util.Point;
+import java.util.ArrayList;
+import org.eclipse.swt.graphics.Point;
+
+
 
 /**
  *
@@ -14,13 +17,29 @@ import org.lwjgl.util.Point;
  */
 public class TerrainLocation extends Location{
     
-    //protected Location[] neighbors = new Block[8];
+    protected TerrainLocation[] neighbors = new TerrainLocation[8];
     
     private Terrain t;
-    Point gridPoint;
+    
+    public static enum Direction {
+		NORTH(0), NORTHEAST(1), EAST(2),
+		SOUTHEAST(3), 
+		SOUTH(4), SOUTHWEST(5), WEST(6),
+		NORTWEST(7);
+		
+		public int value;
+		
+		private Direction(int bearing){
+			this.value = bearing;
+		}
+	}
     
     public TerrainLocation(){
         
+    }
+    
+    public TerrainLocation(Point p, int DIMENSION){
+        super(p, DIMENSION);
     }
     
     public TerrainLocation(int x, int y){
@@ -35,7 +54,27 @@ public class TerrainLocation extends Location{
         this.t = t;
     }
      
+     public void addNeighbor(TerrainLocation loc, Direction dir){
+        neighbors[dir.value] = loc;
+    }
+     
+    public TerrainLocation getNeighbor(Direction dir){
+        return neighbors[dir.value];
+    }
+
+    public ArrayList<TerrainLocation> getNeighbors(){
+        ArrayList<TerrainLocation> neighbor = new ArrayList<TerrainLocation>();
+        for(int i = 0;i<neighbors.length;i++){
+            if(neighbors[i] != null){
+                neighbor.add(neighbors[i]);
+            }
+        }
+        return neighbor;
+    }
+     
     
+    
+        
      
      /**
      *
