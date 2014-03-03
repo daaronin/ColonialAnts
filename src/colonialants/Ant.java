@@ -49,10 +49,11 @@ public class Ant {
         this.state = State.IDLE;
     }
     
-    public Ant(Point p, TerrainLocation t){
+    public Ant(Point p, TerrainLocation t, String[] tex){
         position = new Location(p);
         this.state = State.IDLE;
         origin = t;
+        textures = tex;
     }
     
     public Ant(Point p, int size){
@@ -157,6 +158,14 @@ public class Ant {
         }
     }
     
+    public String getTexture() {
+		String tex = textures[intendedBearing.value];
+		return tex;
+	}
+
+    public void setTexture(String name, Direction dir) {
+            textures[dir.value] = name;
+    }
     
     public Rectangle getScreenPosition(){
         return position.getScreenLocaiton();

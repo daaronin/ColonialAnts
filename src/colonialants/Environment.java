@@ -158,9 +158,12 @@ public class Environment {
 	}
     
     public void addTestAnts(){
+        String[] tex = { "antNorth", "antNorthEast", "antEast", "antSouthEast",
+				"antSouth", "antSouthWest", "antWest", "antNorthWest" };
+        
         ants = new Ant[population];
         for(int i = 0;i<(population);i++){
-            ants[i] = new Ant(new Point(i%(dimension-1),i%(dimension-1)), terrain[i%(dimension-1)][i%(dimension-1)]);
+            ants[i] = new Ant(new Point(i%(dimension-1),i%(dimension-1)), terrain[i%(dimension-1)][i%(dimension-1)], tex);
         }
         //ants[dimension-1] = new Ant(new Point(dimension-1, dimension-1), terrain[(dimension-1)][(dimension-1)]);
     }

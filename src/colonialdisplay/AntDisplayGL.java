@@ -31,15 +31,16 @@ public class AntDisplayGL extends SkelLWJGL{
 		tmap = new TextureMapper();
 
 		tmap.createTexture("src/colonialimages/Sand_1.png", "PNG", "sand");
-		tmap.createTexture("src/colonialimages/AntBit.png", "PNG", "ant");
+		tmap.createTexture("src/colonialimages/Ant_N.png", "PNG", "antNorth");
 		tmap.createTexture("src/colonialimages/Leaf.png", "PNG", "leaf");
-//		tmap.createTexture("src/images/Ant_E.png", "PNG", "antEast");
-//		tmap.createTexture("src/images/Ant_SE.png", "PNG", "antSouthEast");
-//		tmap.createTexture("src/images/Ant_S.png", "PNG", "antSouth");
-//		tmap.createTexture("src/images/Ant_SW.png", "PNG", "antSouthWest");
-//		tmap.createTexture("src/images/Ant_W.png", "PNG", "antWest");
-//		tmap.createTexture("src/images/Ant_NW.png", "PNG", "antNorthWest");
-
+		tmap.createTexture("src/colonialimages/Ant_E.png", "PNG", "antEast");
+		tmap.createTexture("src/colonialimages/Ant_SE.png", "PNG", "antSouthEast");
+		tmap.createTexture("src/colonialimages/Ant_S.png", "PNG", "antSouth");
+		tmap.createTexture("src/colonialimages/Ant_SW.png", "PNG", "antSouthWest");
+		tmap.createTexture("src/colonialimages/Ant_W.png", "PNG", "antWest");
+		tmap.createTexture("src/colonialimages/Ant_NW.png", "PNG", "antNorthWest");
+                tmap.createTexture("src/colonialimages/Ant_NE.png", "PNG", "antNorthEast");
+                
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
 				GL11.GL_REPEAT);
 
@@ -101,7 +102,7 @@ public class AntDisplayGL extends SkelLWJGL{
             GL11.glEnable(GL11.GL_BLEND);
             Ant[] ants = e.getTestAnts();
             for(Ant ant : ants){
-                    String texture = "ant";
+                    String texture = ant.getTexture();
                     Rectangle bounds = ant.getScreenPosition();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                     tmap.getTextureID(texture));
