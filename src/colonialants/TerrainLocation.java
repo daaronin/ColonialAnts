@@ -6,7 +6,7 @@
 
 package colonialants;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import org.eclipse.swt.graphics.Point;
 
 
@@ -18,6 +18,7 @@ import org.eclipse.swt.graphics.Point;
 public class TerrainLocation extends Location{
     
     protected TerrainLocation[] neighbors = new TerrainLocation[8];
+    HashMap<Direction, TerrainLocation> options = new HashMap<Direction, TerrainLocation>();
     
     private Terrain t;
     
@@ -56,20 +57,15 @@ public class TerrainLocation extends Location{
      
      public void addNeighbor(TerrainLocation loc, Direction dir){
         neighbors[dir.value] = loc;
+        options.put(dir, loc);
     }
      
     public TerrainLocation getNeighbor(Direction dir){
         return neighbors[dir.value];
     }
 
-    public ArrayList<TerrainLocation> getNeighbors(){
-        ArrayList<TerrainLocation> neighbor = new ArrayList<TerrainLocation>();
-        for(int i = 0;i<neighbors.length;i++){
-            if(neighbors[i] != null){
-                neighbor.add(neighbors[i]);
-            }
-        }
-        return neighbor;
+    public HashMap<Direction, TerrainLocation> getNeighbors(){
+        return options;
     }
      
     

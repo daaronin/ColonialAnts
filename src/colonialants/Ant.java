@@ -5,7 +5,12 @@
 
 package colonialants;
 
+import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -21,6 +26,8 @@ public class Ant {
     Random r = new Random();
     int SIZE = 20;
     Location position;
+    private Direction intendedBearing = Direction.NORTH;
+    private String[] textures;
 
     private void randomWalk() {
     }
@@ -105,8 +112,20 @@ public class Ant {
     
     
     public void changeDestination(){
-        ArrayList<TerrainLocation> list = origin.getNeighbors();
-        destination = list.get(r.nextInt(list.size()));
+        
+        HashMap<Direction,TerrainLocation> list = origin.getNeighbors();
+        HashMap<Integer, Direction> choices = new HashMap<Integer, Direction>();
+        Iterator it = list.entrySet().iterator();
+        int count = 0;
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            choices.put(count, (Direction) pairs.getKey());
+            count++;
+            //it.remove(); // avoids a ConcurrentModificationException
+        }
+        int choice = r.nextInt(count);
+        intendedBearing = choices.get(choice);
+        destination = list.get(intendedBearing);
         state = State.MOVING;
     }
     
@@ -137,6 +156,7 @@ public class Ant {
             }
         }
     }
+    
     
     public Rectangle getScreenPosition(){
         return position.getScreenLocaiton();
