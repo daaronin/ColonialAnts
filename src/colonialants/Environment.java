@@ -24,7 +24,7 @@ public class Environment {
     
     private TerrainLocation[][] terrain;
     
-    //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish (unless I get impatient)
+    //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
     private Ant[] ants;
     private CommonScents scent;
