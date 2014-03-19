@@ -9,6 +9,7 @@ package colonialdisplay;
 import colonialants.Ant;
 import colonialants.Environment;
 import colonialants.TerrainLocation;
+import java.awt.geom.Rectangle2D;
 import org.eclipse.swt.graphics.Rectangle;
 import org.lwjgl.opengl.GL11;
 
@@ -30,18 +31,20 @@ public class AntDisplayGL extends SkelLWJGL{
 
 		tmap = new TextureMapper();
 
-		tmap.createTexture("src/colonialimages/Sand_1.png", "PNG", "sand");
-		tmap.createTexture("src/colonialimages/Ant_N.png", "PNG", "antNorth");
-		tmap.createTexture("src/colonialimages/Leaf.png", "PNG", "leaf");
-		tmap.createTexture("src/colonialimages/Ant_E.png", "PNG", "antEast");
-		tmap.createTexture("src/colonialimages/Ant_SE.png", "PNG", "antSouthEast");
-		tmap.createTexture("src/colonialimages/Ant_S.png", "PNG", "antSouth");
-		tmap.createTexture("src/colonialimages/Ant_SW.png", "PNG", "antSouthWest");
-		tmap.createTexture("src/colonialimages/Ant_W.png", "PNG", "antWest");
-		tmap.createTexture("src/colonialimages/Ant_NW.png", "PNG", "antNorthWest");
-                tmap.createTexture("src/colonialimages/Ant_NE.png", "PNG", "antNorthEast");
+		tmap.initSheet("src/colonialimages/sprites.png", "PNG");
+		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
+                tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f,.5f,.25f,.25f));
                 
-		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
+                tmap.addSpriteLocation("antNorth", new Rectangle2D.Float(.25f,0,.25f,.25f));
+                tmap.addSpriteLocation("antNorthEast", new Rectangle2D.Float(.5f,0,.25f,.25f));
+                tmap.addSpriteLocation("antSouthEast", new Rectangle2D.Float(.25f,.25f,.25f,.25f));
+                tmap.addSpriteLocation("antSouth", new Rectangle2D.Float(0,.25f,.25f,.25f));
+                tmap.addSpriteLocation("antSouthWest", new Rectangle2D.Float(.5f,.25f,.25f,.25f));
+                tmap.addSpriteLocation("antEast", new Rectangle2D.Float(0,0,.25f,.25f));
+                tmap.addSpriteLocation("antWest", new Rectangle2D.Float(.75f,.25f,.25f,.25f));
+                tmap.addSpriteLocation("antNorthWest", new Rectangle2D.Float(.75f,0,.25f,.25f));
+                
+                GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
 				GL11.GL_REPEAT);
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -88,11 +91,11 @@ public class AntDisplayGL extends SkelLWJGL{
             TerrainLocation[][] gridlocations = e.getLocations();
             for (TerrainLocation[] locations : gridlocations) {
                 for (TerrainLocation location : locations) {
-                    String texture = "sand";
+                    String texture = location.getTerrain().getTexture();
                     Rectangle bounds = location.getScreenLocaiton();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-                    tmap.getTextureID(texture));
-                    drawTile(bounds);
+                    tmap.getSheetID());
+                    drawTile(bounds, tmap.getSpriteLocation(texture));
                 }
             }
          }
@@ -102,12 +105,12 @@ public class AntDisplayGL extends SkelLWJGL{
             GL11.glEnable(GL11.GL_BLEND);
             Ant[] ants = e.getTestAnts();
             for(Ant ant : ants){
-                    String texture = ant.getTexture();
+                    String r = ant.getTexture();
                     Rectangle bounds = ant.getScreenPosition();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-                    tmap.getTextureID(texture));
+                    tmap.getSheetID());
 
-                    drawTile(bounds);
+                    drawTile(bounds, tmap.getSpriteLocation(r));
              }
                             
                         
@@ -116,16 +119,23 @@ public class AntDisplayGL extends SkelLWJGL{
 	
         
         
-        private void drawTile(Rectangle bounds) {
+        private void drawTile(Rectangle bounds, Rectangle2D.Float r) {
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex2f(bounds.x, bounds.y);
-		GL11.glTexCoord2f(0, 1);
-		GL11.glVertex2f(bounds.x, bounds.y + bounds.height);
-		GL11.glTexCoord2f(1, 1);
+		
+		GL11.glTexCoord2f(r.x, r.y+r.height);
+                GL11.glVertex2f(bounds.x, bounds.y + bounds.height);
+                
+                
+                GL11.glTexCoord2f(r.x+r.width, r.y + r.height);
 		GL11.glVertex2f(bounds.x + bounds.width, bounds.y + bounds.height);
-		GL11.glTexCoord2f(1, 0);
-		GL11.glVertex2f(bounds.x + bounds.width, bounds.y);
-		GL11.glTexCoord2f(0, 0);
+                
+                GL11.glTexCoord2f(r.x+r.width, r.y);
+                GL11.glVertex2f(bounds.x + bounds.width, bounds.y);
+		
+		
+                GL11.glTexCoord2f(r.x, r.y);
+                GL11.glVertex2f(bounds.x, bounds.y);
+		
 		GL11.glEnd();
 	}
         
@@ -154,5 +164,10 @@ public class AntDisplayGL extends SkelLWJGL{
 		AntDisplayGL gl = new AntDisplayGL();
                 gl.start();
 	}
+
+    @Override
+    protected void onSliderChange(int TYPE, int value) {
+        
+    }
     
 }

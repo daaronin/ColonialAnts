@@ -3,6 +3,9 @@ package colonialdisplay;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.opengl.GLCanvas;
 import org.eclipse.swt.opengl.GLData;
 import org.eclipse.swt.widgets.Composite;
@@ -11,6 +14,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -40,6 +44,7 @@ public abstract class SkelLWJGL {
 	Display display = new Display();
 	Shell shell;
 	Composite comp;
+        Composite comp2;
 	GLData data = new GLData();
 	GLCanvas canvas;
 	
@@ -140,17 +145,45 @@ public abstract class SkelLWJGL {
 	private Shell initSWT() {
 
 		shell = new Shell(display,SWT.SHELL_TRIM & (~SWT.RESIZE));
-		shell.setLayout(new FillLayout());
+		shell.setLayout(new FormLayout());
 		shell.setSize(SCREEN_WIDTH, SCREEN_WIDTH);
 		shell.setText("Ant Colony: ");
 
 		// Create a composite
 		comp = new Composite(shell, SWT.BORDER);
 		comp.setLayout(new FillLayout());
+                
+                comp2 = new Composite(shell, SWT.BORDER);
+                FillLayout fillLayout = new FillLayout();
+                fillLayout.type = SWT.VERTICAL;
+                fillLayout.spacing = 10;
+		comp2.setLayout(fillLayout);
+                
+                FormData data1 = new FormData();
+		data1.left = new FormAttachment(0,0);
+		data1.top = new FormAttachment(0,0);
+		data1.right = new FormAttachment(75,0);
+                data1.bottom = new FormAttachment(90,0);
+                comp.setLayoutData(data1);
+                
+                FormData data2 = new FormData();
+		data2.left = new FormAttachment(comp, 5);
+		data2.right = new FormAttachment(100, -5);
+		data2.top = new FormAttachment(0, 5);
+                data1.bottom = new FormAttachment(90,0);
+                comp2.setLayoutData(data2);
 		
 		// Depth size 
 		data.depthSize = 1;
 		data.doubleBuffer = true;
+                
+                final Scale scale = new Scale(comp2, SWT.NONE);
+                scale.setMaximum (10);
+                scale.setPageIncrement(1);
+                
+                final Scale scale2 = new Scale(comp2, SWT.NONE);
+                scale2.setMaximum (10);
+                scale2.setPageIncrement(1);
 		
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
@@ -208,4 +241,6 @@ public abstract class SkelLWJGL {
 	protected abstract void onClockTick(int delta);
 	protected abstract void renderGL();	
 	protected abstract void resetGL();
+        
+        protected abstract void onSliderChange(int TYPE, int value);
 }

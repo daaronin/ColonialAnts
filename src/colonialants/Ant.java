@@ -9,7 +9,6 @@ import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
@@ -28,6 +27,7 @@ public class Ant {
     Location position;
     private Direction intendedBearing = Direction.NORTH;
     private String[] textures;
+    private double ANT_SPEED = .08;
 
     private void randomWalk() {
     }
@@ -65,11 +65,11 @@ public class Ant {
         return position.getScreenLocaiton();
     }
     
-    void onClockTick() {
-        update();
+    void onClockTick(int delta) {
+        update(delta);
     }
     
-    public void update(){
+    public void update(int delta){
          //Ant has to stop to think
         if (!isMoving()){
                 // Ant contemplates a move
@@ -81,7 +81,7 @@ public class Ant {
         if (isMoving()){
                 // Ant with a purpose
                 //snapMove(getScreenPosition());
-                walk();
+                walk(delta);
         }
          
     }   
@@ -130,30 +130,53 @@ public class Ant {
         state = State.MOVING;
     }
     
-    public void walk(){
+    public void walk(int delta){
         if(isMoving()){
-            int x = destination.getX() - position.getScreenLocaiton().x;
-            int y = destination.getY() - position.getScreenLocaiton().y;
             
-            if(x!=0){
-                if(x>0){
-                    position.incX();
-                }else{
-                    position.decX();
-                }
-            } 
-            
-            if(y!=0){
-                if(y>0){
-                    position.incY();
-                }else{
-                    position.decY();
-                }
-            }
+            //primMove();
+            advancedMove(delta);
             
             if(position.equalRectagle(destination.getScreenLocaiton())){
                 origin = destination;
                 state = State.IDLE;
+            }
+        }
+    }
+    
+    public void advancedMove(int delta){
+        ANT_SPEED = .08+Math.random()*.05;
+        Rectangle dest = destination.getScreenLocaiton();
+        Rectangle curr = position.getScreenLocaiton();
+        int tol = (int)(Math.sqrt(dest.width *dest.width + dest.height * dest.height))/8;
+        double deltaDistance = ANT_SPEED * (double) delta;
+
+        double distance = Math.sqrt(Math.pow(dest.x - curr.x, 2.0)
+                        + Math.pow(dest.y - curr.y, 2.0));
+        double factor = deltaDistance / distance;
+
+        curr.x += (int) (factor * (dest.x - curr.x));
+        curr.y += (int) (factor * (dest.y - curr.y));
+        curr.x = Math.abs(curr.x - dest.x) < tol ? dest.x : curr.x;
+        curr.y = Math.abs(curr.y - dest.y) < tol ? dest.y : curr.y;
+    }
+    
+    public void primMove(){
+        int x = destination.getX() - position.getScreenLocaiton().x;
+        int y = destination.getY() - position.getScreenLocaiton().y;
+
+        if(x!=0){
+            if(x>0){
+                position.incX();
+            }else{
+                position.decX();
+            }
+        } 
+
+        if(y!=0){
+            if(y>0){
+                position.incY();
+            }else{
+                position.decY();
             }
         }
     }

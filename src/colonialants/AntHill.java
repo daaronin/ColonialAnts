@@ -13,6 +13,10 @@ package colonialants;
 public class AntHill implements Terrain{
 
     String texture;
+
+    AntHill(String texture) {
+        this.texture = texture;
+    }
     
     @Override
     public String toString(){

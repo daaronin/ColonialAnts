@@ -1,5 +1,6 @@
 package colonialdisplay;
 
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -10,36 +11,32 @@ import org.newdawn.slick.util.ResourceLoader;
 
 public class TextureMapper {
 
-	public static HashMap<String, Texture> textureMap = new HashMap<String, Texture>();
+	Texture t = null;
+        public static HashMap<String, Rectangle2D.Float> textureMap = new HashMap<String, Rectangle2D.Float>();
 	
-	public int getWidth(String name){
-		return textureMap.get(name).getTextureHeight();
-	}
 	
-	public int getHeight(String name){
-		return textureMap.get(name).getTextureWidth();
-	}
-	
-	public Texture createTexture(String filename, String imageFormat, String name){
+	public Texture initSheet(String filename, String imageFormat){
 		InputStream stream = ResourceLoader.getResourceAsStream(filename);
-		Texture texture = null;
 		try {
-			texture = TextureLoader.getTexture(imageFormat, stream);
-			textureMap.put(name, texture);
+			t = TextureLoader.getTexture(imageFormat, stream);
 		} catch (IOException e) {
 			System.err.println("Texture loader error");
 			System.exit(-1);
 		}
 		
-		return texture;
+		return t;
 	}
+        
+        public void addSpriteLocation(String name, Rectangle2D.Float p){
+            textureMap.put(name, p);
+        }
+        
+        public Rectangle2D.Float getSpriteLocation(String name){
+            return textureMap.get(name);
+        }
 	
-	public int getTextureID(String name){
-		return textureMap.get(name).getTextureID();
-	}
-	
-	public int count(){
-		return textureMap.size();
+	public int getSheetID(){
+		return t.getTextureID();
 	}
 	
 

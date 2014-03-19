@@ -10,6 +10,7 @@ import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 
 /**
  *
@@ -34,14 +35,14 @@ public class Environment {
     public Environment(){
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 1000;
+        population = 100;
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 1000;
+        population = 100;
     }
     
     private void initAntHill(){
@@ -79,7 +80,7 @@ public class Environment {
         
         for(int i = is;i<ib;i++){
             for(int j = js;j<jb;j++){
-                terrain[i][j].setTerrain((Terrain) new AntHill());
+                terrain[i][j].setTerrain((Terrain) new AntHill("antHill"));
             }
         }
     }
@@ -158,8 +159,16 @@ public class Environment {
 	}
     
     public void addTestAnts(){
-        String[] tex = { "antNorth", "antNorthEast", "antEast", "antSouthEast",
-				"antSouth", "antSouthWest", "antWest", "antNorthWest" };
+        String[] tex = { 
+                            "antNorth", 
+                            "antNorthEast", 
+                            "antEast", 
+                            "antSouthEast",
+                            "antSouth", 
+                            "antSouthWest", 
+                            "antWest", 
+                            "antNorthWest" 
+                          };
         
         ants = new Ant[population];
         for(int i = 0;i<(population);i++){
@@ -282,8 +291,8 @@ public class Environment {
     }
 
     public void onClockTick(int delta) {
-        for(int i = 0;i<ants.length;i++){
-            ants[i].onClockTick();
+        for (Ant ant : ants) {
+            ant.onClockTick(delta);
         }
     }
 

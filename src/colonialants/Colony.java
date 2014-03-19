@@ -20,7 +20,7 @@ public class Colony {
     
     public Colony(){
         location = ColLoc.TL;
-        dimension = 10;
+        dimension = 15;
     }
     
     public ColLoc getLocation(){
