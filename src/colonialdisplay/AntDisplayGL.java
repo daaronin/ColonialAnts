@@ -10,6 +10,7 @@ import colonialants.Ant;
 import colonialants.Environment;
 import colonialants.TerrainLocation;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import org.eclipse.swt.graphics.Rectangle;
 import org.lwjgl.opengl.GL11;
 
@@ -31,9 +32,10 @@ public class AntDisplayGL extends SkelLWJGL{
 
 		tmap = new TextureMapper();
 
-		tmap.initSheet("src/colonialimages/sprites.png", "PNG");
+		tmap.initSheet("src/colonialimages/sprites_1.png", "PNG");
 		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
                 tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f,.5f,.25f,.25f));
+                tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0,.5f,.25f,.25f));
                 
                 tmap.addSpriteLocation("antNorth", new Rectangle2D.Float(.25f,0,.25f,.25f));
                 tmap.addSpriteLocation("antNorthEast", new Rectangle2D.Float(.5f,0,.25f,.25f));
@@ -103,7 +105,7 @@ public class AntDisplayGL extends SkelLWJGL{
         private void drawForeGround() {
             GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glEnable(GL11.GL_BLEND);
-            Ant[] ants = e.getTestAnts();
+            ArrayList<Ant> ants = e.getTestAnts();
             for(Ant ant : ants){
                     String r = ant.getTexture();
                     Rectangle bounds = ant.getScreenPosition();
@@ -116,10 +118,7 @@ public class AntDisplayGL extends SkelLWJGL{
                         
         }
 
-	
-        
-        
-        private void drawTile(Rectangle bounds, Rectangle2D.Float r) {
+	private void drawTile(Rectangle bounds, Rectangle2D.Float r) {
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glTexCoord2f(r.x, r.y+r.height);

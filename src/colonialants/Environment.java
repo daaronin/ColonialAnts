@@ -10,7 +10,6 @@ import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 
 /**
  *
@@ -21,28 +20,29 @@ public class Environment {
     //Needs to be a multiple of 2 for now
     private final int spaceSize = 20;
     
-    private int dimension = 30;
+    private int dimension = 29;
     
     private TerrainLocation[][] terrain;
     
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
-    private Ant[] ants;
+    private ArrayList<Ant> ants;
     private CommonScents scent;
     private Colony colony;
     private int population;
+    Random r = new Random();
     
     public Environment(){
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 100;
+        population = 50;
     }
     
     public Environment(int dimension){
         this.dimension = dimension;
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 100;
+        population = 0;
     }
     
     private void initAntHill(){
@@ -80,7 +80,7 @@ public class Environment {
         
         for(int i = is;i<ib;i++){
             for(int j = js;j<jb;j++){
-                terrain[i][j].setTerrain((Terrain) new AntHill("antHill"));
+                terrain[i][j].setTerrain((Terrain) new AntHill("anthill"));
             }
         }
     }
@@ -102,6 +102,8 @@ public class Environment {
             //System.out.println();
         }
         
+        initAntHill();
+        
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
                 this.setNeighbors(terrain[i][j]);
@@ -110,7 +112,7 @@ public class Environment {
         
         //this.dumpNeighborList();
         
-        //initAntHill();
+        
         
     }
     
@@ -170,14 +172,20 @@ public class Environment {
                             "antNorthWest" 
                           };
         
-        ants = new Ant[population];
+        ants = new ArrayList<Ant>();
         for(int i = 0;i<(population);i++){
-            ants[i] = new Ant(new Point(i%(dimension-1),i%(dimension-1)), terrain[i%(dimension-1)][i%(dimension-1)], tex);
+            int j = r.nextInt(100);
+            if(j<10){
+                ants.add(new GatheringAnt(new Point(5,5), terrain[5][5], tex));
+            }else{
+                ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
+            }
+            
         }
         //ants[dimension-1] = new Ant(new Point(dimension-1, dimension-1), terrain[(dimension-1)][(dimension-1)]);
     }
     
-    public Ant[] getTestAnts(){
+    public ArrayList<Ant> getTestAnts(){
         return ants;
     }
     
@@ -292,6 +300,7 @@ public class Environment {
 
     public void onClockTick(int delta) {
         for (Ant ant : ants) {
+            
             ant.onClockTick(delta);
         }
     }

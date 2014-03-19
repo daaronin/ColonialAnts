@@ -11,6 +11,7 @@ import org.eclipse.swt.opengl.GLData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -47,7 +48,10 @@ public abstract class SkelLWJGL {
         Composite comp2;
 	GLData data = new GLData();
 	GLCanvas canvas;
-	
+        Scale scale;
+	Label label;
+        Label label2;
+        
 	/**
 	 * Get the accurate time system
 	 * 
@@ -156,7 +160,7 @@ public abstract class SkelLWJGL {
                 comp2 = new Composite(shell, SWT.BORDER);
                 FillLayout fillLayout = new FillLayout();
                 fillLayout.type = SWT.VERTICAL;
-                fillLayout.spacing = 10;
+                fillLayout.spacing = 1;
 		comp2.setLayout(fillLayout);
                 
                 FormData data1 = new FormData();
@@ -177,14 +181,41 @@ public abstract class SkelLWJGL {
 		data.depthSize = 1;
 		data.doubleBuffer = true;
                 
+                
+                
+                
                 final Scale scale = new Scale(comp2, SWT.NONE);
                 scale.setMaximum (10);
+                scale.setIncrement(1);
                 scale.setPageIncrement(1);
+                
+                label = new Label(comp2, SWT.NONE);
+                label.setText("Gathering Ants: 0");
+                
+                scale.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                  int perspectiveValue = scale.getSelection();
+                  label.setText("Gathering Ants: " + perspectiveValue);
+                }
+                });
+                
                 
                 final Scale scale2 = new Scale(comp2, SWT.NONE);
                 scale2.setMaximum (10);
                 scale2.setPageIncrement(1);
+                
+                label2 = new Label(comp2, SWT.NONE);
+                label2.setText("Builder Ants: 0");
 		
+                scale2.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                  int perspectiveValue = scale2.getSelection();
+                  label2.setText("Builder Ants: " + perspectiveValue);
+                }
+                });
+                
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();

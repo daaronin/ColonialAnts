@@ -20,25 +20,23 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public class Ant {
     
-    private TerrainLocation destination = null;
-    private TerrainLocation origin = null;
+    TerrainLocation destination = null;
+    TerrainLocation origin = null;
     Random r = new Random();
     int SIZE = 20;
     Location position;
-    private Direction intendedBearing = Direction.NORTH;
+    Direction intendedBearing = Direction.NORTH;
     private String[] textures;
     private double ANT_SPEED = .08;
 
     private void randomWalk() {
     }
 
-    
-    
     public enum State{
         MOVING, IDLE
     }
     
-    private State state;
+    State state;
     
     public Ant(){
         this.state = State.IDLE;
@@ -113,21 +111,26 @@ public class Ant {
     
     
     public void changeDestination(){
-        
         HashMap<Direction,TerrainLocation> list = origin.getNeighbors();
         HashMap<Integer, Direction> choices = new HashMap<Integer, Direction>();
         Iterator it = list.entrySet().iterator();
         int count = 0;
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
-            choices.put(count, (Direction) pairs.getKey());
-            count++;
+            if(((TerrainLocation)pairs.getValue()).getTerrain().getTexture().equals("anthill")){
+                //System.out.println();
+                choices.put(count, (Direction) pairs.getKey());
+                count++;
+            }
             //it.remove(); // avoids a ConcurrentModificationException
         }
-        int choice = r.nextInt(count);
-        intendedBearing = choices.get(choice);
-        destination = list.get(intendedBearing);
-        state = State.MOVING;
+        if(count > 0){
+            int choice = r.nextInt(count);
+            intendedBearing = choices.get(choice);
+            destination = list.get(intendedBearing);
+            state = State.MOVING;
+        }
+        
     }
     
     public void walk(int delta){
