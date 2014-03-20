@@ -1,5 +1,7 @@
 package colonialdisplay;
 
+
+import colonialants.Environment.AntType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -52,7 +54,7 @@ public abstract class SkelLWJGL {
 	Label label;
         Label label2;
         
-	/**
+        /**
 	 * Get the accurate time system
 	 * 
      * @return 
@@ -181,9 +183,6 @@ public abstract class SkelLWJGL {
 		data.depthSize = 1;
 		data.doubleBuffer = true;
                 
-                
-                
-                
                 final Scale scale = new Scale(comp2, SWT.NONE);
                 scale.setMaximum (10);
                 scale.setIncrement(1);
@@ -197,6 +196,7 @@ public abstract class SkelLWJGL {
                 public void handleEvent(Event event) {
                   int perspectiveValue = scale.getSelection();
                   label.setText("Gathering Ants: " + perspectiveValue);
+                  onSliderChange(AntType.GATHERER, perspectiveValue);
                 }
                 });
                 
@@ -213,6 +213,7 @@ public abstract class SkelLWJGL {
                 public void handleEvent(Event event) {
                   int perspectiveValue = scale2.getSelection();
                   label2.setText("Builder Ants: " + perspectiveValue);
+                  onSliderChange(AntType.BUILDER, perspectiveValue);
                 }
                 });
                 
@@ -245,13 +246,13 @@ public abstract class SkelLWJGL {
 		// Add items to it
 		final MenuItem item0 = new MenuItem( menu, SWT.PUSH);
 
-		item0.setText(animate ? "Stop": "Animate");
+		item0.setText(animate ? "Stop" : "Animate");
 		
 		item0.addListener(SWT.Selection, new Listener(){
 			@Override
 			public void handleEvent(Event event) {
 				animate = !animate;
-				item0.setText(animate ? "Stop": "Animate");
+				item0.setText(animate ? "Stop" : "Animate");
 			}
 			
 		});
@@ -273,5 +274,5 @@ public abstract class SkelLWJGL {
 	protected abstract void renderGL();	
 	protected abstract void resetGL();
         
-        protected abstract void onSliderChange(int TYPE, int value);
+        protected abstract void onSliderChange(AntType TYPE, int value);
 }

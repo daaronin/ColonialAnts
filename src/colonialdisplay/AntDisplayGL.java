@@ -8,6 +8,7 @@ package colonialdisplay;
 
 import colonialants.Ant;
 import colonialants.Environment;
+import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void createModel() {
         e = new Environment();
         e.initEmptyField();
-        e.addTestAnts();
+        //e.addTestAnts();
         //e.addTestScent();
     }
     
@@ -165,7 +166,7 @@ public class AntDisplayGL extends SkelLWJGL{
 	}
 
     @Override
-    protected void onSliderChange(int TYPE, int value) {
+    protected void onSliderChange(AntType TYPE, int value) {
         
     }
     

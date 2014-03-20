@@ -16,12 +16,12 @@ import org.eclipse.swt.graphics.Point;
  */
 public class GatheringAnt extends Ant{
 
-        public GatheringAnt(Point p, TerrainLocation t, String[] tex){
-            super(p, t, tex);            
-        }
+    public GatheringAnt(Point p, TerrainLocation t, String[] tex){
+        super(p, t, tex);            
+    }
     
-        @Override
-        public void changeDestination(){
+    @Override
+    public void changeDestination(){
         HashMap<TerrainLocation.Direction,TerrainLocation> list = origin.getNeighbors();
         HashMap<Integer, TerrainLocation.Direction> choices = new HashMap<Integer, TerrainLocation.Direction>();
         Iterator it = list.entrySet().iterator();
@@ -41,7 +41,7 @@ public class GatheringAnt extends Ant{
             destination = list.get(intendedBearing);
             state = State.MOVING;
         }
-        
+
     }
     
 }

@@ -31,11 +31,28 @@ public class Environment {
     private Colony colony;
     private int population;
     Random r = new Random();
+    double PRODUCTION_RATE = .1;
+    
+    private String[] tex = { 
+                            "antNorth", 
+                            "antNorthEast", 
+                            "antEast", 
+                            "antSouthEast",
+                            "antSouth", 
+                            "antSouthWest", 
+                            "antWest", 
+                            "antNorthWest" 
+                          };
+    
+    public enum AntType{
+        GATHERER, BUILDER
+    }
     
     public Environment(){
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
         population = 50;
+        ants = new ArrayList<Ant>();
     }
     
     public Environment(int dimension){
@@ -43,6 +60,7 @@ public class Environment {
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
         population = 0;
+        ants = new ArrayList<Ant>();
     }
     
     private void initAntHill(){
@@ -161,18 +179,7 @@ public class Environment {
 	}
     
     public void addTestAnts(){
-        String[] tex = { 
-                            "antNorth", 
-                            "antNorthEast", 
-                            "antEast", 
-                            "antSouthEast",
-                            "antSouth", 
-                            "antSouthWest", 
-                            "antWest", 
-                            "antNorthWest" 
-                          };
         
-        ants = new ArrayList<Ant>();
         for(int i = 0;i<(population);i++){
             int j = r.nextInt(100);
             if(j<10){
@@ -183,6 +190,16 @@ public class Environment {
             
         }
         //ants[dimension-1] = new Ant(new Point(dimension-1, dimension-1), terrain[(dimension-1)][(dimension-1)]);
+    }
+    
+    public void addAnt(AntType TYPE){
+        if(TYPE == AntType.GATHERER){
+            ants.add(new GatheringAnt(new Point(5,5), terrain[5][5], tex));
+        }else if(TYPE == AntType.BUILDER){
+            ants.add(new BuilderAnt(new Point(5,5), terrain[5][5], tex));
+        }else {
+            ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
+        }
     }
     
     public ArrayList<Ant> getTestAnts(){
@@ -299,8 +316,16 @@ public class Environment {
     }
 
     public void onClockTick(int delta) {
+        int i = r.nextInt(100);
+        if(i<2){
+            i = r.nextInt(3);
+            if(i==0){
+                this.addAnt(AntType.GATHERER);
+            }else if(i==1){
+                this.addAnt(AntType.BUILDER);
+            }
+        }
         for (Ant ant : ants) {
-            
             ant.onClockTick(delta);
         }
     }
