@@ -30,37 +30,61 @@ public class GatheringAnt extends Ant{
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             
-            //food pheromone and carrying food
-            if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() > 0 && carryingFood){
+            //stronger food pheromone and carrying food
+            if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() 
+                    > ((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() && carryingFood){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                probs.put(count, 10.0);
+                probs.put(count, 15.0);
                 count++;
-            //food pheromone and carrying food
-            } else if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() > 0 && !carryingFood){
+            //weaker food pheromone and carrying food
+            } else if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() 
+                    < ((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() && carryingFood){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                probs.put(count, 100.0);
+                probs.put(count, 95.0);
                 count++;
-            //return pheromone and carrying food
-            } else if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() > 0 && carryingFood){
+            //stronger food pheromone and not carrying food
+            } else if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() 
+                    > ((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() && !carryingFood){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                probs.put(count, 100.0);
+                probs.put(count, 95.0);
                 count++;
-            //return pheromone and not carrying food
-            } else if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() > 0 && !carryingFood){
+            //weaker food pheromone and not carrying food
+            } else if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() 
+                    < ((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() && !carryingFood){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                probs.put(count, 10.0);
+                probs.put(count, 15.0);
                 count++;
-            //food pheromone and not carrying food
+            //no pheromones and carrying food
             } else if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() == 0 
-                    && ((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() == 0 && !carryingFood){
+                    && ((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() == 0 && carryingFood){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                probs.put(count, 20.0);
+                probs.put(count, 30.0);
                 count++;
-            }
+            //no pheromones and not carrying food
+            } else {
+                choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                probs.put(count, 30.0);
+                count++;
+            } 
             //it.remove(); // avoids a ConcurrentModificationException
         }
         if(count > 0){
-            int choice = r.nextInt(count);
+            int choice = 0;
+            double bestdiff = 100;
+            for (int i = 0; i<probs.size();i++){
+                double prob = probs.get(i);
+                double diff = 100 - r.nextInt((int)prob);
+                if (bestdiff == 100) {
+                    choice = i;
+                    bestdiff = diff;
+                    System.out.println(bestdiff);
+                }
+                if (bestdiff > diff){
+                    choice = i;
+                    bestdiff = diff;
+                }
+            }
+
             intendedBearing = choices.get(choice);
             destination = list.get(intendedBearing);
             state = State.MOVING;
