@@ -7,6 +7,7 @@
 package colonialdisplay;
 
 import colonialants.Ant;
+import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
@@ -33,7 +34,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
 		tmap = new TextureMapper();
 
-		tmap.initSheet("src/colonialimages/sprites_1.png", "PNG");
+		tmap.initSheet("src/colonialimages/spritesheet2.png", "PNG");
 		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
                 tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f,.5f,.25f,.25f));
                 tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0,.5f,.25f,.25f));
@@ -47,6 +48,10 @@ public class AntDisplayGL extends SkelLWJGL{
                 tmap.addSpriteLocation("antWest", new Rectangle2D.Float(.75f,.25f,.25f,.25f));
                 tmap.addSpriteLocation("antNorthWest", new Rectangle2D.Float(.75f,0,.25f,.25f));
                 
+                tmap.addSpriteLocation("pheromoneReturn", new Rectangle2D.Float(.25f,.75f,.25f,.25f));
+                tmap.addSpriteLocation("pheromoneFood", new Rectangle2D.Float(0,.75f,.25f,.25f));
+                tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.5f,.75f,.25f,.25f));
+                                
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
 				GL11.GL_REPEAT);
 
@@ -73,6 +78,7 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void createModel() {
         e = new Environment();
         e.initEmptyField();
+        e.initScents();
         //e.addTestAnts();
         //e.addTestScent();
     }
@@ -99,6 +105,13 @@ public class AntDisplayGL extends SkelLWJGL{
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                     tmap.getSheetID());
                     drawTile(bounds, tmap.getSpriteLocation(texture));
+                    
+                    String r = location.getScent().getTexture();
+                    Rectangle scentbounds = location.getScreenLocaiton();
+                    GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+                    tmap.getSheetID());
+
+                    drawTile(scentbounds, tmap.getSpriteLocation(r));
                 }
             }
          }
@@ -114,9 +127,7 @@ public class AntDisplayGL extends SkelLWJGL{
                     tmap.getSheetID());
 
                     drawTile(bounds, tmap.getSpriteLocation(r));
-             }
-                            
-                        
+             }                                        
         }
 
 	private void drawTile(Rectangle bounds, Rectangle2D.Float r) {

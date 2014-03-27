@@ -27,7 +27,6 @@ public class Environment {
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
     private ArrayList<Ant> ants;
-    private CommonScents scent;
     private Colony colony;
     private int population;
     Random r = new Random();
@@ -41,7 +40,10 @@ public class Environment {
                             "antSouth", 
                             "antSouthWest", 
                             "antWest", 
-                            "antNorthWest" 
+                            "antNorthWest",
+                            "pheromoneReturn",
+                            "pheromoneFood",
+                            "pheromoneNone"
                           };
     
     public enum AntType{
@@ -206,12 +208,22 @@ public class Environment {
         return ants;
     }
     
-    public void addTestScent(){
-        //scent = new CommonScents(new GridLocation(terrain[5][5].getX(),terrain[5][5].getY()));
+    public void alterScent(TerrainLocation location, String type){
+        //int block = (location.getX() / 20) + dimension * (location.getY() / 20);
+        if ("return".equals(type)) {
+            location.getScent().raiseReturnIntensity();
+        } else if ("food".equals(type)){
+            location.getScent().raiseFoodIntensity();
+        }
     }
     
-    public CommonScents getTestScent(){
-        return scent;
+    public void initScents(){
+        for (int i = 0; i < dimension; i++){
+            for (int j = 0; j < dimension; j++){
+                terrain[i][j].setScent(new CommonScents(tex));
+                //scents.add(new CommonScents(terrain[i][j],tex));
+            }
+        }
     }
     
     public TerrainLocation[][] getLocations(){
@@ -316,6 +328,12 @@ public class Environment {
     }
 
     public void onClockTick(int delta) {
+        for (TerrainLocation[] terrainrow : terrain) {
+            for (TerrainLocation block : terrainrow) {
+                block.onClockTick(delta);
+            }
+        }
+        
         int i = r.nextInt(100);
         if(i<2){
             i = r.nextInt(3);
@@ -325,8 +343,19 @@ public class Environment {
                 this.addAnt(AntType.BUILDER);
             }
         }
+
         for (Ant ant : ants) {
             ant.onClockTick(delta);
+            
+            if(ant.getOrigin().getTerrain() instanceof Leaf){
+                ant.setCarrying();
+            }
+            
+            if (ant.carryingFood){
+                alterScent(ant.getOrigin(),"food");
+            } else {
+                alterScent(ant.getOrigin(),"return");
+            }
         }
     }
 

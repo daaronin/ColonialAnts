@@ -6,6 +6,7 @@
 
 package colonialants;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import org.eclipse.swt.graphics.Point;
 
@@ -19,9 +20,10 @@ public class TerrainLocation extends Location{
     
     protected TerrainLocation[] neighbors = new TerrainLocation[8];
     HashMap<Direction, TerrainLocation> options = new HashMap<Direction, TerrainLocation>();
+    CommonScents scent = new CommonScents();
     
     private Terrain t;
-    
+   
     public static enum Direction {
 		NORTH(0), NORTHEAST(1), EAST(2),
 		SOUTHEAST(3), 
@@ -47,6 +49,14 @@ public class TerrainLocation extends Location{
         super(x,y);
     }
     
+    public void setScent(CommonScents scent){
+        this.scent = scent;
+    }
+    
+    public CommonScents getScent(){
+        return scent;
+    }
+    
      public Terrain getTerrain(){
         return t;
     }
@@ -68,7 +78,9 @@ public class TerrainLocation extends Location{
         return options;
     }
      
-    
+    void onClockTick(int delta) {
+        scent.onClockTick(delta);
+    }
     
         
      

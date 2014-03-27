@@ -28,6 +28,7 @@ public class Ant {
     Direction intendedBearing = Direction.NORTH;
     private String[] textures;
     private double ANT_SPEED = .08;
+    boolean carryingFood = false;
 
     private void randomWalk() {
     }
@@ -184,6 +185,10 @@ public class Ant {
         }
     }
     
+    public TerrainLocation getOrigin(){
+        return this.origin;
+    }
+    
     public String getTexture() {
 		String tex = textures[intendedBearing.value];
 		return tex;
@@ -195,6 +200,14 @@ public class Ant {
     
     public Rectangle getScreenPosition(){
         return position.getScreenLocaiton();
+    }
+    
+    public void setCarrying(){
+        carryingFood = true;
+    }
+    
+    public boolean getCarryingStatus(){
+        return this.carryingFood;
     }
 
 }
