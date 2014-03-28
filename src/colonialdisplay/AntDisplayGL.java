@@ -37,6 +37,7 @@ public class AntDisplayGL extends SkelLWJGL{
                 tmap.initSheet("src/colonialimages/spritesheethighres.png", "PNG");
 		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.25f,.5f,.25f,.125f));
                 tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.75f,.5f,.25f,.125f));
+                tmap.addSpriteLocation("brownleaf", new Rectangle2D.Float(0,.625f,.25f,.125f));
                 tmap.addSpriteLocation("redleaf", new Rectangle2D.Float(.25f,.625f,.25f,.125f));
                 tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0,.5f,.25f,.125f));
                 

@@ -206,8 +206,12 @@ public class Ant {
         carryingFood = true;
     }
     
+    public void stopCarrying(){
+        carryingFood = false;
+    }
+    
     public boolean getCarryingStatus(){
         return this.carryingFood;
-    }
+    }    
 
 }

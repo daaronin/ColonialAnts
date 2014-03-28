@@ -119,6 +119,8 @@ public class Environment {
                 Random r = new Random();
                 if(r.nextInt(100)<5){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
+                }else if(r.nextInt(8191)==1337){
+                    terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
                 }else{
                     terrain[i][j].setTerrain((Terrain) new Sand("sand"));
                 }
@@ -343,9 +345,9 @@ public class Environment {
         int i = r.nextInt(100);
         if(i<2){
             i = r.nextInt(3);
-            if(i==0){
+            if(i<3){
                 this.addAnt(AntType.GATHERER);
-            }else if(i==1){
+            }else if(i==133){                       //Killed all the buildersle
                 this.addAnt(AntType.BUILDER);
             }
         }
@@ -355,6 +357,9 @@ public class Environment {
             
             if(ant.getOrigin().getTerrain() instanceof Leaf){
                 ant.setCarrying();
+            }
+            if(ant.getOrigin().getTerrain() instanceof AntHill){
+                ant.stopCarrying();
             }
             
             if (ant.carryingFood){
