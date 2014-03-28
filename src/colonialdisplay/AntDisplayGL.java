@@ -33,8 +33,33 @@ public class AntDisplayGL extends SkelLWJGL{
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		tmap = new TextureMapper();
+                
+                tmap.initSheet("src/colonialimages/spritesheethighres.png", "PNG");
+		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.25f,.5f,.25f,.125f));
+                tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.75f,.5f,.25f,.125f));
+                tmap.addSpriteLocation("redleaf", new Rectangle2D.Float(.25f,.625f,.25f,.125f));
+                tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0,.5f,.25f,.125f));
+                
+                tmap.addSpriteLocation("antNorth", new Rectangle2D.Float(.25f,0,.25f,.125f));
+                tmap.addSpriteLocation("antNorthEast", new Rectangle2D.Float(.5f,0,.25f,.125f));
+                tmap.addSpriteLocation("antSouthEast", new Rectangle2D.Float(.25f,.125f,.25f,.125f));
+                tmap.addSpriteLocation("antSouth", new Rectangle2D.Float(0,.125f,.25f,.125f));
+                tmap.addSpriteLocation("antSouthWest", new Rectangle2D.Float(.5f,.125f,.25f,.125f));
+                tmap.addSpriteLocation("antEast", new Rectangle2D.Float(0,0,.25f,.125f));
+                tmap.addSpriteLocation("antWest", new Rectangle2D.Float(.75f,.125f,.25f,.125f));
+                tmap.addSpriteLocation("antNorthWest", new Rectangle2D.Float(.75f,0,.25f,.125f));
+                
+                tmap.addSpriteLocation("pheromoneReturn1", new Rectangle2D.Float(0,.375f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneReturn2", new Rectangle2D.Float(.25f,.375f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneReturn3", new Rectangle2D.Float(.5f,.375f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneReturn4", new Rectangle2D.Float(.75f,.375f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneFood1", new Rectangle2D.Float(0,.25f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneFood2", new Rectangle2D.Float(.25f,.25f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneFood3", new Rectangle2D.Float(.5f,.25f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneFood4", new Rectangle2D.Float(.75f,.25f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.75f,.75f,.25f,.125f));
 
-		tmap.initSheet("src/colonialimages/spritesheet2.png", "PNG");
+/*		tmap.initSheet("src/colonialimages/spritesheet2.png", "PNG");
 		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
                 tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f,.5f,.25f,.25f));
                 tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0,.5f,.25f,.25f));
@@ -51,7 +76,7 @@ public class AntDisplayGL extends SkelLWJGL{
                 tmap.addSpriteLocation("pheromoneReturn", new Rectangle2D.Float(.25f,.75f,.25f,.25f));
                 tmap.addSpriteLocation("pheromoneFood", new Rectangle2D.Float(0,.75f,.25f,.25f));
                 tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.5f,.75f,.25f,.25f));
-                                
+ */                               
                 GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S,
 				GL11.GL_REPEAT);
 

@@ -41,8 +41,14 @@ public class Environment {
                             "antSouthWest", 
                             "antWest", 
                             "antNorthWest",
-                            "pheromoneReturn",
-                            "pheromoneFood",
+                            "pheromoneReturn1",
+                            "pheromoneReturn2",
+                            "pheromoneReturn3",
+                            "pheromoneReturn4",
+                            "pheromoneFood1",
+                            "pheromoneFood2",
+                            "pheromoneFood3",
+                            "pheromoneFood4",
                             "pheromoneNone"
                           };
     

@@ -61,14 +61,10 @@ public class CommonScents {
     
     public void raiseReturnIntensity(){
        this.ReturnIntensity += 50;
-       if (FoodIntensity < ReturnIntensity){
-           setTexture("pheromoneReturn",9);
-       }
     }
     
     public void raiseFoodIntensity(){
-       this.FoodIntensity += 50;
-       setTexture("pheromoneFood",8);
+       this.FoodIntensity += 100;
     }
     
     public void lowerReturnIntensity(){
@@ -92,16 +88,28 @@ public class CommonScents {
     }
     
     public String getTexture() {
-        if (ReturnIntensity > FoodIntensity){
-		String tex = textures[9];
-		return tex;
-        } else if (FoodIntensity > ReturnIntensity){
-            String tex = textures[8];
-		return tex;
-        } else {
-            String tex = textures[10];
-		return tex;
+        String tex = textures[16];
+        if (ReturnIntensity <= 50 && ReturnIntensity > 0){
+            tex = textures[8];
+        } else if(ReturnIntensity <= 100 && ReturnIntensity > 50){
+            tex = textures[9];
+        }  else if(ReturnIntensity <= 150 && ReturnIntensity > 100){
+            tex = textures[10];
+        }  else if(ReturnIntensity > 150){
+            tex = textures[11];
         }
+        
+        if (FoodIntensity <= 50 && FoodIntensity > 0){
+            tex = textures[12];
+        } else if(FoodIntensity <= 100 && FoodIntensity > 50){
+            tex = textures[13];
+        }  else if(FoodIntensity <= 150 && FoodIntensity > 100){
+            tex = textures[14];
+        }  else if(FoodIntensity > 150){
+            tex = textures[15];
+        }
+        
+        return tex;
     }
 
     public void setTexture(String name, int type) {
