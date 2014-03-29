@@ -18,9 +18,9 @@ import org.eclipse.swt.graphics.Point;
 public class Environment {
     
     //Needs to be a multiple of 2 for now
-    private final int spaceSize = 10;
+    private final int spaceSize = 20;
     
-    private int dimension = 64;
+    private int dimension = 29;
     
     private TerrainLocation[][] terrain;
     
@@ -117,7 +117,7 @@ public class Environment {
                 
                 terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
-                if(r.nextInt(1000)<1){
+                if(r.nextInt(100)<5){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
                 }else if(r.nextInt(8191)==1337){
                     terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
@@ -203,14 +203,12 @@ public class Environment {
     }
     
     public void addAnt(AntType TYPE){
-        if(ants.size() < 50){
-            if(TYPE == AntType.GATHERER){
-                ants.add(new GatheringAnt(new Point(5,5), terrain[5][5], tex));
-            }else if(TYPE == AntType.BUILDER){
-                ants.add(new BuilderAnt(new Point(5,5), terrain[5][5], tex));
-            }else {
-                ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
-            }
+        if(TYPE == AntType.GATHERER){
+            ants.add(new GatheringAnt(new Point(5,5), terrain[5][5], tex));
+        }else if(TYPE == AntType.BUILDER){
+            ants.add(new BuilderAnt(new Point(5,5), terrain[5][5], tex));
+        }else {
+            ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
         }
     }
     
@@ -345,9 +343,9 @@ public class Environment {
         }
         
         int i = r.nextInt(100);
-        if(i<12){
+        if(i<2){
             i = r.nextInt(3);
-            if(true){
+            if(i<3){
                 this.addAnt(AntType.GATHERER);
             }else if(i==133){                       //Killed all the buildersle
                 this.addAnt(AntType.BUILDER);
