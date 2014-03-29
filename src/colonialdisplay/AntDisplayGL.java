@@ -13,8 +13,6 @@ import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Rectangle;
 import org.lwjgl.opengl.GL11;
 
@@ -186,15 +184,10 @@ public class AntDisplayGL extends SkelLWJGL{
 
 	@Override
 	protected void onClockTick(int delta) {
-        try {
-            Thread.sleep(100);
-            if (!animate)
-                return;
-            e.onClockTick(delta);
-            updateFPS(); // update FPS Counter
-        } catch (InterruptedException ex) {
-            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
-        }
+		if (!animate)
+			return;
+		e.onClockTick(delta);
+		updateFPS(); // update FPS Counter
 	}
 
 	@Override
@@ -212,14 +205,6 @@ public class AntDisplayGL extends SkelLWJGL{
     @Override
     protected void onSliderChange(AntType TYPE, int value) {
         
-    }
-
-    @Override
-    protected String setTitle() {
-        if(e != null){
-            return "Ant Colony: " + e.getTestAnts().size();
-        }
-        return "Ant Colony: ";
     }
     
 }

@@ -229,7 +229,7 @@ public abstract class SkelLWJGL {
 			System.exit(-1);
 		}
 		
-                shell.setText(setTitle());
+		shell.setText("Ant Colony:");
 		//shell.setSize(WIDTH, HEIGHT);
 		shell.open();
 		return shell;
@@ -274,6 +274,5 @@ public abstract class SkelLWJGL {
 	protected abstract void renderGL();	
 	protected abstract void resetGL();
         
-        protected abstract String setTitle();
         protected abstract void onSliderChange(AntType TYPE, int value);
 }
