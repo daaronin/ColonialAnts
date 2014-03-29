@@ -11,6 +11,9 @@ package colonialants;
  * @author George McDaid
  */
 public class Colony {
+    
+    int foodCount;
+    
     public enum ColLoc{
         TR, TL, BR, BL
     }
@@ -21,6 +24,7 @@ public class Colony {
     public Colony(){
         location = ColLoc.TL;
         dimension = 15;
+        foodCount = 0;
     }
     
     public ColLoc getLocation(){
@@ -29,5 +33,25 @@ public class Colony {
     
     public int getDimension(){
         return dimension;
+    }
+    
+    public void addFood(){
+        foodCount += 5;
+    }
+    
+    public void removeFood(){
+        foodCount -= 1;
+    }
+    
+    public void addFood(int amount){
+        foodCount += amount;
+    }
+    
+    public void removeFood(int amount){
+        foodCount -= amount;
+    }
+    
+    public int getFoodCont(){
+        return foodCount;
     }
 }

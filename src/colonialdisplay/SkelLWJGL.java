@@ -53,7 +53,7 @@ public abstract class SkelLWJGL {
         Scale scale;
 	Label label;
         Label label2;
-        
+        Label labelFood;
         /**
 	 * Get the accurate time system
 	 * 
@@ -217,6 +217,9 @@ public abstract class SkelLWJGL {
                 }
                 });
                 
+                labelFood = new Label(comp2, SWT.NONE);
+                labelFood.setText(updateFoodCount());
+                
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();
@@ -275,4 +278,5 @@ public abstract class SkelLWJGL {
 	protected abstract void resetGL();
         
         protected abstract void onSliderChange(AntType TYPE, int value);
+        protected abstract String updateFoodCount();
 }

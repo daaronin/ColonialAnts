@@ -206,5 +206,13 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void onSliderChange(AntType TYPE, int value) {
         
     }
+
+    @Override
+    protected String updateFoodCount() {
+        if(e == null || e.getColony() == null){
+            return "Food Gathered: 0";
+        }
+        return "Food Gathered: " + e.getColony().getFoodCont();
+    }
     
 }

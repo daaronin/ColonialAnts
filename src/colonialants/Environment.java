@@ -334,6 +334,10 @@ public class Environment {
     public int getSpaceSize(){
         return spaceSize;
     }
+    
+    public Colony getColony(){
+        return colony;
+    }
 
     public void onClockTick(int delta) {
         for (TerrainLocation[] terrainrow : terrain) {
@@ -360,6 +364,7 @@ public class Environment {
             }
             if(ant.getOrigin().getTerrain() instanceof AntHill){
                 ant.stopCarrying();
+                colony.addFood();
             }
             
             if (ant.carryingFood){

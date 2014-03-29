@@ -33,6 +33,8 @@ public class Ant {
     private void randomWalk() {
     }
 
+    
+
     public enum State{
         MOVING, IDLE
     }
@@ -138,6 +140,7 @@ public class Ant {
         if(isMoving()){
             
             //primMove();
+            //snapMove();
             advancedMove(delta);
             
             if(position.equalRectagle(destination.getScreenLocaiton())){
@@ -145,6 +148,14 @@ public class Ant {
                 state = State.IDLE;
             }
         }
+    }
+    
+    private void snapMove() {
+        Rectangle dest = destination.getScreenLocaiton();
+        Rectangle curr = position.getScreenLocaiton();
+        
+        curr.x = dest.x;
+        curr.y = dest.y;
     }
     
     public void advancedMove(int delta){
