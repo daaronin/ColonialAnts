@@ -137,8 +137,8 @@ public class Ant {
     public void walk(int delta){
         if(isMoving()){
             
-            //primMove();
-            advancedMove(delta);
+            snapMove();
+            //advancedMove(delta);
             
             if(position.equalRectagle(destination.getScreenLocaiton())){
                 origin = destination;
@@ -148,6 +148,9 @@ public class Ant {
     }
     
     public void advancedMove(int delta){
+        
+//        snapMove();
+        
         ANT_SPEED = .08+Math.random()*.05;
         Rectangle dest = destination.getScreenLocaiton();
         Rectangle curr = position.getScreenLocaiton();
@@ -162,6 +165,14 @@ public class Ant {
         curr.y += (int) (factor * (dest.y - curr.y));
         curr.x = Math.abs(curr.x - dest.x) < tol ? dest.x : curr.x;
         curr.y = Math.abs(curr.y - dest.y) < tol ? dest.y : curr.y;
+    }
+    
+    public void snapMove(){
+        Rectangle dest = destination.getScreenLocaiton();
+        Rectangle curr = position.getScreenLocaiton();
+        
+        curr.x = dest.x;
+        curr.y = dest.y;
     }
     
     public void primMove(){

@@ -14,6 +14,8 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public class CommonScents {
     
+    int SCENT_UNIT = 25;
+    
     public int ReturnIntensity = 0;
     public int FoodIntensity = 0;
     private String[] textures;
@@ -60,11 +62,11 @@ public class CommonScents {
     }
     
     public void raiseReturnIntensity(){
-       this.ReturnIntensity += 25;
+       this.ReturnIntensity += SCENT_UNIT;
     }
     
     public void raiseFoodIntensity(){
-       this.FoodIntensity += 25;
+       this.FoodIntensity += SCENT_UNIT;
     }
     
     public void lowerReturnIntensity(){
@@ -90,23 +92,23 @@ public class CommonScents {
     public String getTexture() {
         String tex = textures[16];
         if (ReturnIntensity > FoodIntensity){
-            if (ReturnIntensity <= 50 && ReturnIntensity > 0){
+            if (ReturnIntensity <= 2*SCENT_UNIT && ReturnIntensity > 0){
                 tex = textures[8];
-            } else if(ReturnIntensity <= 100 && ReturnIntensity > 50){
+            } else if(ReturnIntensity <= 4*SCENT_UNIT && ReturnIntensity > 2*SCENT_UNIT){
                 tex = textures[9];
-            }  else if(ReturnIntensity <= 150 && ReturnIntensity > 100){
+            }  else if(ReturnIntensity <= 6*SCENT_UNIT && ReturnIntensity > 4*SCENT_UNIT){
                 tex = textures[10];
-            }  else if(ReturnIntensity > 150){
+            }  else if(ReturnIntensity > 6*SCENT_UNIT){
                 tex = textures[11];
             }
         }else {
-            if (FoodIntensity <= 50 && FoodIntensity > 0){
+            if (FoodIntensity <= 2*SCENT_UNIT && FoodIntensity > 0){
                 tex = textures[12];
-            } else if(FoodIntensity <= 100 && FoodIntensity > 50){
+            } else if(FoodIntensity <= 4*SCENT_UNIT && FoodIntensity > 2*SCENT_UNIT){
                 tex = textures[13];
-            }  else if(FoodIntensity <= 150 && FoodIntensity > 100){
+            }  else if(FoodIntensity <= 6*SCENT_UNIT && FoodIntensity > 4*SCENT_UNIT){
                 tex = textures[14];
-            }  else if(FoodIntensity > 150){
+            }  else if(FoodIntensity > 6*SCENT_UNIT){
                 tex = textures[15];
             }
         }

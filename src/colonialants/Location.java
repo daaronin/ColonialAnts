@@ -15,7 +15,7 @@ import org.eclipse.swt.graphics.Rectangle;
  */
 public class Location {
 
-    public static final int LOCATION_DIMENSION = 20;
+    public static final int LOCATION_DIMENSION = 10;
        
     protected Point gridLocation;
     

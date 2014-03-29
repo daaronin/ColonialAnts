@@ -18,9 +18,9 @@ import org.eclipse.swt.graphics.Point;
 public class Environment {
     
     //Needs to be a multiple of 2 for now
-    private final int spaceSize = 20;
+    private final int spaceSize = 10;
     
-    private int dimension = 29;
+    private int dimension = 64;
     
     private TerrainLocation[][] terrain;
     
@@ -117,7 +117,7 @@ public class Environment {
                 
                 terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
-                if(r.nextInt(1000)<6){
+                if(r.nextInt(1000)<1){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
                 }else if(r.nextInt(8191)==1337){
                     terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
@@ -345,9 +345,9 @@ public class Environment {
         }
         
         int i = r.nextInt(100);
-        if(i<2){
+        if(i<12){
             i = r.nextInt(3);
-            if(i<3){
+            if(true){
                 this.addAnt(AntType.GATHERER);
             }else if(i==133){                       //Killed all the buildersle
                 this.addAnt(AntType.BUILDER);
