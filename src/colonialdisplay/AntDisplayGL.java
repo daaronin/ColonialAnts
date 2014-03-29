@@ -7,7 +7,6 @@
 package colonialdisplay;
 
 import colonialants.Ant;
-import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;

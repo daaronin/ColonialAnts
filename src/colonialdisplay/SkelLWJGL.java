@@ -29,8 +29,8 @@ public abstract class SkelLWJGL {
 
 	// SVGA 800x600
 	// XVGA 1024x768
-	public static final int SCREEN_WIDTH = 800, 
-			SCREEN_HEIGHT = 800;
+	public static final int SCREEN_WIDTH = 866, 
+			SCREEN_HEIGHT = 744;
 	
 	/* time at last frame */
 	long lastFrame;
@@ -152,7 +152,7 @@ public abstract class SkelLWJGL {
 
 		shell = new Shell(display,SWT.SHELL_TRIM & (~SWT.RESIZE));
 		shell.setLayout(new FormLayout());
-		shell.setSize(SCREEN_WIDTH, SCREEN_WIDTH);
+		shell.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		shell.setText("Ant Colony: ");
 
 		// Create a composite
