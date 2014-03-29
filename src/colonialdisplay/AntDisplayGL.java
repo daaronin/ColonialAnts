@@ -188,6 +188,7 @@ public class AntDisplayGL extends SkelLWJGL{
 			return;
 		e.onClockTick(delta);
 		updateFPS(); // update FPS Counter
+                updateFoodCount();
 	}
 
 	@Override
@@ -208,11 +209,8 @@ public class AntDisplayGL extends SkelLWJGL{
     }
 
     @Override
-    protected String updateFoodCount() {
-        if(e == null || e.getColony() == null){
-            return "Food Gathered: 0";
-        }
-        return "Food Gathered: " + e.getColony().getFoodCont();
+    protected void updateFoodCount() {
+        labelFood.setText("Gathered Food: " + e.getColony().getFoodCont());
     }
     
 }

@@ -20,7 +20,7 @@ public class Environment {
     //Needs to be a multiple of 2 for now
     private final int spaceSize = 20;
     
-    private int dimension = 29;
+    private int dimension = 32;
     
     private TerrainLocation[][] terrain;
     
@@ -363,8 +363,10 @@ public class Environment {
                 ant.setCarrying();
             }
             if(ant.getOrigin().getTerrain() instanceof AntHill){
-                ant.stopCarrying();
-                colony.addFood();
+                if(ant.carryingFood){
+                    ant.stopCarrying();
+                    colony.addFood(1);
+                }
             }
             
             if (ant.carryingFood){

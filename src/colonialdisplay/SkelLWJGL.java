@@ -218,7 +218,7 @@ public abstract class SkelLWJGL {
                 });
                 
                 labelFood = new Label(comp2, SWT.NONE);
-                labelFood.setText(updateFoodCount());
+                labelFood.setText("Gathered Food: ");
                 
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
@@ -278,5 +278,5 @@ public abstract class SkelLWJGL {
 	protected abstract void resetGL();
         
         protected abstract void onSliderChange(AntType TYPE, int value);
-        protected abstract String updateFoodCount();
+        protected abstract void updateFoodCount();
 }
