@@ -111,7 +111,7 @@ public class Environment {
                 
                 terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
-                if(r.nextInt(100)<5){
+                if(r.nextInt(1000)<6){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
                 }else{
                     terrain[i][j].setTerrain((Terrain) new Sand("sand"));
