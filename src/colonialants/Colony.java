@@ -14,6 +14,7 @@ public class Colony {
     
     int foodCount;
     int antCount;
+    int leafCount;
     
     public enum ColLoc{
         TR, TL, BR, BL
@@ -62,6 +63,18 @@ public class Colony {
     
     public int getAntCount(){
         return antCount;
+    }
+    
+    public void addLeafCount(){
+        leafCount++;
+    }
+    
+    public int getLeafCount(){
+        return leafCount;
+    }
+    
+    public void lowerLeafCount(){
+        leafCount--;
     }
 
 }

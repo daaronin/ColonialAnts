@@ -215,7 +215,10 @@ public class Ant {
     }
     
     public void setCarrying(){
-        carryingFood = true;
+        if (!carryingFood){
+            carryingFood = true;
+            getOrigin().takeResources(1);
+        }
     }
     
     public void stopCarrying(){

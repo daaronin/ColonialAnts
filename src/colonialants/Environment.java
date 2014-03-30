@@ -31,6 +31,7 @@ public class Environment {
     private int population;
     Random r = new Random();
     double PRODUCTION_RATE = .1;
+    private int leavestoset = 0;
     
     private String[] tex = { 
                             "antNorth", 
@@ -117,10 +118,14 @@ public class Environment {
                 
                 terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
-                if(r.nextInt(100)<5){
+                if(r.nextInt(100)<3){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
+                    terrain[i][j].setResources(10);
+                    getColony().addLeafCount();
                 }else if(r.nextInt(8191)==1337){
                     terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
+                    terrain[i][j].setResources(100);
+                    getColony().addLeafCount();
                 }else{
                     terrain[i][j].setTerrain((Terrain) new Sand("sand"));
                 }
@@ -338,11 +343,29 @@ public class Environment {
     public Colony getColony(){
         return colony;
     }
+    
+    public void createNewLeaves(TerrainLocation block){
+        if (block.getResources() < 1 && block.getTerrain() instanceof Leaf){
+            block.setTerrain((Terrain) new Sand("sand"));
+            getColony().lowerLeafCount();
+            leavestoset++;
+        }
+        if(leavestoset > 0){
+            int i = r.nextInt(500000);
+            if (block.getTerrain() instanceof Sand && i == 1){
+                block.setTerrain((Terrain) new Leaf("leaf"));
+                block.setResources(10);
+                getColony().addLeafCount();
+                leavestoset--;
+            }
+        }
+    }
 
     public void onClockTick(int delta) {
         for (TerrainLocation[] terrainrow : terrain) {
             for (TerrainLocation block : terrainrow) {
                 block.onClockTick(delta);
+                createNewLeaves(block);
             }
         }
         

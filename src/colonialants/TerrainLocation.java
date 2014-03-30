@@ -6,8 +6,8 @@
 
 package colonialants;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import org.eclipse.swt.graphics.Point;
 
 
@@ -23,6 +23,7 @@ public class TerrainLocation extends Location{
     CommonScents scent = new CommonScents();
     
     private Terrain t;
+    private int resources = 0;
    
     public static enum Direction {
 		NORTH(0), NORTHEAST(1), EAST(2),
@@ -82,6 +83,17 @@ public class TerrainLocation extends Location{
         scent.onClockTick(delta);
     }
     
+    public void setResources(int resources){
+        this.resources = resources;
+    }
+    
+    public void takeResources(int amount){
+        this.resources-=amount;
+    }
+    
+    public int getResources(){
+        return this.resources;
+    }
         
      
      /**

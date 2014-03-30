@@ -3,8 +3,6 @@ package colonialdisplay;
 
 import colonialants.Environment.AntType;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -57,6 +55,7 @@ public abstract class SkelLWJGL {
         Label label2;
         Label labelFood;
         Label labelAnts;
+        Label labelLeaves;
         /**
 	 * Get the accurate time system
 	 * 
@@ -162,11 +161,6 @@ public abstract class SkelLWJGL {
 		comp = new Composite(shell, SWT.BORDER);
 		comp.setLayout(new FillLayout());
                 
-                Device device = Display.getCurrent();
-                Color red = new Color (device, 255, 0, 0);
-                comp.setBackground(red);
-                red.dispose();
-                
                 comp2 = new Composite(shell, SWT.BORDER);
                 FillLayout fillLayout = new FillLayout();
                 fillLayout.type = SWT.VERTICAL;
@@ -231,6 +225,9 @@ public abstract class SkelLWJGL {
                 labelAnts = new Label(comp2, SWT.NONE);
                 labelAnts.setText("Ants Present: ");
                 
+                labelLeaves = new Label(comp2, SWT.NONE);
+                labelLeaves.setText("Leaves Present: ");
+                
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();
@@ -291,4 +288,5 @@ public abstract class SkelLWJGL {
         protected abstract void onSliderChange(AntType TYPE, int value);
         protected abstract void updateFoodCount();
         protected abstract void updateAntCount();
+        protected abstract void updateLeafCount();
 }
