@@ -351,6 +351,7 @@ public class Environment {
             i = r.nextInt(3);
             if(i<3){
                 this.addAnt(AntType.GATHERER);
+                colony.addAntCount();
             }else if(i==133){                       //Killed all the buildersle
                 this.addAnt(AntType.BUILDER);
             }

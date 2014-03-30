@@ -13,6 +13,7 @@ package colonialants;
 public class Colony {
     
     int foodCount;
+    int antCount;
     
     public enum ColLoc{
         TR, TL, BR, BL
@@ -51,7 +52,16 @@ public class Colony {
         foodCount -= amount;
     }
     
-    public int getFoodCont(){
+    public int getFoodCount(){
         return foodCount;
     }
+    
+    public void addAntCount(){
+        antCount++;
+    }
+    
+    public int getAntCount(){
+        return antCount;
+    }
+
 }

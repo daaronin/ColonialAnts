@@ -3,6 +3,8 @@ package colonialdisplay;
 
 import colonialants.Environment.AntType;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -29,7 +31,7 @@ public abstract class SkelLWJGL {
 
 	// SVGA 800x600
 	// XVGA 1024x768
-	public static final int SCREEN_WIDTH = 866, 
+	public static final int SCREEN_WIDTH = 865, 
 			SCREEN_HEIGHT = 744;
 	
 	/* time at last frame */
@@ -54,6 +56,7 @@ public abstract class SkelLWJGL {
 	Label label;
         Label label2;
         Label labelFood;
+        Label labelAnts;
         /**
 	 * Get the accurate time system
 	 * 
@@ -159,6 +162,11 @@ public abstract class SkelLWJGL {
 		comp = new Composite(shell, SWT.BORDER);
 		comp.setLayout(new FillLayout());
                 
+                Device device = Display.getCurrent();
+                Color red = new Color (device, 255, 0, 0);
+                comp.setBackground(red);
+                red.dispose();
+                
                 comp2 = new Composite(shell, SWT.BORDER);
                 FillLayout fillLayout = new FillLayout();
                 fillLayout.type = SWT.VERTICAL;
@@ -220,6 +228,9 @@ public abstract class SkelLWJGL {
                 labelFood = new Label(comp2, SWT.NONE);
                 labelFood.setText("Gathered Food: ");
                 
+                labelAnts = new Label(comp2, SWT.NONE);
+                labelAnts.setText("Ants Present: ");
+                
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();
@@ -279,4 +290,5 @@ public abstract class SkelLWJGL {
         
         protected abstract void onSliderChange(AntType TYPE, int value);
         protected abstract void updateFoodCount();
+        protected abstract void updateAntCount();
 }

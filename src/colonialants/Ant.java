@@ -29,6 +29,7 @@ public class Ant {
     private String[] textures;
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
+    private int numOfAnts = 0;
 
     private void randomWalk() {
     }
@@ -223,6 +224,5 @@ public class Ant {
     
     public boolean getCarryingStatus(){
         return this.carryingFood;
-    }    
-
+    }
 }
