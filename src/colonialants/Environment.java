@@ -343,13 +343,14 @@ public class Environment {
     public void snapMovementOn(int delta){
         snapMovement = true;
         //O(delta);
-        //CommonScents.EVAP_RATE = 3 * delta/55;
+        CommonScents.setEVAP(3 * delta/55);
         //3 * delta/55;
     }
     
     public void snapMovementOff(int delta){
         snapMovement = false;
         //O(delta);
+        CommonScents.setEVAP(2 * delta/17);
         //CommonScents.EVAP_RATE = 2 * delta/17;
     }
     
