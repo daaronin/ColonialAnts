@@ -2,7 +2,6 @@ package colonialdisplay;
 
 
 import colonialants.Environment.AntType;
-import colonialdisplay.AntDisplayGL.MoveAlg;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -278,8 +277,7 @@ public abstract class SkelLWJGL {
 			@Override
 			public void handleEvent(Event event) {
 				snapMovement = !snapMovement;
-                                movementChange(snapMovement ? MoveAlg.REG : MoveAlg.SNAP);
-				item1.setText(snapMovement ? "Advanced" : "Snap");
+                                item1.setText(snapMovement ? "Advanced" : "Snap");
 			}
 			
 		});
@@ -305,5 +303,4 @@ public abstract class SkelLWJGL {
         protected abstract void updateFoodCount();
         protected abstract void updateAntCount();
         protected abstract void updateLeafCount();
-        protected abstract void movementChange(MoveAlg movealg);
 }

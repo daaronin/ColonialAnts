@@ -6,7 +6,6 @@
 
 package colonialants;
 
-import colonialdisplay.AntDisplayGL.MoveAlg;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
@@ -19,8 +18,6 @@ public class CommonScents {
     public int FoodIntensity = 0;
     private String[] textures;
     public static int EVAP_RATE = 1;
-    
-    MoveAlg movealg;
     
     public CommonScents(){
         this.ReturnIntensity = 0;
@@ -89,16 +86,6 @@ public class CommonScents {
     
     public void resetFoodIntensity(){
        this.FoodIntensity = 0;
-    }
-    
-    public void toggleEvapRate(MoveAlg movealg){
-        if (movealg == MoveAlg.SNAP){
-            EVAP_RATE = 3;
-        } else if (movealg == MoveAlg.REG){
-            EVAP_RATE = 1;
-        } else {
-            EVAP_RATE = 0;
-        }
     }
     
     public void alterScent(TerrainLocation location, String type, int delta){

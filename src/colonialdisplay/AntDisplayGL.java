@@ -27,12 +27,6 @@ public class AntDisplayGL extends SkelLWJGL{
     Environment e;
     private TextureMapper tmap = null;
     
-    public enum MoveAlg{
-        SNAP, REG
-    }
-    
-    MoveAlg movealg;
-    
     private void initTextures() {
 
 		// enable alpha blending
@@ -243,10 +237,6 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void updateLeafCount() {
         labelLeaves.setText("Leaves Present: " + e.getColony().getLeafCount());
     }
-    
-    @Override
-    protected void movementChange(MoveAlg movealg) {
-        this.movealg = movealg;
-    }
+   
     
 }

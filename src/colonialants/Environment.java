@@ -395,10 +395,14 @@ public class Environment {
             if(ant.getOrigin().getTerrain() instanceof Leaf){
                 ant.setCarrying();
             }
-            if(ant.getOrigin().getTerrain() instanceof AntHill){
-                if(ant.carryingFood){
-                    ant.stopCarrying();
-                    colony.addFood(1);
+            
+            if(ant instanceof GatheringAnt){
+            
+                if(ant.getOrigin().getTerrain() instanceof AntHill){
+                    if(ant.carryingFood){
+                        ant.stopCarrying();
+                        colony.addFood(1);
+                    }
                 }
             }
             if(ant.state == State.IDLE){
