@@ -21,7 +21,7 @@ public class BuilderAnt extends Ant{
     }
     
     @Override
-    public void changeDestination(){
+    public void changeDestination(int delta){
         HashMap<TerrainLocation.Direction,TerrainLocation> list = origin.getNeighbors();
         HashMap<Integer, TerrainLocation.Direction> choices = new HashMap<Integer, TerrainLocation.Direction>();
         Iterator it = list.entrySet().iterator();

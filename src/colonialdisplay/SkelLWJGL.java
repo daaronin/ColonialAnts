@@ -2,6 +2,7 @@ package colonialdisplay;
 
 
 import colonialants.Environment.AntType;
+import colonialdisplay.AntDisplayGL.MoveAlg;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -26,6 +27,7 @@ import org.lwjgl.opengl.GLContext;
 public abstract class SkelLWJGL {
 	/* animation indicator for menu selector */
 	boolean animate = false;
+        boolean snapMovement = false;
 
 	// SVGA 800x600
 	// XVGA 1024x768
@@ -267,10 +269,24 @@ public abstract class SkelLWJGL {
 			}
 			
 		});
+                
+               final MenuItem item1 = new MenuItem( menu, SWT.PUSH);
+
+		item1.setText(snapMovement ? "Advanced" : "Snap");
 		
-		MenuItem item1 = new MenuItem(menu, SWT.PUSH);
-		item1.setText("Exit");
 		item1.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event event) {
+				snapMovement = !snapMovement;
+                                movementChange(snapMovement ? MoveAlg.REG : MoveAlg.SNAP);
+				item1.setText(snapMovement ? "Advanced" : "Snap");
+			}
+			
+		});
+		
+		MenuItem item2 = new MenuItem(menu, SWT.PUSH);
+		item2.setText("Exit");
+		item2.addListener(SWT.Selection, new Listener(){
 			@Override
 			public void handleEvent(Event event) {
 				shell.dispose();
@@ -289,4 +305,5 @@ public abstract class SkelLWJGL {
         protected abstract void updateFoodCount();
         protected abstract void updateAntCount();
         protected abstract void updateLeafCount();
+        protected abstract void movementChange(MoveAlg movealg);
 }

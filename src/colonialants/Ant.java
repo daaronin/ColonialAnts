@@ -30,6 +30,7 @@ public class Ant {
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
     private int numOfAnts = 0;
+    private int lifespan = 1000;
 
     private void randomWalk() {
     }
@@ -44,11 +45,13 @@ public class Ant {
     
     public Ant(){
         this.state = State.IDLE;
+        this.lifespan = lifespan;
     }
     
     public Ant(Point p){
         position = new Location(p);
         this.state = State.IDLE;
+        this.lifespan = lifespan;
     }
     
     public Ant(Point p, TerrainLocation t, String[] tex){
@@ -56,26 +59,28 @@ public class Ant {
         this.state = State.IDLE;
         origin = t;
         textures = tex;
+        this.lifespan = lifespan;
     }
     
     public Ant(Point p, int size){
         position = new Location(p, size);
         this.state = State.IDLE;
+        this.lifespan = lifespan;
     }
     
     public Rectangle getLocation(){
-        return position.getScreenLocaiton();
+        return position.getScreenLocation();
     }
     
-    void onClockTick(int delta) {
-        update(delta);
+    void onClockTick(int delta, boolean snapMovement) {
+        update(delta, snapMovement);
     }
     
-    public void update(int delta){
+    public void update(int delta, boolean snapMovement){
          //Ant has to stop to think
         if (!isMoving()){
                 // Ant contemplates a move
-                changeDestination();
+                changeDestination(delta);
                 // Turns in the direction to move;
                 // The turn can be made linear
                 //setBearing(intendedBearing);
@@ -83,7 +88,7 @@ public class Ant {
         if (isMoving()){
                 // Ant with a purpose
                 //snapMove(getScreenPosition());
-                walk(delta);
+                walk(delta, snapMovement);
         }
          
     }   
@@ -114,7 +119,7 @@ public class Ant {
     }
     
     
-    public void changeDestination(){
+    public void changeDestination(int delta){
         HashMap<Direction,TerrainLocation> list = origin.getNeighbors();
         HashMap<Integer, Direction> choices = new HashMap<Integer, Direction>();
         Iterator it = list.entrySet().iterator();
@@ -137,14 +142,15 @@ public class Ant {
         
     }
     
-    public void walk(int delta){
+    public void walk(int delta, boolean snapMovement){
         if(isMoving()){
-            
             //primMove();
-            //snapMove();
-            advancedMove(delta);
-            
-            if(position.equalRectagle(destination.getScreenLocaiton())){
+            if(snapMovement){
+                snapMove();
+            }else{
+                advancedMove(delta);
+            }    
+            if(position.equalRectangle(destination.getScreenLocation())){
                 origin = destination;
                 state = State.IDLE;
             }
@@ -152,8 +158,8 @@ public class Ant {
     }
     
     private void snapMove() {
-        Rectangle dest = destination.getScreenLocaiton();
-        Rectangle curr = position.getScreenLocaiton();
+        Rectangle dest = destination.getScreenLocation();
+        Rectangle curr = position.getScreenLocation();
         
         curr.x = dest.x;
         curr.y = dest.y;
@@ -161,8 +167,8 @@ public class Ant {
     
     public void advancedMove(int delta){
         ANT_SPEED = .08+Math.random()*.05;
-        Rectangle dest = destination.getScreenLocaiton();
-        Rectangle curr = position.getScreenLocaiton();
+        Rectangle dest = destination.getScreenLocation();
+        Rectangle curr = position.getScreenLocation();
         int tol = (int)(Math.sqrt(dest.width *dest.width + dest.height * dest.height))/8;
         double deltaDistance = ANT_SPEED * (double) delta;
 
@@ -177,8 +183,8 @@ public class Ant {
     }
     
     public void primMove(){
-        int x = destination.getX() - position.getScreenLocaiton().x;
-        int y = destination.getY() - position.getScreenLocaiton().y;
+        int x = destination.getX() - position.getScreenLocation().x;
+        int y = destination.getY() - position.getScreenLocation().y;
 
         if(x!=0){
             if(x>0){
@@ -211,7 +217,7 @@ public class Ant {
     }
     
     public Rectangle getScreenPosition(){
-        return position.getScreenLocaiton();
+        return position.getScreenLocation();
     }
     
     public void setCarrying(){
@@ -227,5 +233,16 @@ public class Ant {
     
     public boolean getCarryingStatus(){
         return this.carryingFood;
+    }
+    
+    public void setLifeSpan(int lifespan){
+        this.lifespan = lifespan;
+    }
+    
+    public void lowerLifeSpan(int amount){
+        lifespan -= amount;
+        if (lifespan <= 0){
+            System.out.println("An Ant Died!!");
+        }
     }
 }

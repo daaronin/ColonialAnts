@@ -12,7 +12,10 @@ import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Rectangle;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -23,6 +26,12 @@ public class AntDisplayGL extends SkelLWJGL{
 
     Environment e;
     private TextureMapper tmap = null;
+    
+    public enum MoveAlg{
+        SNAP, REG
+    }
+    
+    MoveAlg movealg;
     
     private void initTextures() {
 
@@ -82,7 +91,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
-    
+       
     @Override
     protected void initGL() {
         Rectangle bounds = canvas.getClientArea();
@@ -126,13 +135,13 @@ public class AntDisplayGL extends SkelLWJGL{
             for (TerrainLocation[] locations : gridlocations) {
                 for (TerrainLocation location : locations) {
                     String texture = location.getTerrain().getTexture();
-                    Rectangle bounds = location.getScreenLocaiton();
+                    Rectangle bounds = location.getScreenLocation();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                     tmap.getSheetID());
                     drawTile(bounds, tmap.getSpriteLocation(texture));
                     
                     String r = location.getScent().getTexture();
-                    Rectangle scentbounds = location.getScreenLocaiton();
+                    Rectangle scentbounds = location.getScreenLocation();
                     GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                     tmap.getSheetID());
 
@@ -183,8 +192,19 @@ public class AntDisplayGL extends SkelLWJGL{
 
 	@Override
 	protected void onClockTick(int delta) {
+            System.out.println(delta);
 		if (!animate)
 			return;
+                if (snapMovement){
+                   e.snapMovementOn();
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }else{
+                   e.snapMovementOff();
+                }
 		e.onClockTick(delta);
 		updateFPS(); // update FPS Counter
                 updateFoodCount();
@@ -222,6 +242,11 @@ public class AntDisplayGL extends SkelLWJGL{
     @Override
     protected void updateLeafCount() {
         labelLeaves.setText("Leaves Present: " + e.getColony().getLeafCount());
+    }
+    
+    @Override
+    protected void movementChange(MoveAlg movealg) {
+        this.movealg = movealg;
     }
     
 }

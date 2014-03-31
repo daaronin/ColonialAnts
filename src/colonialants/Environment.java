@@ -5,10 +5,13 @@
 
 package colonialants;
 
+import colonialants.Ant.State;
 import colonialants.Colony.ColLoc;
 import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
 
 /**
@@ -32,6 +35,7 @@ public class Environment {
     Random r = new Random();
     double PRODUCTION_RATE = .1;
     private int leavestoset = 0;
+    private boolean snapMovement = false;
     
     private String[] tex = { 
                             "antNorth", 
@@ -221,15 +225,6 @@ public class Environment {
         return ants;
     }
     
-    public void alterScent(TerrainLocation location, String type){
-        //int block = (location.getX() / 20) + dimension * (location.getY() / 20);
-        if ("return".equals(type)) {
-            location.getScent().raiseReturnIntensity();
-        } else if ("food".equals(type)){
-            location.getScent().raiseFoodIntensity();
-        }
-    }
-    
     public void initScents(){
         for (int i = 0; i < dimension; i++){
             for (int j = 0; j < dimension; j++){
@@ -344,6 +339,20 @@ public class Environment {
         return colony;
     }
     
+    public void snapMovementOn(){
+        snapMovement = true;
+        CommonScents.EVAP_RATE = 9;
+    }
+    
+    public void snapMovementOff(){
+        snapMovement = false;
+        CommonScents.EVAP_RATE = 1;
+    }
+    
+    public boolean getSnapMovement(){
+        return snapMovement;
+    }
+    
     public void createNewLeaves(TerrainLocation block){
         if (block.getResources() < 1 && block.getTerrain() instanceof Leaf){
             block.setTerrain((Terrain) new Sand("sand"));
@@ -375,13 +384,13 @@ public class Environment {
             if(i<3){
                 this.addAnt(AntType.GATHERER);
                 colony.addAntCount();
-            }else if(i==133){                       //Killed all the buildersle
+            }else if(i==133){                       //Killed all the builders
                 this.addAnt(AntType.BUILDER);
             }
         }
 
         for (Ant ant : ants) {
-            ant.onClockTick(delta);
+            ant.onClockTick(delta, snapMovement);
             
             if(ant.getOrigin().getTerrain() instanceof Leaf){
                 ant.setCarrying();
@@ -392,13 +401,13 @@ public class Environment {
                     colony.addFood(1);
                 }
             }
-            
-            if (ant.carryingFood){
-                alterScent(ant.getOrigin(),"food");
-            } else {
-                alterScent(ant.getOrigin(),"return");
+            if(ant.state == State.IDLE){
+                if (ant.carryingFood){
+                    ant.getOrigin().getScent().alterScent(ant.getOrigin(),"food", delta);
+                } else {
+                    ant.getOrigin().getScent().alterScent(ant.getOrigin(),"return", delta);
+                }
             }
         }
     }
-
 }

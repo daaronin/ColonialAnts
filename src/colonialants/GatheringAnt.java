@@ -21,7 +21,7 @@ public class GatheringAnt extends Ant{
     }
     
     @Override
-    public void changeDestination(){
+    public void changeDestination(int delta){
         HashMap<TerrainLocation.Direction,TerrainLocation> list = origin.getNeighbors();
         HashMap<Integer, TerrainLocation.Direction> choices = new HashMap<Integer, TerrainLocation.Direction>();
         HashMap<Integer, Double> probs = new HashMap<Integer, Double>();
@@ -108,6 +108,7 @@ public class GatheringAnt extends Ant{
             intendedBearing = choices.get(choice);
             destination = list.get(intendedBearing);
             state = State.MOVING;
+            lowerLifeSpan(1);
         }
     }
     

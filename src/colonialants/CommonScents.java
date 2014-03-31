@@ -6,6 +6,7 @@
 
 package colonialants;
 
+import colonialdisplay.AntDisplayGL.MoveAlg;
 import org.eclipse.swt.graphics.Rectangle;
 
 /**
@@ -17,7 +18,10 @@ public class CommonScents {
     public int ReturnIntensity = 0;
     public int FoodIntensity = 0;
     private String[] textures;
-       
+    public static int EVAP_RATE = 1;
+    
+    MoveAlg movealg;
+    
     public CommonScents(){
         this.ReturnIntensity = 0;
         this.FoodIntensity = 0;
@@ -39,8 +43,8 @@ public class CommonScents {
     }
     
     public void update(int delta){
-        lowerFoodIntensity();
-        lowerReturnIntensity();
+        lowerFoodIntensity(delta);
+        lowerReturnIntensity(delta);
     }
     
     public int getReturnIntensity(){
@@ -60,22 +64,22 @@ public class CommonScents {
     }
     
     public void raiseReturnIntensity(){
-       this.ReturnIntensity += 25;
+       this.ReturnIntensity += 50;
     }
     
     public void raiseFoodIntensity(){
-       this.FoodIntensity += 25;
+       this.FoodIntensity += 50;
     }
     
-    public void lowerReturnIntensity(){
+    public void lowerReturnIntensity(int delta){
        if (this.ReturnIntensity > 0){
-            this.ReturnIntensity--;
+            this.ReturnIntensity-= EVAP_RATE;
        }
     }
     
-    public void lowerFoodIntensity(){
+    public void lowerFoodIntensity(int delta){
        if (this.FoodIntensity > 0){
-            this.FoodIntensity--;
+            this.FoodIntensity-= EVAP_RATE;
        }
     }
     
@@ -85,6 +89,25 @@ public class CommonScents {
     
     public void resetFoodIntensity(){
        this.FoodIntensity = 0;
+    }
+    
+    public void toggleEvapRate(MoveAlg movealg){
+        if (movealg == MoveAlg.SNAP){
+            EVAP_RATE = 3;
+        } else if (movealg == MoveAlg.REG){
+            EVAP_RATE = 1;
+        } else {
+            EVAP_RATE = 0;
+        }
+    }
+    
+    public void alterScent(TerrainLocation location, String type, int delta){
+        //int block = (location.getX() / 20) + dimension * (location.getY() / 20);
+        if ("return".equals(type)) {
+            location.getScent().raiseReturnIntensity();
+        } else if ("food".equals(type)){
+            location.getScent().raiseFoodIntensity();
+        }
     }
     
     public String getTexture() {

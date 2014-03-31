@@ -72,7 +72,7 @@ public class Location {
         pixelLocation.y--;
     }
     
-    public Rectangle getScreenLocaiton(){
+    public Rectangle getScreenLocation(){
         return pixelLocation;
     }
     
@@ -80,7 +80,7 @@ public class Location {
         return gridLocation;
     }
     
-    public boolean equalRectagle(Rectangle r){     
+    public boolean equalRectangle(Rectangle r){     
          return (pixelLocation.x == r.x && pixelLocation.y == r.y);
     }
 
