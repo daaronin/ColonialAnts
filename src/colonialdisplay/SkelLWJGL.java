@@ -90,7 +90,7 @@ public abstract class SkelLWJGL {
 	
 	public void updateFPS(){
 		if (getTime() - lastFPS > 1000){
-			shell.setText("Ant Colony: " + getDelta());
+			shell.setText("Ant Colony: D: " + getDelta() + " | FPS: " + fps);
 			fps = 0;
 			lastFPS += 1000;
 		}
