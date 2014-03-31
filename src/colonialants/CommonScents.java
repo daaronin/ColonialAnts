@@ -18,6 +18,7 @@ public class CommonScents {
     public int FoodIntensity = 0;
     private String[] textures;
     public static int EVAP_RATE = 1;
+    public static int LAY_RATE = 400;
     
     public CommonScents(){
         this.ReturnIntensity = 0;
@@ -61,11 +62,11 @@ public class CommonScents {
     }
     
     public void raiseReturnIntensity(){
-       this.ReturnIntensity += 50;
+       this.ReturnIntensity += LAY_RATE;
     }
     
     public void raiseFoodIntensity(){
-       this.FoodIntensity += 50;
+       this.FoodIntensity += LAY_RATE;
     }
     
     public void lowerReturnIntensity(int delta){

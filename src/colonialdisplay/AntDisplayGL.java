@@ -186,18 +186,17 @@ public class AntDisplayGL extends SkelLWJGL{
 
 	@Override
 	protected void onClockTick(int delta) {
-            System.out.println(delta);
 		if (!animate)
 			return;
                 if (snapMovement){
-                   e.snapMovementOn();
+                   e.snapMovementOn(delta);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }else{
-                   e.snapMovementOff();
+                   e.snapMovementOff(delta);
                 }
 		e.onClockTick(delta);
 		updateFPS(); // update FPS Counter
@@ -225,7 +224,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
     @Override
     protected void updateFoodCount() {
-        labelFood.setText("Gathered Food: " + e.getColony().getFoodCount());
+        labelFood.setText("Resources Gathered: " + e.getColony().getFoodCount());
     }
     
     @Override

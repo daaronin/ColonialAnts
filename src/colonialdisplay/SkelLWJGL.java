@@ -221,7 +221,7 @@ public abstract class SkelLWJGL {
                 });
                 
                 labelFood = new Label(comp2, SWT.NONE);
-                labelFood.setText("Gathered Food: ");
+                labelFood.setText("Resources Gathered: ");
                 
                 labelAnts = new Label(comp2, SWT.NONE);
                 labelAnts.setText("Ants Present: ");
