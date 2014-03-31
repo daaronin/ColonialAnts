@@ -7,6 +7,7 @@
 package colonialdisplay;
 
 import colonialants.Ant;
+import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
@@ -241,6 +242,17 @@ public class AntDisplayGL extends SkelLWJGL{
     @Override
     protected void updateScoreCount() {
         labelScore.setText("Score (Resources Collected): " + e.getColony().getScore());
+    }
+
+    @Override
+    protected void onLaySliderChange(int value) {
+        CommonScents.setLAY(value);
+    }
+
+    @Override
+    protected void onEvapSliderChange(int value) {
+        CommonScents.setEVAP(value);
+        
     }
    
     

@@ -7,6 +7,7 @@
 package colonialants;
 
 import org.eclipse.swt.graphics.Rectangle;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -16,9 +17,11 @@ public class CommonScents {
     
     public int ReturnIntensity = 0;
     public int FoodIntensity = 0;
+    
     private String[] textures;
-    public static int EVAP_RATE = 1;
-    public static int LAY_RATE = 400;
+    
+    private static int EVAP_RATE = 7;
+    private static int LAY_RATE = 400;
     
     public CommonScents(){
         this.ReturnIntensity = 0;
@@ -37,6 +40,7 @@ public class CommonScents {
     }
     
      void onClockTick(int delta) {
+        //O(delta);
         update(delta);
     }
     
@@ -76,7 +80,7 @@ public class CommonScents {
     }
     
     public void lowerFoodIntensity(int delta){
-       if (this.FoodIntensity > 0){
+        if (this.FoodIntensity > 0){
             this.FoodIntensity-= EVAP_RATE;
        }
     }
@@ -128,4 +132,15 @@ public class CommonScents {
     public void setTexture(String name, int type) {
             textures[type] = name;
     }   
+    
+    public static void setEVAP(int EVAP){
+        EVAP_RATE = EVAP;
+        O("E: " + EVAP_RATE);
+    }
+    
+    public static void setLAY(int LAY){
+        LAY_RATE = LAY;
+        O("L: " + LAY_RATE);
+    }
+        
 }

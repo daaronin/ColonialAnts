@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -341,12 +342,15 @@ public class Environment {
     
     public void snapMovementOn(int delta){
         snapMovement = true;
-        CommonScents.EVAP_RATE = 3 * delta/55;
+        //O(delta);
+        //CommonScents.EVAP_RATE = 3 * delta/55;
+        //3 * delta/55;
     }
     
     public void snapMovementOff(int delta){
         snapMovement = false;
-        CommonScents.EVAP_RATE = 2 * delta/17;
+        //O(delta);
+        //CommonScents.EVAP_RATE = 2 * delta/17;
     }
     
     public boolean getSnapMovement(){

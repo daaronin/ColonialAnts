@@ -1,6 +1,7 @@
 package colonialdisplay;
 
 
+import colonialants.CommonScents;
 import colonialants.Environment.AntType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Rectangle;
@@ -51,13 +52,20 @@ public abstract class SkelLWJGL {
         Composite comp2;
 	GLData data = new GLData();
 	GLCanvas canvas;
+        
         Scale scale;
-	Label label;
-        Label label2;
+        Scale scaleLay;
+        Scale scaleEvap;
+                        
+	Label gathererLabel;
+        Label builderLabel;
         Label labelFood;
         Label labelAnts;
         Label labelLeaves;
         Label labelScore;
+        Label labelEvap;
+        Label labelLay;
+        
         /**
 	 * Get the accurate time system
 	 * 
@@ -82,7 +90,7 @@ public abstract class SkelLWJGL {
 	
 	public void updateFPS(){
 		if (getTime() - lastFPS > 1000){
-			shell.setText("Ant Colony: " + fps);
+			shell.setText("Ant Colony: " + getDelta());
 			fps = 0;
 			lastFPS += 1000;
 		}
@@ -187,38 +195,79 @@ public abstract class SkelLWJGL {
 		data.depthSize = 1;
 		data.doubleBuffer = true;
                 
-                final Scale scale = new Scale(comp2, SWT.NONE);
-                scale.setMaximum (10);
-                scale.setIncrement(1);
-                scale.setPageIncrement(1);
+                final Scale gathererScale = new Scale(comp2, SWT.NONE);
+                gathererScale.setMaximum (10);
+                gathererScale.setIncrement(1);
+                gathererScale.setPageIncrement(1);
                 
-                label = new Label(comp2, SWT.NONE);
-                label.setText("Gathering Ants: 0");
+                gathererLabel = new Label(comp2, SWT.NONE);
+                gathererLabel.setText("Gathering Ants: 0");
                 
-                scale.addListener(SWT.Selection, new Listener() {
+                gathererScale.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                  int perspectiveValue = scale.getSelection();
-                  label.setText("Gathering Ants: " + perspectiveValue);
+                  int perspectiveValue = gathererScale.getSelection();
+                  gathererLabel.setText("Gathering Ants: " + perspectiveValue);
                   onSliderChange(AntType.GATHERER, perspectiveValue);
                 }
                 });
                 
                 
-                final Scale scale2 = new Scale(comp2, SWT.NONE);
-                scale2.setMaximum (10);
-                scale2.setPageIncrement(1);
+                final Scale builderScale = new Scale(comp2, SWT.NONE);
+                builderScale.setMaximum (10);
+                builderScale.setPageIncrement(1);
                 
-                label2 = new Label(comp2, SWT.NONE);
-                label2.setText("Builder Ants: 0");
+                builderLabel = new Label(comp2, SWT.NONE);
+                builderLabel.setText("Builder Ants: 0");
 		
-                scale2.addListener(SWT.Selection, new Listener() {
+                builderScale.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                  int perspectiveValue = scale2.getSelection();
-                  label2.setText("Builder Ants: " + perspectiveValue);
+                  int perspectiveValue = builderScale.getSelection();
+                  builderLabel.setText("Builder Ants: " + perspectiveValue);
                   onSliderChange(AntType.BUILDER, perspectiveValue);
                 }
+                });
+                
+                scaleEvap = new Scale(comp2, SWT.NONE);
+                scaleEvap.setMaximum (20);
+                scaleEvap.setMinimum (1);
+                scaleEvap.setIncrement(1);
+                scaleEvap.setPageIncrement(1);
+                scaleEvap.setSelection(7);
+                
+                labelEvap = new Label(comp2, SWT.NONE);
+                labelEvap.setText("Evap Rate: 7");
+		
+                scaleEvap.addListener(SWT.Selection, new Listener() {
+                    @Override
+                    public void handleEvent(Event event) {
+                      int perspectiveValue = scaleEvap.getSelection();
+                      labelEvap.setText("Evap Rate: " + perspectiveValue);
+                      //O(perspectiveValue);
+                      onEvapSliderChange(perspectiveValue);
+                    }
+                });
+                
+                scaleLay = new Scale(comp2, SWT.NONE);
+                scaleLay.setMaximum (600);
+                scaleLay.setMinimum (1);
+                scaleLay.setIncrement(50);
+                scaleLay.setPageIncrement(50);
+                scaleLay.setSelection(400);
+                
+                labelLay = new Label(comp2, SWT.NONE);
+                labelLay.setText("Lay Rate: 400");
+		
+                scaleLay.addListener(SWT.Selection, new Listener() {
+                    @Override
+                    public void handleEvent(Event event) {
+                      int perspectiveValue = scaleLay.getSelection();
+                      labelLay.setText("Lay Rate: " + perspectiveValue);
+                      //O(perspectiveValue);
+                      onLaySliderChange(perspectiveValue);
+                    }
+
                 });
                 
                 labelFood = new Label(comp2, SWT.NONE);
@@ -281,6 +330,19 @@ public abstract class SkelLWJGL {
 			@Override
 			public void handleEvent(Event event) {
 				snapMovement = !snapMovement;
+                                
+                                int evap;
+                                
+                                if(snapMovement){
+                                    evap = 2;
+                                }else{
+                                    evap = 7;
+                                }
+                                
+                                CommonScents.setEVAP(evap);
+                                scaleEvap.setSelection(evap);
+                                labelEvap.setText("Evap Rate: " + evap);
+                                
                                 item1.setText(snapMovement ? "Advanced" : "Snap");
 			}
 			
@@ -304,6 +366,9 @@ public abstract class SkelLWJGL {
 	protected abstract void resetGL();
         
         protected abstract void onSliderChange(AntType TYPE, int value);
+        protected abstract void onLaySliderChange(int value);
+        protected abstract void onEvapSliderChange(int value);
+        
         protected abstract void updateFoodCount();
         protected abstract void updateAntCount();
         protected abstract void updateLeafCount();
