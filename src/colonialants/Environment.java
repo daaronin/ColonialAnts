@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -122,7 +123,7 @@ public class Environment {
                 
                 terrain[i][j] = new TerrainLocation(new Point(i,j), spaceSize);
                 Random r = new Random();
-                if(r.nextInt(100)<3){
+                if(r.nextInt(1000)<7){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
                     terrain[i][j].setResources(10);
                     getColony().addLeafCount();
@@ -341,12 +342,14 @@ public class Environment {
     
     public void snapMovementOn(int delta){
         snapMovement = true;
-        CommonScents.EVAP_RATE = 3 * delta/55;
+        O(delta);
+        //CommonScents.EVAP_RATE = 3 * delta/55;
     }
     
     public void snapMovementOff(int delta){
         snapMovement = false;
-        CommonScents.EVAP_RATE = delta/17;
+        O(delta);
+        //CommonScents.EVAP_RATE = delta/17;
     }
     
     public boolean getSnapMovement(){

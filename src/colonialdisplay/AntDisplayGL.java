@@ -7,6 +7,7 @@
 package colonialdisplay;
 
 import colonialants.Ant;
+import colonialants.CommonScents;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
@@ -190,6 +191,7 @@ public class AntDisplayGL extends SkelLWJGL{
 			return;
                 if (snapMovement){
                    e.snapMovementOn(delta);
+                   
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ex) {
@@ -235,6 +237,16 @@ public class AntDisplayGL extends SkelLWJGL{
     @Override
     protected void updateLeafCount() {
         labelLeaves.setText("Leaves Present: " + e.getColony().getLeafCount());
+    }
+
+    @Override
+    protected void onEvapSliderChange(int value) {
+        CommonScents.EVAP_RATE = value;
+    }
+
+    @Override
+    protected void onLaySliderChange(int value) {
+        CommonScents.LAY_RATE = value;
     }
    
     

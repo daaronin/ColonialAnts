@@ -94,7 +94,7 @@ public class GatheringAnt extends Ant{
                 /*if (bestdiff == 100) {
                     choice = i;
                     bestdiff = diff;
-                    //O(bestdiff);
+                    //System.out.println(bestdiff);
                 }*/
                 if (bestdiff > diff){
                     choice = i;
@@ -168,7 +168,7 @@ public class GatheringAnt extends Ant{
                 if (bestdiff == 100) {
                     choice = i;
                     bestdiff = diff;
-                    //O(bestdiff);
+                    System.out.println(bestdiff);
                 }
                 if (bestdiff > diff){
                     choice = i;

@@ -16,7 +16,9 @@ public class CommonScents {
     
     public int ReturnIntensity = 0;
     public int FoodIntensity = 0;
+    
     private String[] textures;
+        
     public static int EVAP_RATE = 1;
     public static int LAY_RATE = 400;
     
