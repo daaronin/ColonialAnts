@@ -4,6 +4,7 @@ package colonialdisplay;
 import colonialants.CommonScents;
 import colonialants.Environment.AntType;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -11,6 +12,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.opengl.GLCanvas;
 import org.eclipse.swt.opengl.GLData;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -50,6 +52,8 @@ public abstract class SkelLWJGL {
 	Shell shell;
 	Composite comp;
         Composite comp2;
+        Composite comp3;
+        Composite comp4;
 	GLData data = new GLData();
 	GLCanvas canvas;
         
@@ -66,6 +70,10 @@ public abstract class SkelLWJGL {
         Label labelEvap;
         Label labelLay;
         
+        Button btnWind;
+        Button btnWater;
+        Button btnFungi;
+        Button btnAttack;
         /**
 	 * Get the accurate time system
 	 * 
@@ -166,31 +174,60 @@ public abstract class SkelLWJGL {
 		shell.setLayout(new FormLayout());
 		shell.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		shell.setText("Ant Colony: ");
+                
+                Image bg_image = new Image(display, "src/colonialimages/shellbackground.png");
+                shell.setBackgroundImage(bg_image);
 
 		// Create a composite
 		comp = new Composite(shell, SWT.BORDER);
 		comp.setLayout(new FillLayout());
-                
+                                
                 comp2 = new Composite(shell, SWT.BORDER);
                 FillLayout fillLayout = new FillLayout();
                 fillLayout.type = SWT.VERTICAL;
                 fillLayout.spacing = 1;
 		comp2.setLayout(fillLayout);
                 
+                comp3 = new Composite(shell, SWT.BORDER);
+                fillLayout = new FillLayout();
+                fillLayout.type = SWT.VERTICAL;
+                fillLayout.spacing = 1;
+		comp3.setLayout(fillLayout);
+                
+                comp4 = new Composite(shell, SWT.BORDER);
+                fillLayout = new FillLayout();
+                fillLayout.type = SWT.HORIZONTAL;
+                fillLayout.spacing = 1;
+		comp4.setLayout(fillLayout);
+                        
                 FormData data1 = new FormData();
-		data1.left = new FormAttachment(0,0);
-		data1.top = new FormAttachment(0,0);
-		data1.right = new FormAttachment(75,0);
-                data1.bottom = new FormAttachment(90,0);
+		data1.left = new FormAttachment(0, 5);
+		data1.top = new FormAttachment(0, 5);
+		data1.right = new FormAttachment(75, 0);
+                data1.bottom = new FormAttachment(90, 0);
                 comp.setLayoutData(data1);
                 
                 FormData data2 = new FormData();
 		data2.left = new FormAttachment(comp, 5);
 		data2.right = new FormAttachment(100, -5);
 		data2.top = new FormAttachment(0, 5);
-                data1.bottom = new FormAttachment(90,0);
+                data2.bottom = new FormAttachment(70,0);
                 comp2.setLayoutData(data2);
+                
+                FormData data3 = new FormData();
+		data3.left = new FormAttachment(comp, 5);
+		data3.right = new FormAttachment(100, -5);
+		data3.top = new FormAttachment(comp2, 5);
+                data3.bottom = new FormAttachment(90,0);
+                comp3.setLayoutData(data3);
 		
+                FormData data4 = new FormData();
+		data4.left = new FormAttachment(0, 5);
+		data4.right = new FormAttachment(75, 0);
+		data4.top = new FormAttachment(comp, 5);
+                data4.bottom = new FormAttachment(100, -5);
+                comp4.setLayoutData(data4);
+                
 		// Depth size 
 		data.depthSize = 1;
 		data.doubleBuffer = true;
@@ -269,18 +306,30 @@ public abstract class SkelLWJGL {
                     }
 
                 });
-                
-                labelFood = new Label(comp2, SWT.NONE);
+                                
+                labelFood = new Label(comp3, SWT.NONE);
                 labelFood.setText("Resources Gathered: ");
                 
-                labelAnts = new Label(comp2, SWT.NONE);
+                labelAnts = new Label(comp3, SWT.NONE);
                 labelAnts.setText("Ants Present: ");
                 
-                labelLeaves = new Label(comp2, SWT.NONE);
+                labelLeaves = new Label(comp3, SWT.NONE);
                 labelLeaves.setText("Leaves Present: ");
                 
-                labelScore = new Label(comp2, SWT.NONE);
+                labelScore = new Label(comp3, SWT.NONE);
                 labelScore.setText("Score(Resources Collected): ");
+                
+                btnWind = new Button(comp4, SWT.NONE);
+                btnWind.setText("Wind");
+                
+                btnWater = new Button(comp4, SWT.NONE);
+                btnWater.setText("Water");
+                
+                btnFungi = new Button(comp4, SWT.NONE);
+                btnFungi.setText("Fungi");
+                
+                btnAttack = new Button(comp4, SWT.NONE);
+                btnAttack.setText("Attack");
                 
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
