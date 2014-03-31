@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -242,7 +243,7 @@ public class Ant {
     public void lowerLifeSpan(int amount){
         lifespan -= amount;
         if (lifespan <= 0){
-            System.out.println("An Ant Died!!");
+            //O("An Ant Died!!");
         }
     }
 }

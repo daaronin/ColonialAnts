@@ -13,6 +13,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -56,6 +57,7 @@ public class Environment {
                             "pheromoneFood4",
                             "pheromoneNone"
                           };
+
     
     public enum AntType{
         GATHERER, BUILDER
@@ -167,7 +169,7 @@ public class Environment {
 			list += "||\n";
 
 		}
-		System.out.println(list);
+		O(list);
 	}
     
     public TerrainLocation[] getNeighbors(TerrainLocation block) {
@@ -324,9 +326,9 @@ public class Environment {
         String s = "";
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                System.out.print(terrain[j][i].toString() + " ");
+                O(terrain[j][i].toString() + " ");
             }
-            System.out.println();
+            O();
         }
         return s;
     }
@@ -341,12 +343,12 @@ public class Environment {
     
     public void snapMovementOn(){
         snapMovement = true;
-        CommonScents.EVAP_RATE = 9;
+        //changeEvapRate(9);
     }
     
     public void snapMovementOff(){
         snapMovement = false;
-        CommonScents.EVAP_RATE = 1;
+        //changeEvapRate(1);
     }
     
     public boolean getSnapMovement(){
@@ -396,14 +398,21 @@ public class Environment {
                 ant.setCarrying();
             }
             
-            if(ant instanceof GatheringAnt){
-            
-                if(ant.getOrigin().getTerrain() instanceof AntHill){
-                    if(ant.carryingFood){
-                        ant.stopCarrying();
+            if(ant.getOrigin().getTerrain() instanceof AntHill){
+                 if(ant.carryingFood){
+                    ant.stopCarrying();
+                     colony.addFood(1);
+             
+             if(ant instanceof GatheringAnt){
+             
+                 if(ant.getOrigin().getTerrain() instanceof AntHill){
+                     if(ant.carryingFood){
+                         ant.stopCarrying();
                         colony.addFood(1);
                     }
-                }
+                  }
+              }
+                 }
             }
             if(ant.state == State.IDLE){
                 if (ant.carryingFood){
@@ -414,4 +423,14 @@ public class Environment {
             }
         }
     }
+    
+    public void changeEvapRate(int i) {
+        CommonScents.alterEVAP(i);
+    }
+    
+    public void changeLayRate(int value) {
+        CommonScents.alterLAY(value);
+    }
+    
 }
+    
