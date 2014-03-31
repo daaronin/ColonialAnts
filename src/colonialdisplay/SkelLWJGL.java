@@ -98,7 +98,8 @@ public abstract class SkelLWJGL {
 	
 	public void updateFPS(){
 		if (getTime() - lastFPS > 1000){
-			shell.setText("Ant Colony: D: " + getDelta() + " | FPS: " + fps);
+                        int delta = getDelta();
+			shell.setText("Ant Colony: D: " + delta + " | FPS: " + fps);
 			fps = 0;
 			lastFPS += 1000;
 		}
@@ -210,15 +211,15 @@ public abstract class SkelLWJGL {
                 FormData data2 = new FormData();
 		data2.left = new FormAttachment(comp, 5);
 		data2.right = new FormAttachment(100, -5);
-		data2.top = new FormAttachment(0, 5);
-                data2.bottom = new FormAttachment(70,0);
+		data2.top = new FormAttachment(comp3, 5);
+                data2.bottom = new FormAttachment(90,0);
                 comp2.setLayoutData(data2);
                 
                 FormData data3 = new FormData();
 		data3.left = new FormAttachment(comp, 5);
 		data3.right = new FormAttachment(100, -5);
-		data3.top = new FormAttachment(comp2, 5);
-                data3.bottom = new FormAttachment(90,0);
+		data3.top = new FormAttachment(0, 5);
+                data3.bottom = new FormAttachment(20,0);
                 comp3.setLayoutData(data3);
 		
                 FormData data4 = new FormData();
@@ -321,12 +322,12 @@ public abstract class SkelLWJGL {
                 
                 btnWind = new Button(comp4, SWT.NONE);
                 btnWind.setText("Wind");
-                
+                               
                 btnWater = new Button(comp4, SWT.NONE);
                 btnWater.setText("Water");
                 
                 btnFungi = new Button(comp4, SWT.NONE);
-                btnFungi.setText("Fungi");
+                btnFungi.setText("Plague");
                 
                 btnAttack = new Button(comp4, SWT.NONE);
                 btnAttack.setText("Attack");
