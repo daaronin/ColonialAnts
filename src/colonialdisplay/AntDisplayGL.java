@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Rectangle;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
-import static colonialants.Debug.*;
 
 /**
  *
@@ -186,18 +186,17 @@ public class AntDisplayGL extends SkelLWJGL{
 
 	@Override
 	protected void onClockTick(int delta) {
-            //O(delta);
 		if (!animate)
 			return;
                 if (snapMovement){
-                   e.snapMovementOn();
+                   e.snapMovementOn(delta);
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Environment.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }else{
-                   e.snapMovementOff();
+                   e.snapMovementOff(delta);
                 }
 		e.onClockTick(delta);
 		updateFPS(); // update FPS Counter
@@ -225,7 +224,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
     @Override
     protected void updateFoodCount() {
-        labelFood.setText("Gathered Food: " + e.getColony().getFoodCount());
+        labelFood.setText("Resources Gathered: " + e.getColony().getFoodCount());
     }
     
     @Override
@@ -237,18 +236,6 @@ public class AntDisplayGL extends SkelLWJGL{
     protected void updateLeafCount() {
         labelLeaves.setText("Leaves Present: " + e.getColony().getLeafCount());
     }
-
-    @Override
-    protected void onEvapSliderChange(int value) {
-        e.changeEvapRate(value);
-    }
-
-    @Override
-    protected void onLaySliderChange(int value) {
-        e.changeLayRate(value);
-    }
-
-    
    
     
 }

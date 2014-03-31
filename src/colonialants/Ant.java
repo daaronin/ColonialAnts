@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import static colonialants.Debug.*;
 
 /**
  *
@@ -31,7 +30,7 @@ public class Ant {
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
     private int numOfAnts = 0;
-    private int lifespan = 1000;
+    private int ANT_LIFESPAN = 1000;
 
     private void randomWalk() {
     }
@@ -46,13 +45,13 @@ public class Ant {
     
     public Ant(){
         this.state = State.IDLE;
-        this.lifespan = lifespan;
+        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
     
     public Ant(Point p){
         position = new Location(p);
         this.state = State.IDLE;
-        this.lifespan = lifespan;
+        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
     
     public Ant(Point p, TerrainLocation t, String[] tex){
@@ -60,13 +59,13 @@ public class Ant {
         this.state = State.IDLE;
         origin = t;
         textures = tex;
-        this.lifespan = lifespan;
+        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
     
     public Ant(Point p, int size){
         position = new Location(p, size);
         this.state = State.IDLE;
-        this.lifespan = lifespan;
+        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
     
     public Rectangle getLocation(){
@@ -237,13 +236,17 @@ public class Ant {
     }
     
     public void setLifeSpan(int lifespan){
-        this.lifespan = lifespan;
+        this.ANT_LIFESPAN = lifespan;
     }
     
     public void lowerLifeSpan(int amount){
-        lifespan -= amount;
-        if (lifespan <= 0){
-            //O("An Ant Died!!");
-        }
+        ANT_LIFESPAN -= amount;
+        //if (ANT_LIFESPAN <= 0){
+            //System.out.println("An Ant Died!!");
+        //}
+    }
+    
+    public int getLifeSpan(){
+        return ANT_LIFESPAN;
     }
 }

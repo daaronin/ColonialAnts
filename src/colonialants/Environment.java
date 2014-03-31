@@ -13,7 +13,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
-import static colonialants.Debug.*;
 
 /**
  *
@@ -57,7 +56,6 @@ public class Environment {
                             "pheromoneFood4",
                             "pheromoneNone"
                           };
-
     
     public enum AntType{
         GATHERER, BUILDER
@@ -169,7 +167,7 @@ public class Environment {
 			list += "||\n";
 
 		}
-		O(list);
+		System.out.println(list);
 	}
     
     public TerrainLocation[] getNeighbors(TerrainLocation block) {
@@ -326,9 +324,9 @@ public class Environment {
         String s = "";
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
-                O(terrain[j][i].toString() + " ");
+                System.out.print(terrain[j][i].toString() + " ");
             }
-            O();
+            System.out.println();
         }
         return s;
     }
@@ -341,14 +339,14 @@ public class Environment {
         return colony;
     }
     
-    public void snapMovementOn(){
+    public void snapMovementOn(int delta){
         snapMovement = true;
-        //changeEvapRate(9);
+        CommonScents.EVAP_RATE = 3 * delta/55;
     }
     
-    public void snapMovementOff(){
+    public void snapMovementOff(int delta){
         snapMovement = false;
-        //changeEvapRate(1);
+        CommonScents.EVAP_RATE = delta/17;
     }
     
     public boolean getSnapMovement(){
@@ -379,8 +377,12 @@ public class Environment {
                 createNewLeaves(block);
             }
         }
-        
-        int i = r.nextInt(100);
+        int i = 0;
+        if (snapMovement){
+            i = r.nextInt(30);
+        }else{
+            i = r.nextInt(100);
+        }
         if(i<2){
             i = r.nextInt(3);
             if(i<3){
@@ -391,46 +393,33 @@ public class Environment {
             }
         }
 
-        for (Ant ant : ants) {
-            ant.onClockTick(delta, snapMovement);
+        for (int j = 0; j<ants.size(); j++) {
+            if(ants.get(j).getLifeSpan() <= 0){
+                ants.remove(j);
+                getColony().lowerAntCount();
+            }
+            ants.get(j).onClockTick(delta, snapMovement);
             
-            if(ant.getOrigin().getTerrain() instanceof Leaf){
-                ant.setCarrying();
+            if(ants.get(j).getOrigin().getTerrain() instanceof Leaf){
+                ants.get(j).setCarrying();
             }
             
-            if(ant.getOrigin().getTerrain() instanceof AntHill){
-                 if(ant.carryingFood){
-                    ant.stopCarrying();
-                     colony.addFood(1);
-             
-             if(ant instanceof GatheringAnt){
-             
-                 if(ant.getOrigin().getTerrain() instanceof AntHill){
-                     if(ant.carryingFood){
-                         ant.stopCarrying();
+            if(ants.get(j) instanceof GatheringAnt){
+            
+                if(ants.get(j).getOrigin().getTerrain() instanceof AntHill){
+                    if(ants.get(j).carryingFood){
+                        ants.get(j).stopCarrying();
                         colony.addFood(1);
                     }
-                  }
-              }
-                 }
+                }
             }
-            if(ant.state == State.IDLE){
-                if (ant.carryingFood){
-                    ant.getOrigin().getScent().alterScent(ant.getOrigin(),"food", delta);
+            if(ants.get(j).state == State.IDLE){
+                if (ants.get(j).carryingFood){
+                    ants.get(j).getOrigin().getScent().alterScent(ants.get(j).getOrigin(),"food", delta);
                 } else {
-                    ant.getOrigin().getScent().alterScent(ant.getOrigin(),"return", delta);
+                    ants.get(j).getOrigin().getScent().alterScent(ants.get(j).getOrigin(),"return", delta);
                 }
             }
         }
     }
-    
-    public void changeEvapRate(int i) {
-        CommonScents.alterEVAP(i);
-    }
-    
-    public void changeLayRate(int value) {
-        CommonScents.alterLAY(value);
-    }
-    
 }
-    

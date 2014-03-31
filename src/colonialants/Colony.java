@@ -61,6 +61,10 @@ public class Colony {
         antCount++;
     }
     
+    public void lowerAntCount(){
+        antCount--;
+    }
+    
     public int getAntCount(){
         return antCount;
     }
