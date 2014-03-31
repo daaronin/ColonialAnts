@@ -57,6 +57,7 @@ public abstract class SkelLWJGL {
         Label labelFood;
         Label labelAnts;
         Label labelLeaves;
+        Label labelScore;
         /**
 	 * Get the accurate time system
 	 * 
@@ -229,6 +230,9 @@ public abstract class SkelLWJGL {
                 labelLeaves = new Label(comp2, SWT.NONE);
                 labelLeaves.setText("Leaves Present: ");
                 
+                labelScore = new Label(comp2, SWT.NONE);
+                labelScore.setText("Score(Resources Collected): ");
+                
 		// set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();
@@ -303,4 +307,5 @@ public abstract class SkelLWJGL {
         protected abstract void updateFoodCount();
         protected abstract void updateAntCount();
         protected abstract void updateLeafCount();
+        protected abstract void updateScoreCount();
 }

@@ -140,7 +140,7 @@ public class Environment {
         }
         
         initAntHill();
-        
+        getColony().addFood(100);
         for(int i = 0;i < dimension;i++){
             for(int j = 0;j < dimension;j++){
                 this.setNeighbors(terrain[i][j]);
@@ -346,7 +346,7 @@ public class Environment {
     
     public void snapMovementOff(int delta){
         snapMovement = false;
-        CommonScents.EVAP_RATE = delta/17;
+        CommonScents.EVAP_RATE = 2 * delta/17;
     }
     
     public boolean getSnapMovement(){
@@ -377,19 +377,22 @@ public class Environment {
                 createNewLeaves(block);
             }
         }
-        int i = 0;
-        if (snapMovement){
-            i = r.nextInt(30);
-        }else{
-            i = r.nextInt(100);
-        }
-        if(i<2){
-            i = r.nextInt(3);
-            if(i<3){
-                this.addAnt(AntType.GATHERER);
-                colony.addAntCount();
-            }else if(i==133){                       //Killed all the builders
-                this.addAnt(AntType.BUILDER);
+        if(getColony().getFoodCount() >= 2){
+            int i = 0;
+            if (snapMovement){
+                i = r.nextInt(30);
+            }else{
+                i = r.nextInt(100);
+            }
+            if(i<2){
+                i = r.nextInt(3);
+                if(i<3){
+                    this.addAnt(AntType.GATHERER);
+                    colony.addAntCount();
+                    getColony().removeFood(2);
+                }else if(i==133){                       //Killed all the builders
+                    this.addAnt(AntType.BUILDER);
+                }
             }
         }
 
@@ -410,6 +413,7 @@ public class Environment {
                     if(ants.get(j).carryingFood){
                         ants.get(j).stopCarrying();
                         colony.addFood(1);
+                        colony.addScore(1);
                     }
                 }
             }

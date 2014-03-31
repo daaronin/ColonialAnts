@@ -203,6 +203,7 @@ public class AntDisplayGL extends SkelLWJGL{
                 updateFoodCount();
                 updateAntCount();
                 updateLeafCount();
+                updateScoreCount();
 	}
 
 	@Override
@@ -235,6 +236,11 @@ public class AntDisplayGL extends SkelLWJGL{
     @Override
     protected void updateLeafCount() {
         labelLeaves.setText("Leaves Present: " + e.getColony().getLeafCount());
+    }
+    
+    @Override
+    protected void updateScoreCount() {
+        labelScore.setText("Score (Resources Collected): " + e.getColony().getScore());
     }
    
     

@@ -15,7 +15,8 @@ public class Colony {
     int foodCount;
     int antCount;
     int leafCount;
-    
+    int scoreCount;
+
     public enum ColLoc{
         TR, TL, BR, BL
     }
@@ -80,5 +81,18 @@ public class Colony {
     public void lowerLeafCount(){
         leafCount--;
     }
+    
+    public int getScore() {
+        return scoreCount;
+    }
+    
+    public void addScore(int points){
+        scoreCount += points;
+    }
+    
+    public void lowerScore(int points){
+        scoreCount -= points;
+    }
+    
 
 }
