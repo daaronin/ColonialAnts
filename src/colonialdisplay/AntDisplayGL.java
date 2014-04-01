@@ -200,7 +200,7 @@ public class AntDisplayGL extends SkelLWJGL{
                    e.snapMovementOff(delta);
                 }
 		e.onClockTick(delta);
-		updateFPS(); // update FPS Counter
+		updateFPS(delta); // update FPS Counter
                 updateFoodCount();
                 updateAntCount();
                 updateLeafCount();

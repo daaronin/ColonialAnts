@@ -96,10 +96,9 @@ public abstract class SkelLWJGL {
 		return delta;
 	}
 	
-	public void updateFPS(){
+	public void updateFPS(int delta){
 		if (getTime() - lastFPS > 1000){
-                        int delta = getDelta();
-			shell.setText("Ant Colony: D: " + delta + " | FPS: " + fps);
+                        shell.setText("Ant Colony: D: " + delta + " | FPS: " + fps);
 			fps = 0;
 			lastFPS += 1000;
 		}
@@ -131,7 +130,7 @@ public abstract class SkelLWJGL {
 					int delta = getDelta();
 
 					onClockTick(delta);
-					updateFPS();
+					updateFPS(delta);
 					
 					renderGL();
 					canvas.swapBuffers();
