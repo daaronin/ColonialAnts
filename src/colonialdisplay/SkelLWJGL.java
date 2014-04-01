@@ -33,8 +33,8 @@ public abstract class SkelLWJGL {
 
 	// SVGA 800x600
 	// XVGA 1024x768
-	public static final int SCREEN_WIDTH = 865, 
-			SCREEN_HEIGHT = 744;
+	public static final int SCREEN_WIDTH = 872, 
+			SCREEN_HEIGHT = 750;
 	
 	/* time at last frame */
 	long lastFrame;
