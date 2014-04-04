@@ -19,7 +19,7 @@ public class CommonScents {
     public int FoodIntensity = 0;
     
     private String[] textures;
-    
+
     private static int EVAP_RATE = 7;
     private static int LAY_RATE = 400;
     
@@ -135,12 +135,20 @@ public class CommonScents {
     
     public static void setEVAP(int EVAP){
         EVAP_RATE = EVAP;
-        O("E: " + EVAP_RATE);
+        //o("E: " + EVAP_RATE);
     }
     
     public static void setLAY(int LAY){
         LAY_RATE = LAY;
-        O("L: " + LAY_RATE);
+        //o("L: " + LAY_RATE);
+    }
+    
+    public static int getEVAP() {
+        return EVAP_RATE;
+    }
+
+    public static int getLAY() {
+        return LAY_RATE;
     }
         
 }

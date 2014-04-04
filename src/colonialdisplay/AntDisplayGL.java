@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Rectangle;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import static colonialants.Debug.*;
 
 /**
  *
@@ -181,8 +182,7 @@ public class AntDisplayGL extends SkelLWJGL{
         
         @Override
 	protected void destroyGL() {
-		// TODO Auto-generated method stub
-
+            closeLog();
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class AntDisplayGL extends SkelLWJGL{
 
     @Override
     protected void updateFoodCount() {
-        labelFood.setText("Resources Gathered: " + e.getColony().getFoodCount());
+        labelFood.setText("Net Resources: " + e.getColony().getFoodCount());
     }
     
     @Override

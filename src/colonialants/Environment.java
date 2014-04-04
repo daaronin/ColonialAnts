@@ -7,13 +7,14 @@ package colonialants;
 
 import colonialants.Ant.State;
 import colonialants.Colony.ColLoc;
+import static colonialants.Debug.*;
 import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
-import static colonialants.Debug.*;
 
 /**
  *
@@ -67,14 +68,9 @@ public class Environment {
         colony = new Colony();
         population = 50;
         ants = new ArrayList<Ant>();
-    }
-    
-    public Environment(int dimension){
-        this.dimension = dimension;
-        terrain = new TerrainLocation[dimension][dimension];
-        colony = new Colony();
-        population = 0;
-        ants = new ArrayList<Ant>();
+        
+        Date d = new Date();
+        initLog("src\\" + String.valueOf(d.getTime()) + ".csv");
     }
     
     private void initAntHill(){
@@ -343,15 +339,19 @@ public class Environment {
     public void snapMovementOn(int delta){
         snapMovement = true;
         //O(delta);
-        CommonScents.setEVAP(3 * delta/55);
+        //double evap = .2186*Math.pow((1.0/delta),-.759);
+        //CommonScents.setEVAP((int) (evap+1.5));
+        //o("D: " + delta + " E: " + evap);
         //3 * delta/55;
+        CommonScents.setEVAP(3 * delta/55);
     }
     
     public void snapMovementOff(int delta){
         snapMovement = false;
-        //O(delta);
-        CommonScents.setEVAP(2 * delta/17);
-        //CommonScents.EVAP_RATE = 2 * delta/17;
+        double evap = ((double)ants.size()/((double)delta+1))+1;
+        //CommonScents.setEVAP((int)evap);
+        //o("D: " + delta + " E: " + evap);
+        CommonScents.setEVAP( 2 * delta/17);
     }
     
     public boolean getSnapMovement(){
@@ -375,6 +375,8 @@ public class Environment {
         }
     }
 
+    int curr_delta = 0;
+    
     public void onClockTick(int delta) {
         for (TerrainLocation[] terrainrow : terrain) {
             for (TerrainLocation block : terrainrow) {
@@ -430,5 +432,16 @@ public class Environment {
                 }
             }
         }
+        
+        curr_delta += 1;
+        //o("Log Delta: " + delta);
+        //o("Curr Delta: " + curr_delta);
+        //o();
+        if(curr_delta >= delta*2){
+            
+            curr_delta = 0;
+            logCycle(delta, getColony().getFoodCount(), getColony().getAntCount(), getColony().getLeafCount(), getColony().getScore(), CommonScents.getEVAP(), CommonScents.getLAY());
+        }
+        
     }
 }
