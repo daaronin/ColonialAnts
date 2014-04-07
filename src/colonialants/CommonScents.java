@@ -116,6 +116,7 @@ public class CommonScents {
     }
     
     public String getTexture() {
+        
         String tex = textures[16];
         if (ReturnIntensity > FoodIntensity){
             if (ReturnIntensity <= (int)(.25*(1/EVAP_RATE)+.5) && ReturnIntensity > 0){
