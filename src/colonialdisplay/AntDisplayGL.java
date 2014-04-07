@@ -136,12 +136,15 @@ public class AntDisplayGL extends SkelLWJGL{
                     tmap.getSheetID());
                     drawTile(bounds, tmap.getSpriteLocation(texture));
                     
-                    String r = location.getScent().getTexture();
-                    Rectangle scentbounds = location.getScreenLocation();
-                    GL11.glBindTexture(GL11.GL_TEXTURE_2D,
-                    tmap.getSheetID());
+                    if(location.getScent().FoodIntensity > 0 || location.getScent().ReturnIntensity > 0){
+                        String r = location.getScent().getTexture();
+                        Rectangle scentbounds = location.getScreenLocation();
+                        GL11.glBindTexture(GL11.GL_TEXTURE_2D,
+                        tmap.getSheetID());
 
-                    drawTile(scentbounds, tmap.getSpriteLocation(r));
+                        drawTile(scentbounds, tmap.getSpriteLocation(r));
+                    }
+                    
                 }
             }
          }
@@ -246,12 +249,12 @@ public class AntDisplayGL extends SkelLWJGL{
 
     @Override
     protected void onLaySliderChange(int value) {
-        CommonScents.setLAY(value);
+        //CommonScents.setLAY(value);
     }
 
     @Override
     protected void onEvapSliderChange(int value) {
-        CommonScents.setEVAP(value);
+        //CommonScents.setEVAP(value);
         
     }
    

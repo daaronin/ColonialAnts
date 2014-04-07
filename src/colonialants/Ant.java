@@ -32,11 +32,10 @@ public class Ant {
     private int numOfAnts = 0;
     private int ANT_LIFESPAN = 1000;
 
-    private void randomWalk() {
-    }
-
+       
+    private int RP_LEVEL = 20;
+    private int FP_LEVEL = 20;
     
-
     public enum State{
         MOVING, IDLE
     }
@@ -249,4 +248,30 @@ public class Ant {
     public int getLifeSpan(){
         return ANT_LIFESPAN;
     }
+    
+    public int getRP_LEVEL() {
+        return RP_LEVEL;
+    }
+
+    public void decRP_LEVEL() {
+        if(RP_LEVEL > 0){
+            RP_LEVEL--;
+        }
+    }
+
+    public int getFP_LEVEL() {
+        return FP_LEVEL;
+    }
+
+    public void decFP_LEVEL() {
+        if(FP_LEVEL > 0){
+            FP_LEVEL--;
+        }
+    }
+    
+    public void resetLevels(){
+        FP_LEVEL = 20;
+        RP_LEVEL = 20;
+    }
+    
 }

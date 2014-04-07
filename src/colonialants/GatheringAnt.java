@@ -34,7 +34,7 @@ public class GatheringAnt extends Ant{
            //stronger food pheromone
             if(!carryingFood){
                 if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() > 0){                     
-                    if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() < getOrigin().getScent().getFoodIntensity()){
+                    if(((TerrainLocation)pairs.getValue()).getScent().getFoodIntensity() > getOrigin().getScent().getFoodIntensity()){
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                         probs.put(count, 75.0);
                         count++;
@@ -59,7 +59,7 @@ public class GatheringAnt extends Ant{
                 }
             } else if(carryingFood){
                 if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() > 0){
-                    if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() < getOrigin().getScent().getReturnIntensity()){
+                    if(((TerrainLocation)pairs.getValue()).getScent().getReturnIntensity() > getOrigin().getScent().getReturnIntensity()){
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                         probs.put(count, 75.0);
                         count++;

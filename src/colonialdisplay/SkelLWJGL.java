@@ -388,7 +388,7 @@ public abstract class SkelLWJGL {
                                     evap = 7;
                                 }
                                 
-                                CommonScents.setEVAP(evap);
+                                //CommonScents.setEVAP(evap);
                                 scaleEvap.setSelection(evap);
                                 labelEvap.setText("Evap Rate: " + evap);
                                 

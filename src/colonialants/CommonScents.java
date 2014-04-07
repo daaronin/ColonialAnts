@@ -20,8 +20,10 @@ public class CommonScents {
     
     private String[] textures;
 
-    private static int EVAP_RATE = 7;
-    private static int LAY_RATE = 400;
+    private Ant rlayer = null;
+    private Ant flayer = null;
+
+    private static double EVAP_RATE = .05;
     
     public CommonScents(){
         this.ReturnIntensity = 0;
@@ -45,8 +47,8 @@ public class CommonScents {
     }
     
     public void update(int delta){
-        lowerFoodIntensity(delta);
-        lowerReturnIntensity(delta);
+        lowerFoodIntensity();
+        lowerReturnIntensity();
     }
     
     public int getReturnIntensity(){
@@ -57,31 +59,40 @@ public class CommonScents {
         return FoodIntensity;
     }
     
-    public void setReturnIntensity(int ReturnIntensity){
-       this.ReturnIntensity = ReturnIntensity;
+    public void raiseReturnIntensity(int increase){
+       this.ReturnIntensity += increase;
+       
+       if(this.ReturnIntensity > (1/EVAP_RATE)){
+           this.ReturnIntensity = (int)(1/EVAP_RATE);
+       }
+       
     }
     
-    public void setFoodIntensity(int FoodIntensity){
-       this.FoodIntensity = FoodIntensity;
+    public void raiseFoodIntensity(int increase){
+       this.FoodIntensity += increase;
+       
+       if(this.FoodIntensity > (1/EVAP_RATE)){
+           this.FoodIntensity = (int)(1/EVAP_RATE);
+       }
+       
     }
     
-    public void raiseReturnIntensity(){
-       this.ReturnIntensity += LAY_RATE;
-    }
-    
-    public void raiseFoodIntensity(){
-       this.FoodIntensity += LAY_RATE;
-    }
-    
-    public void lowerReturnIntensity(int delta){
-       if (this.ReturnIntensity > 0){
-            this.ReturnIntensity-= EVAP_RATE;
+    public void lowerReturnIntensity(){
+       if (rlayer!= null && !rlayer.isMoving()){
+            this.ReturnIntensity  = (int)((ReturnIntensity * (1-EVAP_RATE))+.5);
+            if(ReturnIntensity <= .5){
+                this.ReturnIntensity = 0;
+            }
        }
     }
     
-    public void lowerFoodIntensity(int delta){
-        if (this.FoodIntensity > 0){
-            this.FoodIntensity-= EVAP_RATE;
+    public void lowerFoodIntensity(){
+        if (flayer!= null && !flayer.isMoving()){
+            this.FoodIntensity = (int)((FoodIntensity * (1-EVAP_RATE))+.5);
+            if(FoodIntensity <= .5){
+                this.FoodIntensity = 0;
+            }
+            //o(FoodIntensity);
        }
     }
     
@@ -93,35 +104,37 @@ public class CommonScents {
        this.FoodIntensity = 0;
     }
     
-    public void alterScent(TerrainLocation location, String type, int delta){
+    public void alterScent(String type, int increase, Ant layer){
         //int block = (location.getX() / 20) + dimension * (location.getY() / 20);
         if ("return".equals(type)) {
-            location.getScent().raiseReturnIntensity();
+            raiseReturnIntensity(increase);
+            this.rlayer = layer;
         } else if ("food".equals(type)){
-            location.getScent().raiseFoodIntensity();
+            raiseFoodIntensity(increase);
+            this.flayer = layer;
         }
     }
     
     public String getTexture() {
         String tex = textures[16];
         if (ReturnIntensity > FoodIntensity){
-            if (ReturnIntensity <= 50 && ReturnIntensity > 0){
+            if (ReturnIntensity <= (int)(.25*(1/EVAP_RATE)+.5) && ReturnIntensity > 0){
                 tex = textures[8];
-            } else if(ReturnIntensity <= 100 && ReturnIntensity > 50){
+            } else if(ReturnIntensity <= (int)(.5*(1/EVAP_RATE)+.5) && ReturnIntensity > (int)(.25*(1/EVAP_RATE)+.5)){
                 tex = textures[9];
-            }  else if(ReturnIntensity <= 150 && ReturnIntensity > 100){
+            }  else if(ReturnIntensity <= (int)(.75*(1/EVAP_RATE)+.5) && ReturnIntensity > (int)(.5*(1/EVAP_RATE)+.5)){
                 tex = textures[10];
-            }  else if(ReturnIntensity > 150){
+            }  else if(ReturnIntensity > (int)(.75*(1/EVAP_RATE)+.5)){
                 tex = textures[11];
             }
         }else {
-            if (FoodIntensity <= 50 && FoodIntensity > 0){
+            if (FoodIntensity <= (int)(.25*(1/EVAP_RATE)+.5) && FoodIntensity > 0){
                 tex = textures[12];
-            } else if(FoodIntensity <= 100 && FoodIntensity > 50){
+            } else if(FoodIntensity <= (int)(.5*(1/EVAP_RATE)+.5) && FoodIntensity > (int)(.25*(1/EVAP_RATE)+.5)){
                 tex = textures[13];
-            }  else if(FoodIntensity <= 150 && FoodIntensity > 100){
+            }  else if(FoodIntensity <= (int)(.75*(1/EVAP_RATE)+.5) && FoodIntensity > (int)(.5*(1/EVAP_RATE)+.5)){
                 tex = textures[14];
-            }  else if(FoodIntensity > 150){
+            }  else if(FoodIntensity > (int)(.75*(1/EVAP_RATE)+.5)){
                 tex = textures[15];
             }
         }
@@ -133,22 +146,22 @@ public class CommonScents {
             textures[type] = name;
     }   
     
-    public static void setEVAP(int EVAP){
-        EVAP_RATE = EVAP;
-        //o("E: " + EVAP_RATE);
-    }
     
-    public static void setLAY(int LAY){
-        LAY_RATE = LAY;
-        //o("L: " + LAY_RATE);
-    }
-    
-    public static int getEVAP() {
-        return EVAP_RATE;
+    public Ant getRlayer() {
+        return rlayer;
     }
 
-    public static int getLAY() {
-        return LAY_RATE;
+    public void setRlayer(Ant rlayer) {
+        this.rlayer = rlayer;
     }
+
+    public Ant getFlayer() {
+        return flayer;
+    }
+
+    public void setFlayer(Ant flayer) {
+        this.flayer = flayer;
+    }  
+    
         
 }

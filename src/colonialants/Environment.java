@@ -66,7 +66,7 @@ public class Environment {
     public Environment(){
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
-        population = 50;
+        population = 150;
         ants = new ArrayList<Ant>();
         
         Date d = new Date();
@@ -209,13 +209,16 @@ public class Environment {
     }
     
     public void addAnt(AntType TYPE){
-        if(TYPE == AntType.GATHERER){
+        //if(colony.getAntCount() < population){
+            if(TYPE == AntType.GATHERER){
             ants.add(new GatheringAnt(new Point(5,5), terrain[5][5], tex));
-        }else if(TYPE == AntType.BUILDER){
-            ants.add(new BuilderAnt(new Point(5,5), terrain[5][5], tex));
-        }else {
-            ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
-        }
+            }else if(TYPE == AntType.BUILDER){
+                ants.add(new BuilderAnt(new Point(5,5), terrain[5][5], tex));
+            }else {
+                ants.add(new Ant(new Point(5,5), terrain[5][5], tex));
+            }
+        //}
+        
     }
     
     public ArrayList<Ant> getTestAnts(){
@@ -343,15 +346,15 @@ public class Environment {
         //CommonScents.setEVAP((int) (evap+1.5));
         //o("D: " + delta + " E: " + evap);
         //3 * delta/55;
-        CommonScents.setEVAP(3 * delta/55);
+        //CommonScents.setEVAP(3 * delta/55);
     }
     
     public void snapMovementOff(int delta){
         snapMovement = false;
-        double evap = ((double)ants.size()/((double)delta+1))+1;
+        //double evap = ((double)ants.size()/((double)delta+1))+1;
         //CommonScents.setEVAP((int)evap);
         //o("D: " + delta + " E: " + evap);
-        CommonScents.setEVAP( 2 * delta/17);
+        //CommonScents.setEVAP( 2 * delta/17);
     }
     
     public boolean getSnapMovement(){
@@ -378,12 +381,6 @@ public class Environment {
     int curr_delta = 0;
     
     public void onClockTick(int delta) {
-        for (TerrainLocation[] terrainrow : terrain) {
-            for (TerrainLocation block : terrainrow) {
-                block.onClockTick(delta);
-                createNewLeaves(block);
-            }
-        }
         if(getColony().getFoodCount() >= 2){
             int i = 0;
             if (snapMovement){
@@ -415,23 +412,32 @@ public class Environment {
             }
             
             if(ants.get(j) instanceof GatheringAnt){
-            
                 if(ants.get(j).getOrigin().getTerrain() instanceof AntHill){
                     if(ants.get(j).carryingFood){
                         ants.get(j).stopCarrying();
+                        ants.get(j).resetLevels();
+                        
                         colony.addFood(1);
                         colony.addScore(1);
                     }
                 }
-            }
-            if(ants.get(j).state == State.IDLE){
-                if (ants.get(j).carryingFood){
-                    ants.get(j).getOrigin().getScent().alterScent(ants.get(j).getOrigin(),"food", delta);
-                } else {
-                    ants.get(j).getOrigin().getScent().alterScent(ants.get(j).getOrigin(),"return", delta);
+            
+                if(ants.get(j).state == State.IDLE){
+                    if (ants.get(j).carryingFood){
+                        ants.get(j).getOrigin().getScent().alterScent("food", ants.get(j).getFP_LEVEL(), ants.get(j));
+                        ants.get(j).decFP_LEVEL();
+                        //if(j==0) o(ants.get(j).getFP_LEVEL());
+                    } else {
+                        ants.get(j).getOrigin().getScent().alterScent("return", ants.get(j).getRP_LEVEL(), ants.get(j));
+                        ants.get(j).decRP_LEVEL();
+                        //if(j==0) o(ants.get(j).getRP_LEVEL());
+
+                    }
                 }
             }
         }
+        
+        
         
         curr_delta += 1;
         //o("Log Delta: " + delta);
@@ -440,7 +446,14 @@ public class Environment {
         if(curr_delta >= delta*2){
             
             curr_delta = 0;
-            logCycle(delta, getColony().getFoodCount(), getColony().getAntCount(), getColony().getLeafCount(), getColony().getScore(), CommonScents.getEVAP(), CommonScents.getLAY());
+            logCycle(delta, getColony().getFoodCount(), getColony().getAntCount(), getColony().getLeafCount(), getColony().getScore(), 2, 0);
+        }
+        
+        for (TerrainLocation[] terrainrow : terrain) {
+            for (TerrainLocation block : terrainrow) {
+                block.onClockTick(delta);
+                createNewLeaves(block);
+            }
         }
         
     }

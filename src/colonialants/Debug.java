@@ -68,7 +68,7 @@ public class Debug {
         }
     }
     
-    public static void logCycle(int delta, int netResources, int ants, int leaves, int resources, int evap, int lay){
+    public static void logCycle(int delta, int netResources, int ants, int leaves, int resources, double evap, int lay){
         if(LOGGING){
             try {
                 fout.write(delta + "," + netResources + "," + ants + "," + leaves + "," + resources + "," + evap + "," + lay + "\n");
