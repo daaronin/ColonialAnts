@@ -62,7 +62,7 @@ public class AntDisplayGL extends SkelLWJGL{
                 tmap.addSpriteLocation("pheromoneFood2", new Rectangle2D.Float(.25f,.25f,.25f,.125f));
                 tmap.addSpriteLocation("pheromoneFood3", new Rectangle2D.Float(.5f,.25f,.25f,.125f));
                 tmap.addSpriteLocation("pheromoneFood4", new Rectangle2D.Float(.75f,.25f,.25f,.125f));
-                tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.75f,.75f,.25f,.125f));
+                tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.75f,.625f,.25f,.125f));
 
 /*		tmap.initSheet("src/colonialimages/spritesheet2.png", "PNG");
 		tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
@@ -136,14 +136,14 @@ public class AntDisplayGL extends SkelLWJGL{
                     tmap.getSheetID());
                     drawTile(bounds, tmap.getSpriteLocation(texture));
                     
-                    if(location.getScent().FoodIntensity > 0 || location.getScent().ReturnIntensity > 0){
+                    //if(location.getScent().FoodIntensity > 0 || location.getScent().ReturnIntensity > 0){
                         String r = location.getScent().getTexture();
                         Rectangle scentbounds = location.getScreenLocation();
                         GL11.glBindTexture(GL11.GL_TEXTURE_2D,
                         tmap.getSheetID());
 
                         drawTile(scentbounds, tmap.getSpriteLocation(r));
-                    }
+                    //}
                     
                 }
             }

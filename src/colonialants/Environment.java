@@ -121,11 +121,11 @@ public class Environment {
                 Random r = new Random();
                 if(r.nextInt(100)<3){
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
-                    terrain[i][j].setResources(10);
+                    terrain[i][j].setResources(200);
                     getColony().addLeafCount();
                 }else if(r.nextInt(8191)==1337){
                     terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
-                    terrain[i][j].setResources(100);
+                    terrain[i][j].setResources(1000);
                     getColony().addLeafCount();
                 }else{
                     terrain[i][j].setTerrain((Terrain) new Sand("sand"));
@@ -402,8 +402,8 @@ public class Environment {
 
         for (int j = 0; j<ants.size(); j++) {
             if(ants.get(j).getLifeSpan() <= 0){
-                ants.remove(j);
-                getColony().lowerAntCount();
+                //ants.remove(j);
+                //getColony().lowerAntCount();
             }
             ants.get(j).onClockTick(delta, snapMovement);
             

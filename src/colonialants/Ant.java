@@ -30,11 +30,13 @@ public class Ant {
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
     private int numOfAnts = 0;
-    private int ANT_LIFESPAN = 1000;
-
+    private int ANT_LIFESPAN = 5000;
+    
+    
+    private double less_lay = .005;
        
-    private int RP_LEVEL = 20;
-    private int FP_LEVEL = 20;
+    private double RP_LEVEL = 20;
+    private double FP_LEVEL = 20;
     
     public enum State{
         MOVING, IDLE
@@ -240,32 +242,32 @@ public class Ant {
     
     public void lowerLifeSpan(int amount){
         ANT_LIFESPAN -= amount;
-        //if (ANT_LIFESPAN <= 0){
+        if (ANT_LIFESPAN <= 0){
             //System.out.println("An Ant Died!!");
-        //}
+        }
     }
     
     public int getLifeSpan(){
         return ANT_LIFESPAN;
     }
     
-    public int getRP_LEVEL() {
+    public double getRP_LEVEL() {
         return RP_LEVEL;
     }
 
     public void decRP_LEVEL() {
         if(RP_LEVEL > 0){
-            RP_LEVEL--;
+            RP_LEVEL = RP_LEVEL * (1-less_lay);
         }
     }
 
-    public int getFP_LEVEL() {
+    public double getFP_LEVEL() {
         return FP_LEVEL;
     }
 
     public void decFP_LEVEL() {
         if(FP_LEVEL > 0){
-            FP_LEVEL--;
+            FP_LEVEL = FP_LEVEL * (1-less_lay);
         }
     }
     
