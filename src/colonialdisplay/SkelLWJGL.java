@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GLContext;
+import static colonialants.Debug.*;
 
 public abstract class SkelLWJGL {
 	/* animation indicator for menu selector */
@@ -57,14 +58,20 @@ public abstract class SkelLWJGL {
 	GLData data = new GLData();
 	GLCanvas canvas;
         
-        Scale scale;
+        Scale spawnScale;
+        Scale balanceScale;
         Scale scaleLay;
         Scale scaleEvap;
-                        
-	Label gathererLabel;
-        Label builderLabel;
+        Scale scaleLifespan;
+        Scale scaleFood;
+        
+        Label lifespanLabel;
+	Label balanceLabel;
+        Label spawnLabel;
         Label labelFood;
-        Label labelAnts;
+        Label labelFoodRate;
+        Label labelGather;
+        Label labelBuilder;
         Label labelLeaves;
         Label labelScore;
         Label labelEvap;
@@ -194,25 +201,38 @@ public abstract class SkelLWJGL {
                 fillLayout.spacing = 1;
 		comp3.setLayout(fillLayout);
                 
-                comp4 = new Composite(shell, SWT.BORDER);
-                fillLayout = new FillLayout();
-                fillLayout.type = SWT.HORIZONTAL;
-                fillLayout.spacing = 1;
-		comp4.setLayout(fillLayout);
-                        
+                if(DEBUG){
+                    comp4 = new Composite(shell, SWT.BORDER);
+                    fillLayout = new FillLayout();
+                    fillLayout.type = SWT.HORIZONTAL;
+                    fillLayout.spacing = 1;
+                    comp4.setLayout(fillLayout);
+                }     
+                
                 FormData data1 = new FormData();
 		data1.left = new FormAttachment(0, 5);
 		data1.top = new FormAttachment(0, 5);
 		data1.right = new FormAttachment(75, 0);
-                data1.bottom = new FormAttachment(90, 0);
-                comp.setLayoutData(data1);
+                
+               
                 
                 FormData data2 = new FormData();
 		data2.left = new FormAttachment(comp, 5);
 		data2.right = new FormAttachment(100, -5);
 		data2.top = new FormAttachment(comp3, 5);
-                data2.bottom = new FormAttachment(90,0);
+                
+                
+                if(DEBUG){
+                    data1.bottom = new FormAttachment(90, 0);
+                    data2.bottom = new FormAttachment(90,0);
+                }else{
+                    data1.bottom = new FormAttachment(100, 0);
+                    data2.bottom = new FormAttachment(100,0);
+                }
+                
+                comp.setLayoutData(data1);
                 comp2.setLayoutData(data2);
+                
                 
                 FormData data3 = new FormData();
 		data3.left = new FormAttachment(comp, 5);
@@ -220,61 +240,65 @@ public abstract class SkelLWJGL {
 		data3.top = new FormAttachment(0, 5);
                 data3.bottom = new FormAttachment(20,0);
                 comp3.setLayoutData(data3);
-		
-                FormData data4 = new FormData();
-		data4.left = new FormAttachment(0, 5);
-		data4.right = new FormAttachment(75, 0);
-		data4.top = new FormAttachment(comp, 5);
-                data4.bottom = new FormAttachment(100, -5);
-                comp4.setLayoutData(data4);
+                
+		if(DEBUG){
+                    FormData data4 = new FormData();
+                    data4.left = new FormAttachment(0, 5);
+                    data4.right = new FormAttachment(75, 0);
+                    data4.top = new FormAttachment(comp, 5);
+                    data4.bottom = new FormAttachment(100, -5);
+                    comp4.setLayoutData(data4);
+                }
                 
 		// Depth size 
 		data.depthSize = 1;
 		data.doubleBuffer = true;
                 
-                final Scale gathererScale = new Scale(comp2, SWT.NONE);
-                gathererScale.setMaximum (10);
-                gathererScale.setIncrement(1);
-                gathererScale.setPageIncrement(1);
+                balanceScale = new Scale(comp2, SWT.NONE);
+                balanceScale.setMaximum (10);
+                balanceScale.setIncrement(1);
+                balanceScale.setPageIncrement(1);
                 
-                gathererLabel = new Label(comp2, SWT.NONE);
-                gathererLabel.setText("Gathering Ants: 0");
+                balanceLabel = new Label(comp2, SWT.NONE);
+                balanceLabel.setText("Gatherers:Builders | 10:0");
                 
-                gathererScale.addListener(SWT.Selection, new Listener() {
+                balanceScale.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                  int perspectiveValue = gathererScale.getSelection();
-                  gathererLabel.setText("Gathering Ants: " + perspectiveValue);
-                  onSliderChange(AntType.GATHERER, perspectiveValue);
+                  int perspectiveValue = balanceScale.getSelection();
+                  onSliderBalanceChange(perspectiveValue);
                 }
                 });
                 
                 
-                final Scale builderScale = new Scale(comp2, SWT.NONE);
-                builderScale.setMaximum (10);
-                builderScale.setPageIncrement(1);
+                spawnScale = new Scale(comp2, SWT.NONE);
+                spawnScale.setMaximum (10);
+                spawnScale.setMinimum (0);
+                spawnScale.setIncrement(1);
+                spawnScale.setPageIncrement(1);
+                spawnScale.setSelection(1);
                 
-                builderLabel = new Label(comp2, SWT.NONE);
-                builderLabel.setText("Builder Ants: 0");
+                spawnLabel = new Label(comp2, SWT.NONE);
+                spawnLabel.setText("Spawn Rate: 1");
 		
-                builderScale.addListener(SWT.Selection, new Listener() {
+                spawnScale.addListener(SWT.Selection, new Listener() {
                 @Override
                 public void handleEvent(Event event) {
-                  int perspectiveValue = builderScale.getSelection();
-                  builderLabel.setText("Builder Ants: " + perspectiveValue);
-                  onSliderChange(AntType.BUILDER, perspectiveValue);
+                  int perspectiveValue = spawnScale.getSelection();
+                  spawnLabel.setText("Spawn Rate: " + perspectiveValue);
+                  onSliderSpawnChange(perspectiveValue);
                 }
                 });
                 
                 scaleEvap = new Scale(comp2, SWT.NONE);
-                scaleEvap.setMaximum (20);
-                scaleEvap.setMinimum (1);
+                scaleEvap.setMaximum (100);
+                scaleEvap.setMinimum (0);
                 scaleEvap.setIncrement(1);
                 scaleEvap.setPageIncrement(1);
-                scaleEvap.setSelection(7);
+                scaleEvap.setSelection(3);
                 
                 labelEvap = new Label(comp2, SWT.NONE);
-                labelEvap.setText("Evap Rate: 7");
+                labelEvap.setText("Evap Rate: 3");
 		
                 scaleEvap.addListener(SWT.Selection, new Listener() {
                     @Override
@@ -287,14 +311,14 @@ public abstract class SkelLWJGL {
                 });
                 
                 scaleLay = new Scale(comp2, SWT.NONE);
-                scaleLay.setMaximum (600);
+                scaleLay.setMaximum (100);
                 scaleLay.setMinimum (1);
-                scaleLay.setIncrement(50);
-                scaleLay.setPageIncrement(50);
-                scaleLay.setSelection(400);
+                scaleLay.setIncrement(1);
+                scaleLay.setPageIncrement(1);
+                scaleLay.setSelection(3);
                 
                 labelLay = new Label(comp2, SWT.NONE);
-                labelLay.setText("Lay Rate: 400");
+                labelLay.setText("Lay Rate: 3");
 		
                 scaleLay.addListener(SWT.Selection, new Listener() {
                     @Override
@@ -306,40 +330,83 @@ public abstract class SkelLWJGL {
                     }
 
                 });
+                
+                scaleLifespan = new Scale(comp2, SWT.NONE);
+                scaleLifespan.setMaximum (4000);
+                scaleLifespan.setMinimum (500);
+                scaleLifespan.setIncrement(100);
+                scaleLifespan.setPageIncrement(100);
+                scaleLifespan.setSelection(2000);
+                
+                lifespanLabel = new Label(comp2, SWT.NONE);
+                lifespanLabel.setText("Ant Lifespan: 2000");
+		
+                scaleLifespan.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                  int perspectiveValue = scaleLifespan.getSelection();
+                  lifespanLabel.setText("Ant Lifespan: " + perspectiveValue);
+                  onSliderLifespanChange(perspectiveValue);
+                }
+                });
+                
+                scaleFood = new Scale(comp2, SWT.NONE);
+                scaleFood.setMaximum (400);
+                scaleFood.setMinimum (50);
+                scaleFood.setIncrement(50);
+                scaleFood.setPageIncrement(50);
+                scaleFood.setSelection(200);
+                
+                labelFoodRate = new Label(comp2, SWT.NONE);
+                labelFoodRate.setText("Food Rate: 200");
+		
+                scaleFood.addListener(SWT.Selection, new Listener() {
+                @Override
+                public void handleEvent(Event event) {
+                  int perspectiveValue = scaleFood.getSelection();
+                  labelFoodRate.setText("Food Rate: " + perspectiveValue);
+                  onSliderFoodChange(perspectiveValue);
+                }
+                });
+                
+                
                                 
                 labelFood = new Label(comp3, SWT.NONE);
-                labelFood.setText("Net Resources: ");
+                labelFood.setText("Net Resources: 0");
                 
-                labelAnts = new Label(comp3, SWT.NONE);
-                labelAnts.setText("Ants Present: ");
+                labelGather = new Label(comp3, SWT.NONE);
+                labelGather.setText("Gatherers Present: 0");
+                
+                labelBuilder = new Label(comp3, SWT.NONE);
+                labelBuilder.setText("Builders Present: 0");
+                
                 
                 labelLeaves = new Label(comp3, SWT.NONE);
-                labelLeaves.setText("Leaves Present: ");
+                labelLeaves.setText("Leaves Present: 0");
                 
                 labelScore = new Label(comp3, SWT.NONE);
-                labelScore.setText("Score(Resources Collected): ");
+                labelScore.setText("Resources Collected: 0");
                 
-                btnWind = new Button(comp4, SWT.NONE);
-                btnWind.setText("Wind");
-                
-                btnWind.addListener(SWT.Selection, new Listener() {
-                    @Override
-                    public void handleEvent(Event event) {
-                      invokeWind();
-                    }
+                if(DEBUG){
+                    btnWind = new Button(comp4, SWT.NONE);
+                    btnWind.setText("Wind");
 
-                });
-                               
-                btnWater = new Button(comp4, SWT.NONE);
-                btnWater.setText("Water");
+                    btnWind.addListener(SWT.Selection, new Listener() {
+                        @Override
+                        public void handleEvent(Event event) {
+                          invokeWind();
+                        }
+
+                    });
+
+                    btnWater = new Button(comp4, SWT.NONE);
+                    btnWater.setText("Water");
+
+                    btnFungi = new Button(comp4, SWT.NONE);
+                    btnFungi.setText("Plague");
+                }
                 
-                btnFungi = new Button(comp4, SWT.NONE);
-                btnFungi.setText("Plague");
-                
-                btnAttack = new Button(comp4, SWT.NONE);
-                btnAttack.setText("Attack");
-                
-		// set up canvas
+                // set up canvas
 		canvas = new GLCanvas(comp, SWT.NONE, data);
 		canvas.setCurrent();
 		canvas.setMenu(initMenu());
@@ -422,12 +489,16 @@ public abstract class SkelLWJGL {
 	protected abstract void renderGL();	
 	protected abstract void resetGL();
         
-        protected abstract void onSliderChange(AntType TYPE, int value);
         protected abstract void onLaySliderChange(int value);
         protected abstract void onEvapSliderChange(int value);
+        protected abstract void onSliderLifespanChange(int value);
+        protected abstract void onSliderBalanceChange(int value);
+        protected abstract void onSliderFoodChange(int value);
+        protected abstract void onSliderSpawnChange(int value);
         
         protected abstract void updateFoodCount();
-        protected abstract void updateAntCount();
+        protected abstract void updateGatherCount();
+        protected abstract void updateBuilderCount();
         protected abstract void updateLeafCount();
         protected abstract void updateScoreCount();
         

@@ -220,10 +220,6 @@ public class AntDisplayGL extends SkelLWJGL {
         gl.start();
     }
 
-    @Override
-    protected void onSliderChange(AntType TYPE, int value) {
-
-    }
 
     @Override
     protected void updateFoodCount() {
@@ -231,8 +227,13 @@ public class AntDisplayGL extends SkelLWJGL {
     }
 
     @Override
-    protected void updateAntCount() {
-        labelAnts.setText("Ants Present: " + e.getColony().getAntCount());
+    protected void updateGatherCount() {
+        labelGather.setText("Gatherers Present: " + e.getColony().getAntCount(AntType.GATHERER));
+    }
+    
+    @Override
+    protected void updateBuilderCount() {
+        labelBuilder.setText("Builders Present: " + e.getColony().getAntCount(AntType.BUILDER));
     }
 
     @Override
@@ -265,5 +266,31 @@ public class AntDisplayGL extends SkelLWJGL {
             }
         }
     }
+
+    private void updateAntCount() {
+        updateGatherCount();
+        updateBuilderCount();
+    }
+
+    @Override
+    protected void onSliderLifespanChange(int value) {
+        
+    }
+
+    @Override
+    protected void onSliderBalanceChange(int value) {
+        
+    }
+
+    @Override
+    protected void onSliderFoodChange(int value) {
+        
+    }
+
+    @Override
+    protected void onSliderSpawnChange(int value) {
+        
+    }
+
 
 }
