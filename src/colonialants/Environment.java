@@ -408,8 +408,8 @@ public class Environment {
 
         for (int j = 0; j < ants.size(); j++) {
             if (ants.get(j).getLifeSpan() <= 0) {
-                //ants.remove(j);
-                //getColony().lowerAntCount();
+                ants.remove(j);
+                getColony().lowerAntCount();
             }
             ants.get(j).onClockTick(delta, snapMovement);
 

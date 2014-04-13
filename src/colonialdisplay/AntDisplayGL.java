@@ -256,4 +256,14 @@ public class AntDisplayGL extends SkelLWJGL {
 
     }
 
+    @Override
+    protected void invokeWind() {
+        for (TerrainLocation[] locationrow : e.getLocations()) {
+            for (TerrainLocation location : locationrow) {
+                location.getScent().resetFoodIntensity();
+                location.getScent().resetReturnIntensity();
+            }
+        }
+    }
+
 }

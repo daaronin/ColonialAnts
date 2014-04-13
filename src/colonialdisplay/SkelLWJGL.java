@@ -308,7 +308,7 @@ public abstract class SkelLWJGL {
                 });
                                 
                 labelFood = new Label(comp3, SWT.NONE);
-                labelFood.setText("Resources Gathered: ");
+                labelFood.setText("Net Resources: ");
                 
                 labelAnts = new Label(comp3, SWT.NONE);
                 labelAnts.setText("Ants Present: ");
@@ -321,6 +321,14 @@ public abstract class SkelLWJGL {
                 
                 btnWind = new Button(comp4, SWT.NONE);
                 btnWind.setText("Wind");
+                
+                btnWind.addListener(SWT.Selection, new Listener() {
+                    @Override
+                    public void handleEvent(Event event) {
+                      invokeWind();
+                    }
+
+                });
                                
                 btnWater = new Button(comp4, SWT.NONE);
                 btnWater.setText("Water");
@@ -422,4 +430,6 @@ public abstract class SkelLWJGL {
         protected abstract void updateAntCount();
         protected abstract void updateLeafCount();
         protected abstract void updateScoreCount();
+        
+        protected abstract void invokeWind();
 }

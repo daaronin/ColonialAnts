@@ -13,8 +13,8 @@ import static colonialants.Debug.*;
  */
 public class CommonScents {
 
-    public double ReturnIntensity = 0;
-    public double FoodIntensity = 0;
+    private double ReturnIntensity = 0;
+    private double FoodIntensity = 0;
 
     private String[] textures;
 
