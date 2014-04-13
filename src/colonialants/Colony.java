@@ -6,6 +6,8 @@
 
 package colonialants;
 
+import colonialants.Environment.AntType;
+
 /**
  *
  * @author George McDaid
@@ -13,9 +15,11 @@ package colonialants;
 public class Colony {
     
     int foodCount;
-    int antCount;
     int leafCount;
     int scoreCount;
+    
+    int gatherers;
+    int builders;
 
     public enum ColLoc{
         TR, TL, BR, BL
@@ -58,16 +62,33 @@ public class Colony {
         return foodCount;
     }
     
-    public void addAntCount(){
-        antCount++;
+    public void addAntCount(AntType type){
+        if(type == AntType.GATHERER){
+            gatherers++;
+        }else if(type == AntType.BUILDER){
+            builders++;
+        }
     }
     
-    public void lowerAntCount(){
-        antCount--;
+    public void lowerAntCount(AntType type){
+        if(type == AntType.GATHERER){
+            gatherers--;
+        }else if(type == AntType.BUILDER){
+            builders--;
+        }
     }
     
-    public int getAntCount(){
-        return antCount;
+    public int getAntCount(AntType type){
+        if(type == AntType.GATHERER){
+            return gatherers;
+        }else if(type == AntType.BUILDER){
+            return builders;
+        }
+        return 0;
+    }
+    
+    public int getPopulation(){
+        return gatherers + builders;
     }
     
     public void addLeafCount(){

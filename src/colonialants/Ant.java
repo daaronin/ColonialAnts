@@ -29,7 +29,7 @@ public class Ant {
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
     private int numOfAnts = 0;
-    private int ANT_LIFESPAN = 1400;
+    private int ANT_LIFESPAN = 2000;
 
     private double less_lay = .005;
 

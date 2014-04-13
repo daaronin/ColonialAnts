@@ -210,8 +210,10 @@ public class Environment {
         //if(colony.getAntCount() < population){
         if (TYPE == AntType.GATHERER) {
             ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], tex));
+            colony.addAntCount(AntType.GATHERER);
         } else if (TYPE == AntType.BUILDER) {
             ants.add(new BuilderAnt(new Point(0, 0), terrain[0][0], tex));
+            colony.addAntCount(AntType.BUILDER);
         } else {
             ants.add(new Ant(new Point(0, 0), terrain[0][0], tex));
         }
@@ -398,7 +400,6 @@ public class Environment {
                 i = r.nextInt(3);
                 if (i < 3) {
                     this.addAnt(AntType.GATHERER);
-                    colony.addAntCount();
                     getColony().removeFood(2);
                 } else if (i == 133) {                       //Killed all the builders
                     this.addAnt(AntType.BUILDER);
@@ -408,8 +409,16 @@ public class Environment {
 
         for (int j = 0; j < ants.size(); j++) {
             if (ants.get(j).getLifeSpan() <= 0) {
-                ants.remove(j);
-                getColony().lowerAntCount();
+                
+                if(ants.get(j) instanceof GatheringAnt){
+                    ants.remove(j);
+                    getColony().lowerAntCount(AntType.GATHERER);
+                }else if(ants.get(j) instanceof BuilderAnt){
+                    ants.remove(j);
+                    getColony().lowerAntCount(AntType.BUILDER);
+                }
+                
+                
             }
             ants.get(j).onClockTick(delta, snapMovement);
 
@@ -450,7 +459,7 @@ public class Environment {
         if (curr_delta >= delta * 2) {
 
             curr_delta = 0;
-            logCycle(delta, getColony().getFoodCount(), getColony().getAntCount(), getColony().getLeafCount(), getColony().getScore(), 2, 0);
+            logCycle(delta, getColony().getFoodCount(), getColony().getPopulation(), getColony().getLeafCount(), getColony().getScore(), 2, 0);
         }
 
         for (TerrainLocation[] terrainrow : terrain) {

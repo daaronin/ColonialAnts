@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 public class Debug {
     
-    private static boolean DEBUG = true;
+    public static boolean DEBUG = true;
     private static boolean LOGGING = false;
     
     private static File LogFile;
