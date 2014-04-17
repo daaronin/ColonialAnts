@@ -3,8 +3,10 @@ package colonialdisplay;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -15,8 +17,13 @@ public class TextureMapper {
         public static HashMap<String, Rectangle2D.Float> textureMap = new HashMap<String, Rectangle2D.Float>();
 	
 	
-	public Texture initSheet(String filename, String imageFormat){
-		InputStream stream = ResourceLoader.getResourceAsStream(filename);
+	public Texture initSheet(URL url, String imageFormat){
+		InputStream stream = null;
+            try {
+                stream = url.openStream();
+            } catch (IOException ex) {
+                Logger.getLogger(TextureMapper.class.getName()).log(Level.SEVERE, null, ex);
+            }
 		try {
 			t = TextureLoader.getTexture(imageFormat, stream);
 		} catch (IOException e) {

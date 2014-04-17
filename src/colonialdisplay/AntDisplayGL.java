@@ -37,7 +37,7 @@ public class AntDisplayGL extends SkelLWJGL {
 
         tmap = new TextureMapper();
 
-        tmap.initSheet("src/colonialimages/spritesheethighres.png", "PNG");
+        tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres.png"), "PNG");
         tmap.addSpriteLocation("sand", new Rectangle2D.Float(.25f, .5f, .25f, .125f));
         tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.75f, .5f, .25f, .125f));
         tmap.addSpriteLocation("brownleaf", new Rectangle2D.Float(0, .625f, .25f, .125f));
@@ -279,16 +279,16 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onSliderBalanceChange(int value) {
+        e.setAntBalance(value);
+    }
+
+    @Override
+    protected void onSliderFoodChange(double value) {
         
     }
 
     @Override
-    protected void onSliderFoodChange(int value) {
-        
-    }
-
-    @Override
-    protected void onSliderSpawnChange(int value) {
+    protected void onSliderSpawnChange(double value) {
         
     }
 

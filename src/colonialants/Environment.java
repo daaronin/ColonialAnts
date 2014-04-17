@@ -25,7 +25,7 @@ public class Environment {
     private final int spaceSize = 20;
 
     private int dimension = 32;
-
+    
     private TerrainLocation[][] terrain;
 
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
@@ -37,7 +37,8 @@ public class Environment {
     double PRODUCTION_RATE = .1;
     private int leavestoset = 0;
     private boolean snapMovement = false;
-
+    private int antBalance = 100;
+    
     private String[] tex = {
         "antNorth",
         "antNorthEast",
@@ -397,12 +398,13 @@ public class Environment {
                 i = r.nextInt(100);
             }
             if (i < 2) {
-                i = r.nextInt(3);
-                if (i < 3) {
+                i = r.nextInt(100)+1;
+                if (i <= antBalance) {
                     this.addAnt(AntType.GATHERER);
                     getColony().removeFood(2);
-                } else if (i == 133) {                       //Killed all the builders
+                } else{                       //Killed all the builders
                     this.addAnt(AntType.BUILDER);
+                    getColony().removeFood(2);
                 }
             }
         }
@@ -469,5 +471,9 @@ public class Environment {
             }
         }
 
+    }
+    
+    public void setAntBalance(int balance){
+        this.antBalance = balance;
     }
 }

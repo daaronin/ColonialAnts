@@ -26,6 +26,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GLContext;
 import static colonialants.Debug.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 
 public abstract class SkelLWJGL {
 	/* animation indicator for menu selector */
@@ -182,7 +186,14 @@ public abstract class SkelLWJGL {
 		shell.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		shell.setText("Ant Colony: ");
                 
-                Image bg_image = new Image(display, "src/colonialimages/shellbackground.png");
+                
+                Image bg_image = null;
+                try {
+                    bg_image = new Image(display, this.getClass().getResource("/colonialimages/shellbackground.png").openStream());
+                } catch (IOException ex) {
+                    Logger.getLogger(SkelLWJGL.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
                 shell.setBackgroundImage(bg_image);
 
 		// Create a composite
@@ -255,6 +266,7 @@ public abstract class SkelLWJGL {
 		data.doubleBuffer = true;
                 
                 balanceScale = new Scale(comp2, SWT.NONE);
+                balanceScale.setMinimum (0);
                 balanceScale.setMaximum (10);
                 balanceScale.setIncrement(1);
                 balanceScale.setPageIncrement(1);
@@ -266,7 +278,10 @@ public abstract class SkelLWJGL {
                 @Override
                 public void handleEvent(Event event) {
                   int perspectiveValue = balanceScale.getSelection();
-                  onSliderBalanceChange(perspectiveValue);
+                  int gath = 10-perspectiveValue;
+                  int build = perspectiveValue;
+                  balanceLabel.setText("Gatherers:Builders | "+gath+":"+build);
+                  onSliderBalanceChange(gath*10);
                 }
                 });
                 
@@ -493,8 +508,8 @@ public abstract class SkelLWJGL {
         protected abstract void onEvapSliderChange(int value);
         protected abstract void onSliderLifespanChange(int value);
         protected abstract void onSliderBalanceChange(int value);
-        protected abstract void onSliderFoodChange(int value);
-        protected abstract void onSliderSpawnChange(int value);
+        protected abstract void onSliderFoodChange(double value);
+        protected abstract void onSliderSpawnChange(double value);
         
         protected abstract void updateFoodCount();
         protected abstract void updateGatherCount();

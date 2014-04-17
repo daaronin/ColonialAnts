@@ -21,7 +21,8 @@ public class TerrainLocation extends Location {
 
     private Terrain t;
     private int resources = 0;
-
+    
+    
     public static enum Direction {
 
         NORTH(0), NORTHEAST(1), EAST(2),
