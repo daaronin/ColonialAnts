@@ -9,7 +9,7 @@ package colonialants;
  *
  * @author George McDaid
  */
-public interface Terrain {
+public interface Terrain{
     
     /**
      *

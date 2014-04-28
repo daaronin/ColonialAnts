@@ -6,11 +6,13 @@
 
 package colonialants;
 
+import java.io.Serializable;
+
 /**
  *
  * @author George McDaid
  */
-public class AntHill implements Terrain{
+public class AntHill implements Terrain, Serializable{
 
     String texture;
 

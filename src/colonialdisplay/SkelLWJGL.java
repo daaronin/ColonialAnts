@@ -25,7 +25,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GLContext;
-import static colonialants.Debug.*;
+import static colonialants.Utility.*;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -494,6 +494,15 @@ public abstract class SkelLWJGL {
 			public void handleEvent(Event event) {
 				shell.dispose();
 			}
+		});
+                
+                MenuItem item3 = new MenuItem(menu, SWT.PUSH);
+		item3.setText("Save");
+		item3.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event event) {
+				save();
+			}
 		});	
 		return menu;
 	}
@@ -510,6 +519,7 @@ public abstract class SkelLWJGL {
         protected abstract void onSliderBalanceChange(int value);
         protected abstract void onSliderFoodChange(double value);
         protected abstract void onSliderSpawnChange(double value);
+        protected abstract void save();
         
         protected abstract void updateFoodCount();
         protected abstract void updateGatherCount();
@@ -518,4 +528,6 @@ public abstract class SkelLWJGL {
         protected abstract void updateScoreCount();
         
         protected abstract void invokeWind();
+        
+        
 }

@@ -6,11 +6,13 @@
 
 package colonialants;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Dan
  */
-public class Leaf implements Terrain {
+public class Leaf implements Terrain , Serializable{
     
     String texture;
     

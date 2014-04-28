@@ -6,7 +6,7 @@ package colonialants;
 
 import colonialants.Ant.State;
 import colonialants.Colony.ColLoc;
-import static colonialants.Debug.*;
+import static colonialants.Utility.*;
 import colonialants.TerrainLocation.Direction;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +30,7 @@ public class Environment {
 
     //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
     //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
-    private ArrayList<Ant> ants;
+    
     private Colony colony;
     private int population;
     Random r = new Random();
@@ -68,7 +68,7 @@ public class Environment {
         terrain = new TerrainLocation[dimension][dimension];
         colony = new Colony();
         population = 150;
-        ants = new ArrayList<Ant>();
+        
 
         Date d = new Date();
         initLog("src\\" + String.valueOf(d.getTime()) + ".csv");
@@ -195,7 +195,7 @@ public class Environment {
     }
 
     public void addTestAnts() {
-
+        ArrayList<Ant> ants = colony.getAnts();
         for (int i = 0; i < (population); i++) {
             int j = r.nextInt(100);
             if (j < 10) {
@@ -208,6 +208,7 @@ public class Environment {
     }
 
     public void addAnt(AntType TYPE) {
+        ArrayList<Ant> ants = colony.getAnts();
         //if(colony.getAntCount() < population){
         if (TYPE == AntType.GATHERER) {
             ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], tex));
@@ -223,7 +224,7 @@ public class Environment {
     }
 
     public ArrayList<Ant> getTestAnts() {
-        return ants;
+        return colony.getAnts();
     }
 
     public void initScents() {
@@ -390,6 +391,7 @@ public class Environment {
     int curr_delta = 0;
 
     public void onClockTick(int delta) {
+        ArrayList<Ant> ants = colony.getAnts();
         if (getColony().getFoodCount() >= 2) {
             int i = 0;
             if (snapMovement) {
@@ -475,5 +477,9 @@ public class Environment {
     
     public void setAntBalance(int balance){
         this.antBalance = balance;
+    }
+    
+    public int getDimension(){
+        return dimension;
     }
 }

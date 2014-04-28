@@ -4,6 +4,7 @@
  */
 package colonialants;
 
+import java.io.Serializable;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 
@@ -11,7 +12,7 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * @author George McDaid
  */
-public class Location {
+public class Location implements Serializable{
 
     public static final int LOCATION_DIMENSION = 20;
 

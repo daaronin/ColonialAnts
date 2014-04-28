@@ -7,12 +7,15 @@
 package colonialants;
 
 import colonialants.Environment.AntType;
+import java.util.ArrayList;
 
 /**
  *
  * @author George McDaid
  */
 public class Colony {
+    
+    private ArrayList<Ant> ants;
     
     int foodCount;
     int leafCount;
@@ -32,6 +35,7 @@ public class Colony {
         location = ColLoc.TL;
         dimension = 15;
         foodCount = 0;
+        ants = new ArrayList<Ant>();
     }
     
     public ColLoc getLocation(){
@@ -113,6 +117,10 @@ public class Colony {
     
     public void lowerScore(int points){
         scoreCount -= points;
+    }
+    
+    public ArrayList<Ant> getAnts(){
+        return ants;
     }
     
 

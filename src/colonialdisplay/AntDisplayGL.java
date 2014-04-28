@@ -6,18 +6,22 @@
 package colonialdisplay;
 
 import colonialants.Ant;
-import colonialants.CommonScents;
+import static colonialants.Utility.*;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
 import colonialants.TerrainLocation;
 import java.awt.geom.Rectangle2D;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Rectangle;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
-import static colonialants.Debug.*;
 
 /**
  *
@@ -27,7 +31,16 @@ public class AntDisplayGL extends SkelLWJGL {
 
     Environment e;
     private TextureMapper tmap = null;
-
+    private static String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+    private static String protocol = "jdbc:derby:";
+    private static Connection conn = null;
+    private static ArrayList statements = new ArrayList(); // list of Statements, PreparedStatements
+    private static PreparedStatement psInsert = null;
+    private static PreparedStatement psUpdate = null;
+    private static Statement s = null;
+    private static ResultSet rs = null;
+    private static String framework = "embedded";
+    
     private void initTextures() {
 
         // enable alpha blending
@@ -214,12 +227,227 @@ public class AntDisplayGL extends SkelLWJGL {
         GL11.glViewport(bounds.x, bounds.y, bounds.width, bounds.height);
 
     }
+    
+    protected void saveAnts(){
+    }
 
     public static void main(String[] args) {
         AntDisplayGL gl = new AntDisplayGL();
-        gl.start();
-    }
+        try {
+            
+            Class.forName(driver).newInstance();
+            
+            conn = DriverManager.getConnection(protocol + "src/colonialdisplay/derbyDB;create=true");
+            
 
+            s = conn.createStatement();
+            statements.add(s);
+
+            // We create a table...
+            try{
+                s.execute("create table location1(num int PRIMARY KEY, addr varchar(40))");
+                System.out.println("Created table location");
+            }catch(SQLException e){
+                
+            }
+
+            // and add a few rows...
+
+            /* It is recommended to use PreparedStatements when you are
+             * repeating execution of an SQL statement. PreparedStatements also
+             * allows you to parameterize variables. By using PreparedStatements
+             * you may increase performance (because the Derby engine does not
+             * have to recompile the SQL statement each time it is executed) and
+             * improve security (because of Java type checking).
+             */
+            // parameter 1 is num (int), parameter 2 is addr (varchar)
+            psInsert = conn.prepareStatement(
+                    "insert into location1 values (?, ?)");
+            statements.add(psInsert);
+
+            psInsert.setInt(1, 1958);
+            psInsert.setString(2, "Webster St.");
+            psInsert.executeUpdate();
+            System.out.println("Inserted 1957 Webster");
+
+            psInsert.setInt(1, 1911);
+            psInsert.setString(2, "Union St.");
+            psInsert.executeUpdate();
+            System.out.println("Inserted 1910 Union");
+
+            // Let's update some rows as well...
+            // parameter 1 and 3 are num (int), parameter 2 is addr (varchar)
+            psUpdate = conn.prepareStatement(
+                    "update location1 set num=?, addr=? where num=?");
+            statements.add(psUpdate);
+
+            psUpdate.setInt(1, 180);
+            psUpdate.setString(2, "Grand Ave.");
+            psUpdate.setInt(3, 1956);
+            psUpdate.executeUpdate();
+            System.out.println("Updated 1956 Webster to 180 Grand");
+
+            psUpdate.setInt(1, 300);
+            psUpdate.setString(2, "Lakeshore Ave.");
+            psUpdate.setInt(3, 180);
+            psUpdate.executeUpdate();
+            System.out.println("Updated 180 Grand to 300 Lakeshore");
+
+
+            /*
+             We select the rows and verify the results.
+             */
+            rs = s.executeQuery(
+                    "SELECT num, addr FROM location1 ORDER BY num");
+
+            /* we expect the first returned column to be an integer (num),
+             * and second to be a String (addr). Rows are sorted by street
+             * number (num).
+             *
+             * Normally, it is best to use a pattern of
+             *  while(rs.next()) {
+             *    // do something with the result set
+             *  }
+             * to process all returned rows, but we are only expecting two rows
+             * this time, and want the verification code to be easy to
+             * comprehend, so we use a different pattern.
+             */
+            int number; // street number retrieved from the database
+            boolean failure = false;
+            if (!rs.next()) {
+                failure = true;
+                //reportFailure("No rows in ResultSet");
+            }
+
+            if ((number = rs.getInt(1)) != 300) {
+                failure = true;
+                //reportFailure(
+                //"Wrong row returned, expected num=300, got " + number);
+            }
+
+            if (!rs.next()) {
+                failure = true;
+                //reportFailure("Too few rows");
+            }
+
+            if ((number = rs.getInt(1)) != 1910) {
+                failure = true;
+//                reportFailure(
+//                        "Wrong row returned, expected num=1910, got " + number);
+            }
+
+            if (rs.next()) {
+                failure = true;
+                //reportFailure("Too many rows");
+            }
+            
+            rs = s.executeQuery("SELECT COUNT(*) FROM location1");
+            rs.next();
+            int ir = rs.getInt(1);
+            o("ROWS: " + ir);
+
+            if (!failure) {
+                System.out.println("Verified the rows");
+                
+            }
+
+            // delete the table
+//            s.execute("drop table location");
+//            System.out.println("Dropped table location");
+
+            /*
+             We commit the transaction. Any changes will be persisted to
+             the database now.
+             */
+            conn.commit();
+            System.out.println("Committed the transaction");
+
+            /*
+             * In embedded mode, an application should shut down the database.
+             * If the application fails to shut down the database,
+             * Derby will not perform a checkpoint when the JVM shuts down.
+             * This means that it will take longer to boot (connect to) the
+             * database the next time, because Derby needs to perform a recovery
+             * operation.
+             *
+             * It is also possible to shut down the Derby system/engine, which
+             * automatically shuts down all booted databases.
+             *
+             * Explicitly shutting down the database or the Derby engine with
+             * the connection URL is preferred. This style of shutdown will
+             * always throw an SQLException.
+             *
+             * Not shutting down when in a client environment, see method
+             * Javadoc.
+             */
+            if (framework.equals("embedded")) {
+
+                // the shutdown=true attribute shuts down Derby
+                DriverManager.getConnection("jdbc:derby:;shutdown=true");
+
+                    // To shut down a specific database only, but keep the
+                // engine running (for example for connecting to other
+                // databases), specify a database in the connection URL:
+                //DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
+            }
+
+
+            // release all open resources to avoid unnecessary memory usage
+            // ResultSet
+            if (rs != null) {
+                rs.close();
+                rs = null;
+            }
+
+            // Statements and PreparedStatements
+            int i = 0;
+            while (!statements.isEmpty()) {
+                // PreparedStatement extend Statement
+                Statement st = (Statement) statements.remove(i);
+                try {
+                    if (st != null) {
+                        st.close();
+                        st = null;
+                    }
+                } catch (SQLException sqle) {
+                    //printSQLException(sqle);
+                }
+            }
+
+            //Connection
+            if (conn != null) {
+                conn.close();
+                conn = null;
+            }
+        }
+
+    
+    catch (ClassNotFoundException ex
+
+    
+        ) {
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    catch (InstantiationException ex
+
+    
+        ) {
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    catch (IllegalAccessException ex
+
+    
+        ) {
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    catch (SQLException ex
+
+    
+        ) {
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        gl.start();
+}
 
     @Override
     protected void updateFoodCount() {
@@ -291,6 +519,14 @@ public class AntDisplayGL extends SkelLWJGL {
     protected void onSliderSpawnChange(double value) {
         
     }
+
+    @Override
+    protected void save() {
+        saveAnts();
+    }
+
+
+    
 
 
 }

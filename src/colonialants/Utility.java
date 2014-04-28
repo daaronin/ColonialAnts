@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author George McDaid
  */
-public class Debug {
+public class Utility {
     
     public static boolean DEBUG = true;
     private static boolean LOGGING = false;
@@ -25,7 +25,7 @@ public class Debug {
     private static File LogFile;
     private static BufferedWriter fout;
     
-    public Debug(){
+    public Utility(){
         
     }
     
@@ -49,8 +49,8 @@ public class Debug {
     
     public static void initLog(String filename){
         LogFile = new File(filename);
-        
-        try {
+        if(LOGGING){
+            try {
             
             if (!LogFile.exists()) {
                 LogFile.createNewFile();
@@ -63,9 +63,11 @@ public class Debug {
             
             LOGGING = true;
         
-        } catch (IOException ex) {
-            Logger.getLogger(Debug.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+        
     }
     
     public static void logCycle(int delta, int netResources, int ants, int leaves, int resources, double evap, int lay){
@@ -73,7 +75,7 @@ public class Debug {
             try {
                 fout.write(delta + "," + netResources + "," + ants + "," + leaves + "," + resources + "," + evap + "," + lay + "\n");
             } catch (IOException ex) {
-                Logger.getLogger(Debug.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -84,7 +86,7 @@ public class Debug {
                 fout.close();
             }
         } catch (IOException ex) {
-            Logger.getLogger(Debug.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

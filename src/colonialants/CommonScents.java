@@ -5,13 +5,14 @@
  */
 package colonialants;
 
-import static colonialants.Debug.*;
+import static colonialants.Utility.*;
+import java.io.Serializable;
 
 /**
  *
  * @author Dan Ford
  */
-public class CommonScents {
+public class CommonScents implements Serializable{
 
     private double ReturnIntensity = 0;
     private double FoodIntensity = 0;

@@ -5,11 +5,13 @@
 
 package colonialants;
 
+import java.io.Serializable;
+
 /**
  *
  * @author George McDaid
  */
-public class Stream implements Terrain{
+public class Stream implements Terrain, Serializable{
     
     String texture;
     

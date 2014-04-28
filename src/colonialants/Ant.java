@@ -5,6 +5,7 @@
 package colonialants;
 
 import colonialants.TerrainLocation.Direction;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -17,22 +18,21 @@ import org.eclipse.swt.graphics.Rectangle;
  *
  * @author George McDaid
  */
-public class Ant {
+public class Ant implements Serializable{
 
     TerrainLocation destination = null;
     TerrainLocation origin = null;
-    Random r = new Random();
+    
     int SIZE = 20;
     Location position;
     Direction intendedBearing = Direction.NORTH;
-    private String[] textures;
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
-    private int numOfAnts = 0;
     private int ANT_LIFESPAN = 2000;
-
     private double less_lay = .005;
-
+    
+    Random r = new Random();
+    private String[] textures;
     private double RP_LEVEL = 32;
     private double FP_LEVEL = 32;
 
@@ -59,13 +59,11 @@ public class Ant {
         this.state = State.IDLE;
         origin = t;
         textures = tex;
-        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
 
     public Ant(Point p, int size) {
         position = new Location(p, size);
         this.state = State.IDLE;
-        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
 
     public Rectangle getLocation() {

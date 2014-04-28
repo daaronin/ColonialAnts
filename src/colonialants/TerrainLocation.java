@@ -5,6 +5,7 @@
  */
 package colonialants;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Random;
 import org.eclipse.swt.graphics.Point;
@@ -13,7 +14,7 @@ import org.eclipse.swt.graphics.Point;
  *
  * @author George McDaid
  */
-public class TerrainLocation extends Location {
+public class TerrainLocation extends Location implements Serializable{
 
     protected TerrainLocation[] neighbors = new TerrainLocation[8];
     HashMap<Direction, TerrainLocation> options = new HashMap<Direction, TerrainLocation>();
@@ -21,7 +22,6 @@ public class TerrainLocation extends Location {
 
     private Terrain t;
     private int resources = 0;
-    
     
     public static enum Direction {
 

@@ -5,11 +5,13 @@
 
 package colonialants;
 
+import java.io.Serializable;
+
 /**
  *
  * @author George McDaid
  */
-public class Sand implements Terrain{
+public class Sand implements Terrain, Serializable{
     
     String texture;
     
