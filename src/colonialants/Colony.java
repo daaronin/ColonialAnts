@@ -17,12 +17,12 @@ public class Colony {
     
     private ArrayList<Ant> ants;
     
-    int foodCount;
-    int leafCount;
-    int scoreCount;
+    private int foodCount;
+    private int leafCount;
+    private int scoreCount;
     
-    int gatherers;
-    int builders;
+    private int gatherers;
+    private int builders;
 
     public enum ColLoc{
         TR, TL, BR, BL
@@ -123,5 +123,17 @@ public class Colony {
         return ants;
     }
     
+    public void setAnts(ArrayList<Ant> ants){
+        this.ants = ants;
+    }
 
+    public void resetColony(){
+        ants = new ArrayList<Ant>();
+        foodCount = 100;
+        leafCount = 0;
+        scoreCount = 0;
+
+        gatherers = 0;
+        builders = 0;
+    }
 }

@@ -6,13 +6,14 @@ package colonialants;
 
 import colonialants.Ant.State;
 import colonialants.Colony.ColLoc;
-import static colonialants.Utility.*;
 import colonialants.TerrainLocation.Direction;
+import static colonialants.Utility.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.eclipse.swt.graphics.Point;
 
 /**
@@ -28,9 +29,7 @@ public class Environment {
     
     private TerrainLocation[][] terrain;
 
-    //Normally this will be a swarm holding all ants, sadly we must wait for Krish Fish, unless I get impatient
-    //Envionment has a Swarm (I think this has become a colony. Eventually ants can go in there)
-    
+       
     private Colony colony;
     private int population;
     Random r = new Random();
@@ -38,8 +37,11 @@ public class Environment {
     private int leavestoset = 0;
     private boolean snapMovement = false;
     private int antBalance = 100;
+
     
-    private String[] tex = {
+    private boolean spawnStarted = false;
+    
+    public static String[] tex = {
         "antNorth",
         "antNorthEast",
         "antEast",
@@ -239,7 +241,11 @@ public class Environment {
     public TerrainLocation[][] getLocations() {
         return terrain;
     }
-
+    
+    public void setSquare(TerrainLocation location, int x, int y){
+        terrain[x][y] = location;
+    }
+    
     public void setNeighbors(TerrainLocation block) {
 
         Point coords = block.getIdices();
@@ -410,62 +416,68 @@ public class Environment {
                 }
             }
         }
-
-        for (int j = 0; j < ants.size(); j++) {
-            if (ants.get(j).getLifeSpan() <= 0) {
-                
-                if(ants.get(j) instanceof GatheringAnt){
-                    ants.remove(j);
-                    getColony().lowerAntCount(AntType.GATHERER);
-                }else if(ants.get(j) instanceof BuilderAnt){
-                    ants.remove(j);
-                    getColony().lowerAntCount(AntType.BUILDER);
-                }
-                
-                
+        if(ants.isEmpty()){
+            if(spawnStarted){
+                o("LOST");
             }
-            ants.get(j).onClockTick(delta, snapMovement);
+        }else{
+            for (int j = 0; j < ants.size(); j++) {
+                if (ants.get(j).getLifeSpan() <= 0) {
 
-            if (ants.get(j).getOrigin().getTerrain() instanceof Leaf) {
-                ants.get(j).setCarrying();
-            }
-
-            if (ants.get(j) instanceof GatheringAnt) {
-                if (ants.get(j).getOrigin().getTerrain() instanceof AntHill) {
-                    if (ants.get(j).carryingFood) {
-                        ants.get(j).stopCarrying();
-                        ants.get(j).resetLevels();
-
-                        colony.addFood(1);
-                        colony.addScore(1);
+                    if(ants.get(j) instanceof GatheringAnt){
+                        ants.remove(j);
+                        if(ants.isEmpty()){
+                            return;
+                        }
+                        getColony().lowerAntCount(AntType.GATHERER);
+                    }else if(ants.get(j) instanceof BuilderAnt){
+                        ants.remove(j);
+                        if(ants.isEmpty()){
+                            return;
+                        }
+                        getColony().lowerAntCount(AntType.BUILDER);
                     }
+
+
+                }
+                ants.get(j).onClockTick(delta, snapMovement);
+
+                if (ants.get(j).getOrigin().getTerrain() instanceof Leaf) {
+                    ants.get(j).setCarrying();
                 }
 
-                if (ants.get(j).state == State.IDLE) {
-                    if (ants.get(j).carryingFood) {
-                        ants.get(j).getOrigin().getScent().alterScent("food", ants.get(j).getFP_LEVEL(), ants.get(j));
-                        ants.get(j).decFP_LEVEL();
-                        //if(j==0) o(ants.get(j).getFP_LEVEL());
-                    } else {
-                        ants.get(j).getOrigin().getScent().alterScent("return", ants.get(j).getRP_LEVEL(), ants.get(j));
-                        ants.get(j).decRP_LEVEL();
-                        //if(j==0) o(ants.get(j).getRP_LEVEL());
+                if (ants.get(j) instanceof GatheringAnt) {
+                    if (ants.get(j).getOrigin().getTerrain() instanceof AntHill) {
+                        if (ants.get(j).carryingFood) {
+                            ants.get(j).stopCarrying();
+                            ants.get(j).resetLevels();
 
+                            colony.addFood(1);
+                            colony.addScore(1);
+                        }
+                    }
+
+
+
+                    if (ants.get(j).state == State.IDLE) {
+
+
+                        if (ants.get(j).carryingFood) {
+                            ants.get(j).getOrigin().getScent().alterScent("food", ants.get(j).getFP_LEVEL(), ants.get(j));
+                            ants.get(j).decFP_LEVEL();
+                            //if(j==0) o(ants.get(j).getFP_LEVEL());
+                        } else {
+                            ants.get(j).getOrigin().getScent().alterScent("return", ants.get(j).getRP_LEVEL(), ants.get(j));
+                            ants.get(j).decRP_LEVEL();
+                            //if(j==0) o(ants.get(j).getRP_LEVEL());
+
+                        }
                     }
                 }
             }
         }
-
-        curr_delta += 1;
-        //o("Log Delta: " + delta);
-        //o("Curr Delta: " + curr_delta);
-        //o();
-        if (curr_delta >= delta * 2) {
-
-            curr_delta = 0;
-            logCycle(delta, getColony().getFoodCount(), getColony().getPopulation(), getColony().getLeafCount(), getColony().getScore(), 2, 0);
-        }
-
+        //curr_delta += 1;
+        
         for (TerrainLocation[] terrainrow : terrain) {
             for (TerrainLocation block : terrainrow) {
                 block.onClockTick(delta);
@@ -482,4 +494,218 @@ public class Environment {
     public int getDimension(){
         return dimension;
     }
+    
+    public void reset() {
+        blowWind();
+        for (TerrainLocation[] terrainrow : terrain) {
+            for (TerrainLocation location : terrainrow) {
+                if(location.getTerrain().getTexture().equals("stream")){
+                    
+                }
+            }
+        }
+        colony.resetColony();
+    }
+
+    public void blowWind() {
+        for (TerrainLocation[] locationrow : getLocations()) {
+            for (TerrainLocation location : locationrow) {
+                location.getScent().resetFoodIntensity();
+                location.getScent().resetReturnIntensity();
+            }
+        }
+    }
+    
+    public boolean isSpawnStarted() {
+        return spawnStarted;
+    }
+
+    public void setSpawnStarted(boolean spawnStarted) {
+        this.spawnStarted = spawnStarted;
+    }
+    
+    public TerrainLocation createStream(TerrainLocation startBlock, TerrainLocation endBlock){
+        HashMap<TerrainLocation.Direction,TerrainLocation> list = startBlock.getNeighbors();
+        HashMap<Integer, TerrainLocation.Direction> choices = new HashMap<Integer, TerrainLocation.Direction>();
+        HashMap<Integer, Double> probs = new HashMap<Integer, Double>();
+        Iterator it = list.entrySet().iterator();
+        
+        startBlock.setTerrain((Terrain) new Stream("stream"));
+        endBlock.setTerrain((Terrain) new Stream("stream"));
+        
+        int count = 0;
+        int bestmove = 100;
+        
+        int startX = startBlock.getX();
+        int startY = startBlock.getY();
+        //System.out.println("Start x: " + startX + ", Start y: " + startY);
+        
+        int endX = endBlock.getX();
+        int endY = endBlock.getY();
+        //System.out.println("End x: " + endX + ", End y: " + endY);
+        
+        while (it.hasNext() && bestmove == 100) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            
+            int neighborX = ((TerrainLocation) pairs.getValue()).getX();
+            int neighborY = ((TerrainLocation) pairs.getValue()).getY();
+            //System.out.println("Neighbor x: " + neighborX + ", Neighbor y: " + neighborY);            
+            
+            if (neighborY == endY && neighborX == endX){
+                choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                probs.put(count, 100.0);
+                bestmove = count;
+                count++;    
+            } else if (neighborY <= startY){
+                //opposite Y direction
+                if (endY > startY){
+                    if (neighborX > startX){
+                        if(endX >= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX < startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 15.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }
+                    } else if (neighborX < startX){
+                        if(endX > startX){
+                            //BAD MOVE
+                        } else if (endX <= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }            
+                    }
+                //matching Y direction    
+                } else if (endY <= startY){
+                    if (neighborX > startX){
+                        if(endX >= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 85.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX < startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 45.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }
+                    } else if (neighborX < startX){
+                        if(endX > startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 45.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX <= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 85.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }            
+                    }        
+                }
+            }else if (neighborY > startY){
+                //matching Y direction
+                if (endY >= startY){
+                    if (neighborX > startX){
+                        if(endX >= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 85.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX < startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 45.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }
+                    } else if (neighborX < startX){
+                        if(endX > startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 45.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX <= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 85.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }            
+                    }
+                //opposite Y direction    
+                } else if (endY < startY){
+                    if (neighborX > startX){
+                        if(endX >= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX < startX){
+                            //BAD MOVE
+                        }
+                    } else if (neighborX < startX){
+                        if(endX > startX){
+                            //BAD MOVE
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 15.0);
+                            //((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        } else if (endX <= startX){
+                            //matching X direction
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            count++;
+                        }            
+                    }        
+                }
+            }
+        }
+        if (count > 0) {
+            int choice = 0;
+            double bestdiff = 100;
+            for (int i = 0; i < probs.size(); i++) {
+                double prob = probs.get(i);
+                double diff = 100 - r.nextInt((int) prob);
+                /*if (bestdiff == 100) {
+                 choice = i;
+                 bestdiff = diff;
+                 //System.out.println(bestdiff);
+                 }*/
+                if (bestdiff > diff) {
+                    choice = i;
+                    bestdiff = diff;
+                }
+            }
+            if (bestmove != 100) {
+                choice = bestmove;
+            }
+            //System.out.println("Choice: " + choice);
+            Direction intendedBearing = choices.get(choice);
+            TerrainLocation destination = list.get(intendedBearing);
+            destination.setTerrain((Terrain) new Stream("stream"));
+            return destination;
+        }
+        
+        TerrainLocation destination = new TerrainLocation();
+        return destination;
+    }
+    
 }

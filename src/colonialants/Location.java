@@ -21,10 +21,6 @@ public class Location implements Serializable{
     protected Rectangle pixelLocation = new Rectangle(0, 0,
             LOCATION_DIMENSION, LOCATION_DIMENSION);
 
-    public Location() {
-
-    }
-
     public Location(int x, int y) {
         gridLocation = new Point(x, y);
 
@@ -45,6 +41,10 @@ public class Location implements Serializable{
 
         pixelLocation.x = gridLocation.y * pixelLocation.width;
         pixelLocation.y = gridLocation.x * pixelLocation.height;
+    }
+    
+    public Location() {
+        
     }
 
     public int getX() {

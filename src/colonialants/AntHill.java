@@ -16,13 +16,13 @@ public class AntHill implements Terrain, Serializable{
 
     String texture;
 
-    AntHill(String texture) {
+    public AntHill(String texture) {
         this.texture = texture;
     }
     
     @Override
     public String toString(){
-        return "AH";
+        return "anthill";
     }
     
     @Override

@@ -1,8 +1,11 @@
 package colonialdisplay;
 
 
-import colonialants.CommonScents;
-import colonialants.Environment.AntType;
+import static colonialants.Utility.*;
+import java.io.IOException;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
@@ -25,11 +28,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GLContext;
-import static colonialants.Utility.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 
 public abstract class SkelLWJGL {
 	/* animation indicator for menu selector */
@@ -85,6 +83,10 @@ public abstract class SkelLWJGL {
         Button btnWater;
         Button btnFungi;
         Button btnAttack;
+        Button btnReset;
+        
+        Random r = new Random();
+        
         /**
 	 * Get the accurate time system
 	 * 
@@ -177,6 +179,7 @@ public abstract class SkelLWJGL {
 		
 		destroyGL();
 		display.dispose();
+             
 	}
 	
 	private Shell initSWT() {
@@ -235,10 +238,10 @@ public abstract class SkelLWJGL {
                 
                 if(DEBUG){
                     data1.bottom = new FormAttachment(90, 0);
-                    data2.bottom = new FormAttachment(90,0);
+                    data2.bottom = new FormAttachment(100,-5);
                 }else{
-                    data1.bottom = new FormAttachment(100, 0);
-                    data2.bottom = new FormAttachment(100,0);
+                    data1.bottom = new FormAttachment(90, 0);
+                    data2.bottom = new FormAttachment(100,-5);
                 }
                 
                 comp.setLayoutData(data1);
@@ -402,6 +405,17 @@ public abstract class SkelLWJGL {
                 labelScore = new Label(comp3, SWT.NONE);
                 labelScore.setText("Resources Collected: 0");
                 
+                btnReset = new Button(comp2, SWT.NONE);
+                    btnReset.setText("Reset");
+
+                    btnReset.addListener(SWT.Selection, new Listener() {
+                        @Override
+                        public void handleEvent(Event event) {
+                          invokeReset();
+                        }
+
+                    });
+                
                 if(DEBUG){
                     btnWind = new Button(comp4, SWT.NONE);
                     btnWind.setText("Wind");
@@ -416,6 +430,14 @@ public abstract class SkelLWJGL {
 
                     btnWater = new Button(comp4, SWT.NONE);
                     btnWater.setText("Water");
+                    
+                    btnWater.addListener(SWT.Selection, new Listener() {
+                        @Override
+                        public void handleEvent(Event event) {
+                          invokeWater();
+                        }
+
+                    });
 
                     btnFungi = new Button(comp4, SWT.NONE);
                     btnFungi.setText("Plague");
@@ -503,7 +525,16 @@ public abstract class SkelLWJGL {
 			public void handleEvent(Event event) {
 				save();
 			}
-		});	
+		});
+                
+                MenuItem item4 = new MenuItem(menu, SWT.PUSH);
+		item4.setText("Load");
+		item4.addListener(SWT.Selection, new Listener(){
+			@Override
+			public void handleEvent(Event event) {
+				load();
+			}
+		});                
 		return menu;
 	}
 	
@@ -520,6 +551,7 @@ public abstract class SkelLWJGL {
         protected abstract void onSliderFoodChange(double value);
         protected abstract void onSliderSpawnChange(double value);
         protected abstract void save();
+        protected abstract void load();
         
         protected abstract void updateFoodCount();
         protected abstract void updateGatherCount();
@@ -528,6 +560,8 @@ public abstract class SkelLWJGL {
         protected abstract void updateScoreCount();
         
         protected abstract void invokeWind();
+        protected abstract void invokeWater();
+        protected abstract void invokeReset();
         
         
 }

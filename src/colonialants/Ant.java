@@ -23,6 +23,10 @@ public class Ant implements Serializable{
     TerrainLocation destination = null;
     TerrainLocation origin = null;
     
+    static int antCount = 0;
+    
+    private int id;
+    
     int SIZE = 20;
     Location position;
     Direction intendedBearing = Direction.NORTH;
@@ -31,39 +35,62 @@ public class Ant implements Serializable{
     private int ANT_LIFESPAN = 2000;
     private double less_lay = .005;
     
+    State state;
     Random r = new Random();
     private String[] textures;
     private double RP_LEVEL = 32;
     private double FP_LEVEL = 32;
 
     public enum State {
-
-        MOVING, IDLE
+        MOVING(0), IDLE(1);
+        
+        private int value;
+        
+        private State(int value) {
+            this.value = value;
+        }
+        
+        public static State fromValue(int value){
+            switch(value){
+                case 0:
+                    return State.MOVING;
+                case 1:
+                    return State.IDLE;
+                default: 
+                    return State.IDLE;
+            }
+        }
+        
     }
-
-    State state;
 
     public Ant() {
         this.state = State.IDLE;
         this.ANT_LIFESPAN = ANT_LIFESPAN;
+        id = antCount;
+        antCount++;
     }
 
     public Ant(Point p) {
+        this();
         position = new Location(p);
-        this.state = State.IDLE;
-        this.ANT_LIFESPAN = ANT_LIFESPAN;
     }
 
     public Ant(Point p, TerrainLocation t, String[] tex) {
+        this();
         position = new Location(p);
-        this.state = State.IDLE;
         origin = t;
+        textures = tex;
+    }
+    
+    public Ant(Point p, String[] tex) {
+        this();
+        position = new Location(p);
         textures = tex;
     }
 
     public Ant(Point p, int size) {
+        this();
         position = new Location(p, size);
-        this.state = State.IDLE;
     }
 
     public Rectangle getLocation() {
@@ -88,6 +115,10 @@ public class Ant implements Serializable{
             //snapMove(getScreenPosition());
             walk(delta, snapMovement);
         }
+        
+        if (getOrigin().getTerrain() instanceof Stream){
+                lowerLifeSpan(5000);
+            }
 
     }
 
@@ -202,6 +233,10 @@ public class Ant implements Serializable{
     public TerrainLocation getOrigin() {
         return this.origin;
     }
+    
+    public TerrainLocation getDestination() {
+        return this.destination;
+    }
 
     public String getTexture() {
         String tex = textures[intendedBearing.value];
@@ -269,6 +304,64 @@ public class Ant implements Serializable{
     public void resetLevels() {
         FP_LEVEL = 32;
         RP_LEVEL = 32;
+    }
+    
+    public int getID(){
+        return id;
+    }
+    
+    public int getBearing(){
+        return intendedBearing.value;
+    }
+    
+    public int getState(){
+        return state.value;
+    }
+    
+    public void setDestination(TerrainLocation destination) {
+        this.destination = destination;
+    }
+
+    public void setOrigin(TerrainLocation origin) {
+        this.origin = origin;
+    }
+
+    public void setPosition(Location position) {
+        this.position = position;
+    }
+
+    public void setIntendedBearing(Direction intendedBearing) {
+        this.intendedBearing = intendedBearing;
+    }
+
+    public void setCarryingFood(boolean carryingFood) {
+        this.carryingFood = carryingFood;
+    }
+
+    public void setANT_LIFESPAN(int ANT_LIFESPAN) {
+        this.ANT_LIFESPAN = ANT_LIFESPAN;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public void setRP_LEVEL(double RP_LEVEL) {
+        this.RP_LEVEL = RP_LEVEL;
+    }
+
+    public void setFP_LEVEL(double FP_LEVEL) {
+        this.FP_LEVEL = FP_LEVEL;
+    }
+    
+    public void setID(int id){
+        this.id = id;
+        antCount--;
+    }
+    
+    @Override
+    public String toString(){
+        return "ant";
     }
 
 }

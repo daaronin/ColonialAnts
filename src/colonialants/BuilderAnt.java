@@ -20,6 +20,10 @@ public class BuilderAnt extends Ant{
         super(p, t, tex);            
     }
     
+    public BuilderAnt(Point p, String[] tex){
+        super(p, tex);            
+    }
+    
     @Override
     public void changeDestination(int delta){
         HashMap<TerrainLocation.Direction,TerrainLocation> list = origin.getNeighbors();
@@ -42,5 +46,10 @@ public class BuilderAnt extends Ant{
             state = State.MOVING;
         }
 
+    }
+    
+    @Override
+    public String toString(){
+        return "builder";
     }
 }

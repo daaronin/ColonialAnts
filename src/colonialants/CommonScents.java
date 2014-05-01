@@ -20,7 +20,7 @@ public class CommonScents implements Serializable{
     private String[] textures;
 
     private Ant rlayer = null;
-    private Ant flayer = null;
+    private Ant flayer = null; 
 
     private static double EVAP_RATE = .03125;
 
@@ -79,10 +79,13 @@ public class CommonScents implements Serializable{
     public void lowerReturnIntensity() {
         if (rlayer != null && !rlayer.isMoving()) {
 
-            this.ReturnIntensity = (int) (ReturnIntensity * (1 - EVAP_RATE));
+            this.ReturnIntensity = (ReturnIntensity * (1 - EVAP_RATE));
+        }else if(rlayer == null){
+            this.ReturnIntensity = (ReturnIntensity * (1-(EVAP_RATE*.0588)));
         }
+        
 
-        if (this.ReturnIntensity <= .5) {
+        if (this.ReturnIntensity < EVAP_RATE) {
             this.ReturnIntensity = 0;
         }
 
@@ -90,12 +93,14 @@ public class CommonScents implements Serializable{
 
     public void lowerFoodIntensity() {
         if (flayer != null && !flayer.isMoving()) {
-
+            
             this.FoodIntensity = ((FoodIntensity * (1 - EVAP_RATE)));
 
+        }else if(flayer == null){
+            this.FoodIntensity = ((FoodIntensity * (1 - (EVAP_RATE*.0588))));
         }
-
-        if (this.FoodIntensity <= .5) {
+        
+        if (this.FoodIntensity < EVAP_RATE) {
             this.FoodIntensity = 0;
         }
     }
@@ -170,4 +175,15 @@ public class CommonScents implements Serializable{
         this.flayer = flayer;
     }
 
+    public void setReturnIntensity(double ReturnIntensity) {
+        this.ReturnIntensity = ReturnIntensity;
+    }
+
+    public void setFoodIntensity(double FoodIntensity) {
+        this.FoodIntensity = FoodIntensity;
+    }
+
+    public static void setEVAP_RATE(double EVAP_RATE) {
+        CommonScents.EVAP_RATE = EVAP_RATE;
+    }    
 }

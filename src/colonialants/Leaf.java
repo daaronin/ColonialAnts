@@ -22,9 +22,7 @@ public class Leaf implements Terrain , Serializable{
     
     @Override
     public String toString(){
-        String s = "L";
-        
-        return s;
+        return "leaf";
     }
     
     @Override

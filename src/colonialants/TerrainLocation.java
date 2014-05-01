@@ -7,7 +7,6 @@ package colonialants;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Random;
 import org.eclipse.swt.graphics.Point;
 
 /**
@@ -16,13 +15,17 @@ import org.eclipse.swt.graphics.Point;
  */
 public class TerrainLocation extends Location implements Serializable{
 
+    static int terrainLocCount = 0;
+    
+    private int id;
+    
     protected TerrainLocation[] neighbors = new TerrainLocation[8];
     HashMap<Direction, TerrainLocation> options = new HashMap<Direction, TerrainLocation>();
     CommonScents scent = new CommonScents();
 
     private Terrain t;
     private int resources = 0;
-    
+
     public static enum Direction {
 
         NORTH(0), NORTHEAST(1), EAST(2),
@@ -35,18 +38,39 @@ public class TerrainLocation extends Location implements Serializable{
         private Direction(int bearing) {
             this.value = bearing;
         }
-    }
-
-    public TerrainLocation() {
-
+        
+        public static Direction fromValue(int value){
+            switch(value){
+                case 0:
+                    return Direction.NORTH;
+                case 1:
+                    return Direction.NORTHEAST;
+                case 2:
+                    return Direction.EAST;
+                case 3:
+                    return Direction.SOUTHEAST;
+                case 4:
+                    return Direction.SOUTH;
+                case 5:
+                    return Direction.SOUTHWEST;
+                case 6:
+                    return Direction.WEST;
+                case 7:
+                    return Direction.NORTWEST;
+                default: 
+                    return Direction.NORTH;
+            }
+        }
     }
 
     public TerrainLocation(Point p, int DIMENSION) {
         super(p, DIMENSION);
+        id = terrainLocCount;
+        terrainLocCount++;
     }
-
-    public TerrainLocation(int x, int y) {
-        super(x, y);
+    
+    public TerrainLocation(){
+        
     }
 
     public void setScent(CommonScents scent) {
@@ -103,4 +127,7 @@ public class TerrainLocation extends Location implements Serializable{
         return t.toString();
     }
 
+    public int getID(){
+        return id;
+    }
 }

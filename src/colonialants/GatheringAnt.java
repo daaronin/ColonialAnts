@@ -19,6 +19,10 @@ public class GatheringAnt extends Ant {
         super(p, t, tex);
     }
 
+    public GatheringAnt(Point p, String[] tex) {
+        super(p, tex);
+    }
+    
     @Override
     public void changeDestination(int delta) {
         HashMap<TerrainLocation.Direction, TerrainLocation> list = origin.getNeighbors();
@@ -201,5 +205,10 @@ public class GatheringAnt extends Ant {
             state = State.MOVING;
             lowerLifeSpan(1);
         }
+    }
+    
+    @Override
+    public String toString(){
+        return "gatherer";
     }
 }

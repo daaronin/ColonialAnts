@@ -21,9 +21,7 @@ public class Sand implements Terrain, Serializable{
     
     @Override
     public String toString(){
-        String s = "O";
-        
-        return s;
+        return "sand";
     }
 
     @Override

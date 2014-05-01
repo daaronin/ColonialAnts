@@ -6,21 +6,29 @@
 package colonialdisplay;
 
 import colonialants.Ant;
-import static colonialants.Utility.*;
+import colonialants.AntHill;
+import colonialants.BuilderAnt;
 import colonialants.Environment;
 import colonialants.Environment.AntType;
+import colonialants.GatheringAnt;
+import colonialants.Leaf;
+import colonialants.Sand;
+import colonialants.Stream;
+import colonialants.Terrain;
 import colonialants.TerrainLocation;
+import colonialants.TerrainLocation.Direction;
+import static colonialants.Utility.*;
 import java.awt.geom.Rectangle2D;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.MessageBox;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -31,15 +39,10 @@ public class AntDisplayGL extends SkelLWJGL {
 
     Environment e;
     private TextureMapper tmap = null;
-    private static String driver = "org.apache.derby.jdbc.EmbeddedDriver";
-    private static String protocol = "jdbc:derby:";
-    private static Connection conn = null;
-    private static ArrayList statements = new ArrayList(); // list of Statements, PreparedStatements
-    private static PreparedStatement psInsert = null;
-    private static PreparedStatement psUpdate = null;
-    private static Statement s = null;
-    private static ResultSet rs = null;
-    private static String framework = "embedded";
+    private boolean loadTerrain = false;
+    private ArrayList<Ant> antload;
+    private HashMap<Integer, ArrayList> antlayf = new HashMap<Integer, ArrayList>();
+    private HashMap<Integer, ArrayList> antlayr = new HashMap<Integer, ArrayList>();
     
     private void initTextures() {
 
@@ -53,6 +56,7 @@ public class AntDisplayGL extends SkelLWJGL {
         tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres.png"), "PNG");
         tmap.addSpriteLocation("sand", new Rectangle2D.Float(.25f, .5f, .25f, .125f));
         tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.75f, .5f, .25f, .125f));
+        tmap.addSpriteLocation("stream", new Rectangle2D.Float(.5f, .5f, .25f, .125f));
         tmap.addSpriteLocation("brownleaf", new Rectangle2D.Float(0, .625f, .25f, .125f));
         tmap.addSpriteLocation("redleaf", new Rectangle2D.Float(.25f, .625f, .25f, .125f));
         tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0, .5f, .25f, .125f));
@@ -155,7 +159,7 @@ public class AntDisplayGL extends SkelLWJGL {
                         tmap.getSheetID());
 
                 drawTile(scentbounds, tmap.getSpriteLocation(r));
-                    //}
+                //}
 
             }
         }
@@ -227,227 +231,260 @@ public class AntDisplayGL extends SkelLWJGL {
         GL11.glViewport(bounds.x, bounds.y, bounds.width, bounds.height);
 
     }
+
+    protected void saveBackground() {
+        prepareInsert(""
+                + "INSERT INTO terrain "
+                + "VALUES "
+                + "(?,?,?,?,?,?,?,?,?)");
+        for (TerrainLocation[] locationrow : e.getLocations()) {
+            for (TerrainLocation location : locationrow) {
+                try {
+                    psInsert.setInt(TERRAIN_ID, location.getID());
+                    psInsert.setInt(TERRAIN_GRIDX, location.getIdices().x);
+                    psInsert.setInt(TERRAIN_GRIDY, location.getIdices().y);
+                    psInsert.setString(TERRAIN_TYPE, location.getTerrain().getTexture());
+                    psInsert.setInt(TERRAIN_RESOURCES, location.getResources());
+                    if (location.getScent().getFlayer() == null) {
+                        psInsert.setInt(TERRAIN_FLAYER, -1);
+                    } else {
+                        psInsert.setInt(TERRAIN_FLAYER, location.getScent().getFlayer().getID());
+                    }
+                    if (location.getScent().getRlayer() == null) {
+                        psInsert.setInt(TERRAIN_RLAYER, -1);
+                    } else {
+                        psInsert.setInt(TERRAIN_RLAYER, location.getScent().getRlayer().getID());
+                    }
+                    psInsert.setDouble(TERRAIN_RINTENSITY, location.getScent().getReturnIntensity());
+                    psInsert.setDouble(TERRAIN_FINTENSITY, location.getScent().getFoodIntensity());
+                    psInsert.executeUpdate();
+                } catch (SQLException ex) {
+                    printSQLException(ex);
+                    Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+        commit();
+    }
+
+    protected void saveAnts() {
+        try {
+            prepareInsert(""
+                    + "INSERT INTO ant "
+                    + "VALUES "
+                    + "(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+            for (Ant ant : e.getColony().getAnts()) {
+                psInsert.setInt(ANT_ID, ant.getID());
+                psInsert.setString(ANT_TYPE, ant.toString());
+                psInsert.setDouble(ANT_PIXELX, ant.getScreenPosition().x);
+                psInsert.setDouble(ANT_PIXELY, ant.getScreenPosition().y);
+                psInsert.setInt(ANT_INTENDEDBEARING, ant.getBearing());
+                psInsert.setInt(ANT_LIFESPAN, ant.getLifeSpan());
+                psInsert.setBoolean(ANT_FOOD, ant.getCarryingStatus());
+                if (ant.getDestination() == null) {
+                    psInsert.setInt(ANT_DESTINATIONX, -1);
+                    psInsert.setInt(ANT_DESTINATIONY, -1);
+                } else {
+                    psInsert.setInt(ANT_DESTINATIONX, ant.getDestination().getIdices().x);
+                    psInsert.setInt(ANT_DESTINATIONY, ant.getDestination().getIdices().y);
+                }
+                psInsert.setInt(ANT_ORIGINX, ant.getOrigin().getIdices().x);
+                psInsert.setInt(ANT_ORIGINY, ant.getOrigin().getIdices().y);
+                psInsert.setDouble(ANT_RP_LEVEL, ant.getRP_LEVEL());
+                psInsert.setDouble(ANT_FP_LEVEL, ant.getFP_LEVEL());
+                psInsert.setInt(ANT_STATE, ant.getState());
+                psInsert.executeUpdate();
+            }
+
+        } catch (SQLException ex) {
+            printSQLException(ex);
+            //Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        commit();
+    }
     
-    protected void saveAnts(){
+    private void loadBackground() {
+        try {
+            ResultSet rs = executeQuery(""
+                    + "SELECT COUNT(id)"
+                    + "FROM terrain");
+            loadTerrain = false;
+            if(rs!= null && rs.next()){
+                if(rs.getInt(1) == e.getDimension()*e.getDimension()){
+                    ResultSet terrainrs = executeQuery(""
+                                            + "SELECT *"
+                                            + "FROM terrain");
+                    TerrainLocation[][] terrain = e.getLocations();
+                    while(terrainrs.next()){
+                        int i = terrainrs.getInt(TERRAIN_GRIDX);
+                        int j = terrainrs.getInt(TERRAIN_GRIDY);
+                        
+                        String terraintype = terrainrs.getString(TERRAIN_TYPE);
+                        
+                        if(!terrain[i][j].toString().equals(terraintype)){
+                            if(terraintype.equals("sand")){
+                                terrain[i][j].setTerrain((Terrain) new Sand("sand"));
+                            }else if(terraintype.equals("leaf")){
+                                int res = terrainrs.getInt(TERRAIN_RESOURCES);
+                                terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
+                                terrain[i][j].setResources(res);
+                            }else if(terraintype.equals("redleaf")){
+                                 int res = terrainrs.getInt(TERRAIN_RESOURCES);
+                                 terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
+                                 terrain[i][j].setResources(res);
+                            }else if(terraintype.equals("stream")){
+                                 int res = terrainrs.getInt(TERRAIN_RESOURCES);
+                                 terrain[i][j].setTerrain((Terrain) new Stream("stream"));
+                                 terrain[i][j].setResources(res);
+                            }else if(terraintype.equals("anthill")){
+                                 terrain[i][j].setTerrain((Terrain) new AntHill("anthill"));
+                            }else{
+                                 terrain[i][j].setTerrain((Terrain) new Sand("sand"));
+                            }
+                            
+                        }
+                        
+                        int flayer = terrainrs.getInt(TERRAIN_FLAYER);
+                        int rlayer = terrainrs.getInt(TERRAIN_RLAYER);
+                        
+                        double rintensity = terrainrs.getInt(TERRAIN_RINTENSITY);
+                        double fintensity = terrainrs.getInt(TERRAIN_FINTENSITY);
+                        
+                        terrain[i][j].getScent().setFoodIntensity(fintensity);
+                        terrain[i][j].getScent().setReturnIntensity(rintensity);
+                        
+                        Point p = new Point(i, j);
+                        
+                        if(flayer != -1){
+                            ArrayList<Point> antlaylf = antlayf.get(flayer);
+                            if(antlaylf != null){
+                                antlaylf.add(p);
+                            }else{
+                                ArrayList<Point> points = new ArrayList<Point>();
+                                points.add(p);
+                                antlayf.put(flayer, points);
+                            } 
+                        }
+                        
+                        if(rlayer != -1){
+                            ArrayList<Point> antlaylr = antlayr.get(rlayer);
+                            if(antlaylr != null){
+                                antlaylr.add(p);
+                            }else{
+                                ArrayList<Point> points = new ArrayList<Point>();
+                                points.add(p);
+                                antlayr.put(rlayer, points);
+                            } 
+                        }
+                        
+                    }
+                    loadTerrain = true;
+                }else{
+                    // create dialog with ok and cancel button and info icon
+                    MessageBox dialog = 
+                      new MessageBox(shell, SWT.ICON_ERROR| SWT.OK);
+                    loadTerrain = false;
+                    dialog.setText("Load Error");
+                    dialog.setMessage("There was an error loading the save data. Data has been cleared.");
+                    dialog.open();
+                    truncate("terrain");
+                    truncate("ant");
+                }
+            }
+        } catch (SQLException ex) {
+            printSQLException(ex);
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    private void loadAnts() {
+        antload = new ArrayList<Ant>(); 
+        try {
+            ResultSet rs = executeQuery(""
+                    + "SELECT *"
+                    + "FROM ant");
+            while(rs.next()){
+                int pixelx = rs.getInt(ANT_PIXELX);
+                int pixely = rs.getInt(ANT_PIXELY);
+                //o("P: "+pixelx+"|"+pixely);
+                String type = rs.getString(ANT_TYPE);
+                Ant a; 
+                if(type.equalsIgnoreCase("ant")){
+                    a = new Ant(new Point(0, 0), Environment.tex);
+                }else if(type.equalsIgnoreCase("gatherer")){
+                    a = new GatheringAnt(new Point(0, 0),Environment.tex);
+                }else if(type.equalsIgnoreCase("builder")){
+                    a = new BuilderAnt(new Point(0, 0),Environment.tex);
+                }else{
+                    a = new Ant(new Point(pixelx, pixely), Environment.tex);
+                }
+                a.getScreenPosition().x = pixelx;
+                a.getScreenPosition().y = pixely;
+                
+                a.setANT_LIFESPAN(rs.getInt(ANT_LIFESPAN));
+                a.setCarryingFood(rs.getBoolean(ANT_FOOD));
+                
+                int dx = rs.getInt(ANT_DESTINATIONX);
+                int dy=  rs.getInt(ANT_DESTINATIONY);
+                //o(dx+"|"+dy);
+                if(dx!=-1 && dy!=-1){
+                  a.setDestination(e.getLocations()[dx][dy]);  
+                }
+                
+                int ox = rs.getInt(ANT_ORIGINX);
+                int oy=  rs.getInt(ANT_ORIGINY);
+                a.setOrigin(e.getLocations()[ox][oy]);             
+                
+                a.setRP_LEVEL(rs.getInt(ANT_RP_LEVEL));
+                a.setFP_LEVEL(rs.getInt(ANT_FP_LEVEL));
+                
+                int bearing = rs.getInt(ANT_INTENDEDBEARING);
+                int state = rs.getInt(ANT_STATE);
+                
+                a.setIntendedBearing(Direction.fromValue(bearing));
+                a.setState(Ant.State.fromValue(state));
+                                
+                int id = rs.getInt(ANT_ID);
+                ArrayList<Point> layf = antlayf.get(id);
+                ArrayList<Point> layr = antlayr.get(id);
+                
+                antload.add(a);
+                
+                
+                TerrainLocation[][] terrain = e.getLocations();
+
+                if(layf != null){
+                    for (Point point : layf) {
+                        terrain[point.x][point.y].getScent().setFlayer(a);
+                    }
+                }
+
+                if(layr != null){
+                    for (Point point : layr) {
+                        terrain[point.x][point.y].getScent().setRlayer(a);
+                    }
+                }
+                
+                
+            }
+            //o(antload.size());
+            e.getColony().setAnts(antload);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void main(String[] args) {
         AntDisplayGL gl = new AntDisplayGL();
-        try {
-            
-            Class.forName(driver).newInstance();
-            
-            conn = DriverManager.getConnection(protocol + "src/colonialdisplay/derbyDB;create=true");
-            
-
-            s = conn.createStatement();
-            statements.add(s);
-
-            // We create a table...
-            try{
-                s.execute("create table location1(num int PRIMARY KEY, addr varchar(40))");
-                System.out.println("Created table location");
-            }catch(SQLException e){
-                
-            }
-
-            // and add a few rows...
-
-            /* It is recommended to use PreparedStatements when you are
-             * repeating execution of an SQL statement. PreparedStatements also
-             * allows you to parameterize variables. By using PreparedStatements
-             * you may increase performance (because the Derby engine does not
-             * have to recompile the SQL statement each time it is executed) and
-             * improve security (because of Java type checking).
-             */
-            // parameter 1 is num (int), parameter 2 is addr (varchar)
-            psInsert = conn.prepareStatement(
-                    "insert into location1 values (?, ?)");
-            statements.add(psInsert);
-
-            psInsert.setInt(1, 1958);
-            psInsert.setString(2, "Webster St.");
-            psInsert.executeUpdate();
-            System.out.println("Inserted 1957 Webster");
-
-            psInsert.setInt(1, 1911);
-            psInsert.setString(2, "Union St.");
-            psInsert.executeUpdate();
-            System.out.println("Inserted 1910 Union");
-
-            // Let's update some rows as well...
-            // parameter 1 and 3 are num (int), parameter 2 is addr (varchar)
-            psUpdate = conn.prepareStatement(
-                    "update location1 set num=?, addr=? where num=?");
-            statements.add(psUpdate);
-
-            psUpdate.setInt(1, 180);
-            psUpdate.setString(2, "Grand Ave.");
-            psUpdate.setInt(3, 1956);
-            psUpdate.executeUpdate();
-            System.out.println("Updated 1956 Webster to 180 Grand");
-
-            psUpdate.setInt(1, 300);
-            psUpdate.setString(2, "Lakeshore Ave.");
-            psUpdate.setInt(3, 180);
-            psUpdate.executeUpdate();
-            System.out.println("Updated 180 Grand to 300 Lakeshore");
-
-
-            /*
-             We select the rows and verify the results.
-             */
-            rs = s.executeQuery(
-                    "SELECT num, addr FROM location1 ORDER BY num");
-
-            /* we expect the first returned column to be an integer (num),
-             * and second to be a String (addr). Rows are sorted by street
-             * number (num).
-             *
-             * Normally, it is best to use a pattern of
-             *  while(rs.next()) {
-             *    // do something with the result set
-             *  }
-             * to process all returned rows, but we are only expecting two rows
-             * this time, and want the verification code to be easy to
-             * comprehend, so we use a different pattern.
-             */
-            int number; // street number retrieved from the database
-            boolean failure = false;
-            if (!rs.next()) {
-                failure = true;
-                //reportFailure("No rows in ResultSet");
-            }
-
-            if ((number = rs.getInt(1)) != 300) {
-                failure = true;
-                //reportFailure(
-                //"Wrong row returned, expected num=300, got " + number);
-            }
-
-            if (!rs.next()) {
-                failure = true;
-                //reportFailure("Too few rows");
-            }
-
-            if ((number = rs.getInt(1)) != 1910) {
-                failure = true;
-//                reportFailure(
-//                        "Wrong row returned, expected num=1910, got " + number);
-            }
-
-            if (rs.next()) {
-                failure = true;
-                //reportFailure("Too many rows");
-            }
-            
-            rs = s.executeQuery("SELECT COUNT(*) FROM location1");
-            rs.next();
-            int ir = rs.getInt(1);
-            o("ROWS: " + ir);
-
-            if (!failure) {
-                System.out.println("Verified the rows");
-                
-            }
-
-            // delete the table
-//            s.execute("drop table location");
-//            System.out.println("Dropped table location");
-
-            /*
-             We commit the transaction. Any changes will be persisted to
-             the database now.
-             */
-            conn.commit();
-            System.out.println("Committed the transaction");
-
-            /*
-             * In embedded mode, an application should shut down the database.
-             * If the application fails to shut down the database,
-             * Derby will not perform a checkpoint when the JVM shuts down.
-             * This means that it will take longer to boot (connect to) the
-             * database the next time, because Derby needs to perform a recovery
-             * operation.
-             *
-             * It is also possible to shut down the Derby system/engine, which
-             * automatically shuts down all booted databases.
-             *
-             * Explicitly shutting down the database or the Derby engine with
-             * the connection URL is preferred. This style of shutdown will
-             * always throw an SQLException.
-             *
-             * Not shutting down when in a client environment, see method
-             * Javadoc.
-             */
-            if (framework.equals("embedded")) {
-
-                // the shutdown=true attribute shuts down Derby
-                DriverManager.getConnection("jdbc:derby:;shutdown=true");
-
-                    // To shut down a specific database only, but keep the
-                // engine running (for example for connecting to other
-                // databases), specify a database in the connection URL:
-                //DriverManager.getConnection("jdbc:derby:" + dbName + ";shutdown=true");
-            }
-
-
-            // release all open resources to avoid unnecessary memory usage
-            // ResultSet
-            if (rs != null) {
-                rs.close();
-                rs = null;
-            }
-
-            // Statements and PreparedStatements
-            int i = 0;
-            while (!statements.isEmpty()) {
-                // PreparedStatement extend Statement
-                Statement st = (Statement) statements.remove(i);
-                try {
-                    if (st != null) {
-                        st.close();
-                        st = null;
-                    }
-                } catch (SQLException sqle) {
-                    //printSQLException(sqle);
-                }
-            }
-
-            //Connection
-            if (conn != null) {
-                conn.close();
-                conn = null;
-            }
-        }
-
-    
-    catch (ClassNotFoundException ex
-
-    
-        ) {
-            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (InstantiationException ex
-
-    
-        ) {
-            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (IllegalAccessException ex
-
-    
-        ) {
-            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    catch (SQLException ex
-
-    
-        ) {
-            Logger.getLogger(AntDisplayGL.class.getName()).log(Level.SEVERE, null, ex);
-    }
+        initDB();
         gl.start();
-}
+        shutdownDB();
+    }
 
     @Override
     protected void updateFoodCount() {
@@ -458,7 +495,7 @@ public class AntDisplayGL extends SkelLWJGL {
     protected void updateGatherCount() {
         labelGather.setText("Gatherers Present: " + e.getColony().getAntCount(AntType.GATHERER));
     }
-    
+
     @Override
     protected void updateBuilderCount() {
         labelBuilder.setText("Builders Present: " + e.getColony().getAntCount(AntType.BUILDER));
@@ -487,12 +524,7 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void invokeWind() {
-        for (TerrainLocation[] locationrow : e.getLocations()) {
-            for (TerrainLocation location : locationrow) {
-                location.getScent().resetFoodIntensity();
-                location.getScent().resetReturnIntensity();
-            }
-        }
+        e.blowWind();
     }
 
     private void updateAntCount() {
@@ -502,7 +534,7 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onSliderLifespanChange(int value) {
-        
+
     }
 
     @Override
@@ -512,21 +544,57 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onSliderFoodChange(double value) {
-        
+
     }
 
     @Override
     protected void onSliderSpawnChange(double value) {
-        
+
     }
 
     @Override
     protected void save() {
-        saveAnts();
+        if(animate){
+            truncate("terrain");
+            truncate("ant");
+            animate = false;
+            saveBackground();
+            saveAnts();
+            animate = true;
+        }else{
+            truncate("terrain");
+            truncate("ant");
+            saveBackground();
+            saveAnts();
+        }
     }
 
-
+    @Override
+    protected void load() {
+        if(animate){
+            animate = false;
+            loadAnts();
+            loadBackground();
+        }else{
+            loadAnts();
+            loadBackground();
+        }
+    }   
+    @Override
+    protected void invokeReset() {
+        e.reset();
+    }
     
-
-
+    @Override
+    protected void invokeWater() {
+        int x = r.nextInt(15) + 15;
+        TerrainLocation start = e.getLocations()[x][0];
+        
+        x = r.nextInt(31);
+        TerrainLocation end = e.getLocations()[x][31];
+        
+        while(start != end){
+            start = e.createStream(start, end);
+        }
+    }
 }

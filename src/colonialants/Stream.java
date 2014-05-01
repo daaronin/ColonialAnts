@@ -15,11 +15,13 @@ public class Stream implements Terrain, Serializable{
     
     String texture;
     
+    public Stream(String tex){
+        texture = tex;
+    }
+    
     @Override
     public String toString(){
-        String s = "S";
-        
-        return s;
+        return "stream";
     }
     
     @Override
