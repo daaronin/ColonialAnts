@@ -32,6 +32,8 @@ public class Ant implements Serializable{
     Direction intendedBearing = Direction.NORTH;
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
+    boolean carryingDirt = true;
+    boolean fear = false;
     private int ANT_LIFESPAN = 2000;
     private double less_lay = .005;
     
@@ -40,6 +42,7 @@ public class Ant implements Serializable{
     private String[] textures;
     private double RP_LEVEL = 32;
     private double FP_LEVEL = 32;
+    private double DP_LEVEL = 32;
 
     public enum State {
         MOVING(0), IDLE(1);
@@ -82,6 +85,14 @@ public class Ant implements Serializable{
         textures = tex;
     }
     
+    public Ant(Point p, TerrainLocation t, String[] tex, int life) {
+        this();
+        position = new Location(p);
+        origin = t;
+        textures = tex;
+        ANT_LIFESPAN = life;
+    }
+    
     public Ant(Point p, String[] tex) {
         this();
         position = new Location(p);
@@ -115,11 +126,6 @@ public class Ant implements Serializable{
             //snapMove(getScreenPosition());
             walk(delta, snapMovement);
         }
-        
-        if (getOrigin().getTerrain() instanceof Stream){
-                lowerLifeSpan(5000);
-            }
-
     }
 
     public boolean isMoving() {
@@ -266,6 +272,19 @@ public class Ant implements Serializable{
         return this.carryingFood;
     }
 
+    public void pickUpDirt(){
+        carryingDirt = true;
+    }
+    
+    public void stopCarryingDirt(){
+        carryingDirt = false;
+        getOrigin().takeResources(1);
+    }
+    
+    public boolean getCarryingDirt(){
+        return this.carryingDirt;
+    }
+    
     public void setLifeSpan(int lifespan) {
         this.ANT_LIFESPAN = lifespan;
     }
@@ -300,10 +319,36 @@ public class Ant implements Serializable{
             FP_LEVEL = FP_LEVEL * (1 - less_lay);
         }
     }
+    
+    public double getDP_LEVEL() {
+        return DP_LEVEL;
+    }
+
+    public void decDP_LEVEL() {
+        if (DP_LEVEL > 0) {
+            DP_LEVEL = DP_LEVEL * (1 - less_lay);
+        }
+    }
 
     public void resetLevels() {
         FP_LEVEL = 32;
         RP_LEVEL = 32;
+    }
+    
+    public void addFear(){
+        fear = true;
+    }
+    
+    public void removeFear(){
+        fear = true;
+    }
+    
+    public void setFear(boolean state){
+        fear = state;
+    }
+    
+    public boolean getFear(){
+        return fear;
     }
     
     public int getID(){
@@ -352,6 +397,10 @@ public class Ant implements Serializable{
 
     public void setFP_LEVEL(double FP_LEVEL) {
         this.FP_LEVEL = FP_LEVEL;
+    }
+    
+    public void setDP_LEVEL(double DP_LEVEL) {
+        this.DP_LEVEL = DP_LEVEL;
     }
     
     public void setID(int id){

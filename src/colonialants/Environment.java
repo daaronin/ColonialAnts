@@ -29,7 +29,10 @@ public class Environment {
     
     private TerrainLocation[][] terrain;
 
-       
+    private int SPAWN_RATE = 2;
+    private int FOOD_RATE = 200;
+    private int LIFE_SPAN = 2000;
+    
     private Colony colony;
     private int population;
     Random r = new Random();
@@ -41,7 +44,7 @@ public class Environment {
     
     private boolean spawnStarted = false;
     
-    public static String[] tex = {
+    public static String[] gatherertex = {
         "antNorth",
         "antNorthEast",
         "antEast",
@@ -58,7 +61,29 @@ public class Environment {
         "pheromoneFood2",
         "pheromoneFood3",
         "pheromoneFood4",
-        "pheromoneNone"
+        "pheromoneNone",
+        "pheromoneDanger"
+    };
+    
+    public static String[] buildertex = {
+      "builderAntNorth",
+        "builderAntNorthEast",
+        "builderAntEast",
+        "builderAntSouthEast",
+        "builderAntSouth",
+        "builderAntSouthWest",
+        "builderAntWest",
+        "builderAntNorthWest",
+        "pheromoneReturn1",
+        "pheromoneReturn2",
+        "pheromoneReturn3",
+        "pheromoneReturn4",
+        "pheromoneFood1",
+        "pheromoneFood2",
+        "pheromoneFood3",
+        "pheromoneFood4",
+        "pheromoneNone",
+        "pheromoneDanger"
     };
 
     public enum AntType {
@@ -74,6 +99,10 @@ public class Environment {
 
         Date d = new Date();
         initLog("src\\" + String.valueOf(d.getTime()) + ".csv");
+    }
+    
+    public TerrainLocation[][] getTerrain(){
+        return terrain;
     }
 
     private void initAntHill() {
@@ -124,7 +153,7 @@ public class Environment {
                 Random r = new Random();
                 if (r.nextInt(100) < 3) {
                     terrain[i][j].setTerrain((Terrain) new Leaf("leaf"));
-                    terrain[i][j].setResources(200);
+                    terrain[i][j].setResources(FOOD_RATE);
                     getColony().addLeafCount();
                 } else if (r.nextInt(8191) == 1337) {
                     terrain[i][j].setTerrain((Terrain) new Leaf("redleaf"));
@@ -201,9 +230,9 @@ public class Environment {
         for (int i = 0; i < (population); i++) {
             int j = r.nextInt(100);
             if (j < 10) {
-                ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], tex));
+                ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], gatherertex));
             } else {
-                ants.add(new Ant(new Point(0, 0), terrain[0][0], tex));
+                ants.add(new Ant(new Point(0, 0), terrain[0][0], gatherertex));
             }
         }
         //ants[dimension-1] = new Ant(new Point(dimension-1, dimension-1), terrain[(dimension-1)][(dimension-1)]);
@@ -213,13 +242,13 @@ public class Environment {
         ArrayList<Ant> ants = colony.getAnts();
         //if(colony.getAntCount() < population){
         if (TYPE == AntType.GATHERER) {
-            ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], tex));
+            ants.add(new GatheringAnt(new Point(0, 0), terrain[0][0], gatherertex, LIFE_SPAN));
             colony.addAntCount(AntType.GATHERER);
         } else if (TYPE == AntType.BUILDER) {
-            ants.add(new BuilderAnt(new Point(0, 0), terrain[0][0], tex));
+            ants.add(new BuilderAnt(new Point(0, 0), terrain[0][0], buildertex, LIFE_SPAN));
             colony.addAntCount(AntType.BUILDER);
         } else {
-            ants.add(new Ant(new Point(0, 0), terrain[0][0], tex));
+            ants.add(new Ant(new Point(0, 0), terrain[0][0], gatherertex, LIFE_SPAN));
         }
         //}
 
@@ -232,7 +261,7 @@ public class Environment {
     public void initScents() {
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                terrain[i][j].setScent(new CommonScents(tex));
+                terrain[i][j].setScent(new CommonScents(gatherertex));
                 //scents.add(new CommonScents(terrain[i][j],tex));
             }
         }
@@ -383,7 +412,7 @@ public class Environment {
             getColony().lowerLeafCount();
             leavestoset++;
         }
-        if (leavestoset > 0) {
+        if (leavestoset + (8 - (int)(FOOD_RATE/25)) > 0) {
             int i = r.nextInt(500000);
             if (block.getTerrain() instanceof Sand && i == 1) {
                 block.setTerrain((Terrain) new Leaf("leaf"));
@@ -405,7 +434,7 @@ public class Environment {
             } else {
                 i = r.nextInt(100);
             }
-            if (i < 2) {
+            if (i < SPAWN_RATE) {
                 i = r.nextInt(100)+1;
                 if (i <= antBalance) {
                     this.addAnt(AntType.GATHERER);
@@ -442,25 +471,25 @@ public class Environment {
                 }
                 ants.get(j).onClockTick(delta, snapMovement);
 
-                if (ants.get(j).getOrigin().getTerrain() instanceof Leaf) {
-                    ants.get(j).setCarrying();
-                }
-
                 if (ants.get(j) instanceof GatheringAnt) {
                     if (ants.get(j).getOrigin().getTerrain() instanceof AntHill) {
+                        ants.get(j).setFear(false);
                         if (ants.get(j).carryingFood) {
                             ants.get(j).stopCarrying();
                             ants.get(j).resetLevels();
 
                             colony.addFood(1);
                             colony.addScore(1);
-                        }
+                        } 
+                    } else if (ants.get(j).getOrigin().getTerrain() instanceof Stream){
+                        ants.get(j).lowerLifeSpan(5000);
+                    } else if (ants.get(j).getOrigin().getTerrain() instanceof Leaf) {
+                        ants.get(j).setCarrying();
                     }
 
 
 
                     if (ants.get(j).state == State.IDLE) {
-
 
                         if (ants.get(j).carryingFood) {
                             ants.get(j).getOrigin().getScent().alterScent("food", ants.get(j).getFP_LEVEL(), ants.get(j));
@@ -472,8 +501,21 @@ public class Environment {
                             //if(j==0) o(ants.get(j).getRP_LEVEL());
 
                         }
+                         if (ants.get(j).getFear() == true){
+                            ants.get(j).getOrigin().getScent().alterScent("danger", ants.get(j).getDP_LEVEL(), ants.get(j));
+                            ants.get(j).decDP_LEVEL();
+                            ants.get(j).stopCarrying();
+                        }
                     }
+                } else if (ants.get(j) instanceof BuilderAnt){
+                if (ants.get(j).getOrigin().getTerrain() instanceof Stream){
+                    ants.get(j).stopCarryingDirt();
+                } else if (ants.get(j).getOrigin().getTerrain() instanceof AntHill){
+                    ants.get(j).pickUpDirt();
+                } else if (ants.get(j).getOrigin().getTerrain() instanceof Sand){
+                    ants.get(j).pickUpDirt();
                 }
+            }
             }
         }
         //curr_delta += 1;
@@ -482,9 +524,22 @@ public class Environment {
             for (TerrainLocation block : terrainrow) {
                 block.onClockTick(delta);
                 createNewLeaves(block);
+                removeWater(block);
             }
         }
 
+    }
+    
+    public void setSpawnRate(int rate){
+        SPAWN_RATE = rate;
+    }
+    
+    public void setFoodRate(int rate){
+        FOOD_RATE = rate;
+    }
+    
+    public void setLifeSpan(int rate){
+        LIFE_SPAN = rate;
     }
     
     public void setAntBalance(int balance){
@@ -500,7 +555,11 @@ public class Environment {
         for (TerrainLocation[] terrainrow : terrain) {
             for (TerrainLocation location : terrainrow) {
                 if(location.getTerrain().getTexture().equals("stream")){
-                    
+                    if (location.getX() < colony.getDimension() * 20 && location.getY() < colony.getDimension() * 20 ){
+                        location.setTerrain((Terrain) new Sand("anthill"));
+                    } else {
+                        location.setTerrain((Terrain) new Sand("sand"));
+                    }
                 }
             }
         }
@@ -524,6 +583,16 @@ public class Environment {
         this.spawnStarted = spawnStarted;
     }
     
+    public void removeWater(TerrainLocation block) {
+        if (block.getResources() < 1 && block.getTerrain() instanceof Stream) {
+            if (block.getX() < colony.getDimension() * 20 && block.getY() < colony.getDimension() * 20 ){
+                block.setTerrain((Terrain) new Sand("anthill"));
+            } else {
+                block.setTerrain((Terrain) new Sand("sand"));
+            }
+        }
+    }
+    
     public TerrainLocation createStream(TerrainLocation startBlock, TerrainLocation endBlock){
         HashMap<TerrainLocation.Direction,TerrainLocation> list = startBlock.getNeighbors();
         HashMap<Integer, TerrainLocation.Direction> choices = new HashMap<Integer, TerrainLocation.Direction>();
@@ -531,7 +600,9 @@ public class Environment {
         Iterator it = list.entrySet().iterator();
         
         startBlock.setTerrain((Terrain) new Stream("stream"));
+        startBlock.setResources(25);
         endBlock.setTerrain((Terrain) new Stream("stream"));
+        endBlock.setResources(25);
         
         int count = 0;
         int bestmove = 100;
@@ -550,7 +621,7 @@ public class Environment {
             int neighborX = ((TerrainLocation) pairs.getValue()).getX();
             int neighborY = ((TerrainLocation) pairs.getValue()).getY();
             //System.out.println("Neighbor x: " + neighborX + ", Neighbor y: " + neighborY);            
-            
+           // if(((TerrainLocation)))
             if (neighborY == endY && neighborX == endX){
                 choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                 probs.put(count, 100.0);
@@ -565,6 +636,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 55.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         } else if (endX < startX){
                             //BAD MOVE
@@ -581,6 +653,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 55.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         }            
                     }
@@ -592,6 +665,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 85.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         } else if (endX < startX){
                             //BAD MOVE
@@ -612,6 +686,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 85.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         }            
                     }        
@@ -625,6 +700,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 85.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         } else if (endX < startX){
                             //BAD MOVE
@@ -645,6 +721,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 85.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         }            
                     }
@@ -656,6 +733,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 55.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         } else if (endX < startX){
                             //BAD MOVE
@@ -672,6 +750,7 @@ public class Environment {
                             choices.put(count, (TerrainLocation.Direction) pairs.getKey());
                             probs.put(count, 55.0);
                             ((TerrainLocation)pairs.getValue()).setTerrain((Terrain) new Stream("stream"));
+                            ((TerrainLocation)pairs.getValue()).setResources(25);
                             count++;
                         }            
                     }        
@@ -701,10 +780,11 @@ public class Environment {
             Direction intendedBearing = choices.get(choice);
             TerrainLocation destination = list.get(intendedBearing);
             destination.setTerrain((Terrain) new Stream("stream"));
+            destination.setResources(25);
             return destination;
         }
-        
         TerrainLocation destination = new TerrainLocation();
+        //System.out.println("Count: " + count);
         return destination;
     }
     

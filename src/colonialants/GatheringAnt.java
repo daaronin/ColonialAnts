@@ -19,6 +19,10 @@ public class GatheringAnt extends Ant {
         super(p, t, tex);
     }
 
+    public GatheringAnt(Point p, TerrainLocation t, String[] tex, int life) {
+        super(p, t, tex, life);
+    }
+    
     public GatheringAnt(Point p, String[] tex) {
         super(p, tex);
     }
@@ -33,60 +37,66 @@ public class GatheringAnt extends Ant {
         int bestmove = 100;
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry) it.next();
-
-            //stronger food pheromone
-            if (!carryingFood) {
-                if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > 0) {
-                    if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > getOrigin().getScent().getFoodIntensity()) {
+            
+            if (!(((TerrainLocation) pairs.getValue()).getTerrain() instanceof Stream)){
+                //stronger food pheromone
+                if (!carryingFood) {
+                    if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > 0) {
+                        if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > getOrigin().getScent().getFoodIntensity()) {
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 75.0);
+                            count++;
+                        } else {
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            count++;
+                        }
+                    } else if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > 0 && ((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() == 0) {
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                        probs.put(count, 75.0);
+                        probs.put(count, 10.0);
+                        count++;
+                    } else if (((TerrainLocation) pairs.getValue()).getTerrain() instanceof Leaf) {
+                        choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                        probs.put(count, 100.0);
+                        bestmove = count;
                         count++;
                     } else {
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                        probs.put(count, 55.0);
+                        probs.put(count, 35.0);
                         count++;
                     }
-                } else if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > 0 && ((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() == 0) {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 10.0);
-                    count++;
-                } else if (((TerrainLocation) pairs.getValue()).getTerrain() instanceof Leaf) {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 100.0);
-                    bestmove = count;
-                    count++;
-                } else {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 35.0);
-                    count++;
-                }
-            } else if (carryingFood) {
-                if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > 0) {
-                    if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > getOrigin().getScent().getReturnIntensity()) {
+                } else if (carryingFood) {
+                    if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > 0) {
+                        if (((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() > getOrigin().getScent().getReturnIntensity()) {
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 75.0);
+                            count++;
+                        } else {
+                            choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                            probs.put(count, 55.0);
+                            count++;
+                        }
+                    } else if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > 0 && ((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() == 0) {
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                        probs.put(count, 75.0);
+                        probs.put(count, 10.0);
+                        count++;
+                    } else if (((TerrainLocation) pairs.getValue()).getTerrain() instanceof AntHill) {
+                        choices.put(count, (TerrainLocation.Direction) pairs.getKey());
+                        probs.put(count, 100.0);
+                        bestmove = count;
                         count++;
                     } else {
                         choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                        probs.put(count, 55.0);
+                        probs.put(count, 35.0);
                         count++;
                     }
-                } else if (((TerrainLocation) pairs.getValue()).getScent().getFoodIntensity() > 0 && ((TerrainLocation) pairs.getValue()).getScent().getReturnIntensity() == 0) {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 10.0);
-                    count++;
-                } else if (((TerrainLocation) pairs.getValue()).getTerrain() instanceof AntHill) {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 100.0);
-                    bestmove = count;
-                    count++;
-                } else {
-                    choices.put(count, (TerrainLocation.Direction) pairs.getKey());
-                    probs.put(count, 35.0);
-                    count++;
                 }
+            } else if ((((TerrainLocation) pairs.getValue()).getTerrain() instanceof Stream)) {
+                //ALERT COLONY OF WATER
+                addFear();
+            } else {
+                
             }
-            //it.remove(); // avoids a ConcurrentModificationException
         }
         if (count > 0) {
             int choice = 0;

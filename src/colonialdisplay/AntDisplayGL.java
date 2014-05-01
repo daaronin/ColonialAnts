@@ -53,32 +53,42 @@ public class AntDisplayGL extends SkelLWJGL {
 
         tmap = new TextureMapper();
 
-        tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres.png"), "PNG");
-        tmap.addSpriteLocation("sand", new Rectangle2D.Float(.25f, .5f, .25f, .125f));
-        tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.75f, .5f, .25f, .125f));
+        tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres_5_1_2014.png"), "PNG");
+        tmap.addSpriteLocation("sand", new Rectangle2D.Float(0f, .625f, .25f, .125f));
+        tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f, .625f, .25f, .125f));
         tmap.addSpriteLocation("stream", new Rectangle2D.Float(.5f, .5f, .25f, .125f));
-        tmap.addSpriteLocation("brownleaf", new Rectangle2D.Float(0, .625f, .25f, .125f));
-        tmap.addSpriteLocation("redleaf", new Rectangle2D.Float(.25f, .625f, .25f, .125f));
-        tmap.addSpriteLocation("anthill", new Rectangle2D.Float(0, .5f, .25f, .125f));
+        tmap.addSpriteLocation("brownleaf", new Rectangle2D.Float(0f, .75f, .25f, .125f));
+        tmap.addSpriteLocation("redleaf", new Rectangle2D.Float(.25f, .75f, .25f, .125f));
+        tmap.addSpriteLocation("anthill", new Rectangle2D.Float(.25f, .5f, .25f, .125f));
 
         tmap.addSpriteLocation("antNorth", new Rectangle2D.Float(.25f, 0, .25f, .125f));
-        tmap.addSpriteLocation("antNorthEast", new Rectangle2D.Float(.5f, 0, .25f, .125f));
+        tmap.addSpriteLocation("antNorthEast", new Rectangle2D.Float(0, .125f, .25f, .125f));
         tmap.addSpriteLocation("antSouthEast", new Rectangle2D.Float(.25f, .125f, .25f, .125f));
-        tmap.addSpriteLocation("antSouth", new Rectangle2D.Float(0, .125f, .25f, .125f));
-        tmap.addSpriteLocation("antSouthWest", new Rectangle2D.Float(.5f, .125f, .25f, .125f));
+        tmap.addSpriteLocation("antSouth", new Rectangle2D.Float(.5f, 0, .25f, .125f));
+        tmap.addSpriteLocation("antSouthWest", new Rectangle2D.Float(.75f, 0, .25f, .125f));
         tmap.addSpriteLocation("antEast", new Rectangle2D.Float(0, 0, .25f, .125f));
         tmap.addSpriteLocation("antWest", new Rectangle2D.Float(.75f, .125f, .25f, .125f));
-        tmap.addSpriteLocation("antNorthWest", new Rectangle2D.Float(.75f, 0, .25f, .125f));
+        tmap.addSpriteLocation("antNorthWest", new Rectangle2D.Float(.25f, .125f, .25f, .125f));
 
-        tmap.addSpriteLocation("pheromoneReturn1", new Rectangle2D.Float(0, .375f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneReturn2", new Rectangle2D.Float(.25f, .375f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneReturn3", new Rectangle2D.Float(.5f, .375f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntNorth", new Rectangle2D.Float(.5f, .625f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntNorthEast", new Rectangle2D.Float(.75f, .5f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntSouthEast", new Rectangle2D.Float(.25f, .875f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntSouth", new Rectangle2D.Float(.5f, .75f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntSouthWest", new Rectangle2D.Float(.5f, .875f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntEast", new Rectangle2D.Float(0, .875f, .25f, .125f));
+        tmap.addSpriteLocation("builderAntWest", new Rectangle2D.Float(.75f, .75f, .25f, .125f));        
+        tmap.addSpriteLocation("builderAntNorthWest", new Rectangle2D.Float(.75f, .625f, .25f, .125f));        
+        
+        tmap.addSpriteLocation("pheromoneReturn1", new Rectangle2D.Float(.25f, .375f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneReturn2", new Rectangle2D.Float(.5f, .375f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneReturn3", new Rectangle2D.Float(.75f, .25f, .25f, .125f));
         tmap.addSpriteLocation("pheromoneReturn4", new Rectangle2D.Float(.75f, .375f, .25f, .125f));
         tmap.addSpriteLocation("pheromoneFood1", new Rectangle2D.Float(0, .25f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneFood2", new Rectangle2D.Float(.25f, .25f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneFood3", new Rectangle2D.Float(.5f, .25f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneFood4", new Rectangle2D.Float(.75f, .25f, .25f, .125f));
-        tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.75f, .625f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneFood2", new Rectangle2D.Float(0, .375f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneFood3", new Rectangle2D.Float(.25f, .25f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneFood4", new Rectangle2D.Float(.5f, .25f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneNone", new Rectangle2D.Float(.75f, .875f, .25f, .125f));
+        tmap.addSpriteLocation("pheromoneDanger", new Rectangle2D.Float(0, .5f, .25f, .125f));
 
         /*		tmap.initSheet("src/colonialimages/spritesheet2.png", "PNG");
          tmap.addSpriteLocation("sand", new Rectangle2D.Float(.5f,.5f,.25f,.25f));
@@ -414,13 +424,13 @@ public class AntDisplayGL extends SkelLWJGL {
                 String type = rs.getString(ANT_TYPE);
                 Ant a; 
                 if(type.equalsIgnoreCase("ant")){
-                    a = new Ant(new Point(0, 0), Environment.tex);
+                    a = new Ant(new Point(0, 0), Environment.gatherertex);
                 }else if(type.equalsIgnoreCase("gatherer")){
-                    a = new GatheringAnt(new Point(0, 0),Environment.tex);
+                    a = new GatheringAnt(new Point(0, 0),Environment.gatherertex);
                 }else if(type.equalsIgnoreCase("builder")){
-                    a = new BuilderAnt(new Point(0, 0),Environment.tex);
+                    a = new BuilderAnt(new Point(0, 0),Environment.buildertex);
                 }else{
-                    a = new Ant(new Point(pixelx, pixely), Environment.tex);
+                    a = new Ant(new Point(pixelx, pixely), Environment.gatherertex);
                 }
                 a.getScreenPosition().x = pixelx;
                 a.getScreenPosition().y = pixely;
@@ -513,12 +523,22 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onLaySliderChange(int value) {
-        //CommonScents.setLAY(value);
+        ArrayList<Ant> ants = e.getColony().getAnts();
+        for(int i = 0; i < ants.size(); i++){
+        ants.get(i).setRP_LEVEL(value);
+        ants.get(i).setFP_LEVEL(value);
+        ants.get(i).setDP_LEVEL(value);
+        }
     }
 
     @Override
     protected void onEvapSliderChange(int value) {
-        //CommonScents.setEVAP(value);
+        TerrainLocation[][] terrain = e.getTerrain();
+        for (TerrainLocation[] terrainrow : terrain) {
+            for (TerrainLocation location : terrainrow) {
+                location.getScent().setEVAP_RATE(value);
+            }
+        }
 
     }
 
@@ -534,7 +554,7 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onSliderLifespanChange(int value) {
-
+        e.setLifeSpan((int)value);
     }
 
     @Override
@@ -544,12 +564,12 @@ public class AntDisplayGL extends SkelLWJGL {
 
     @Override
     protected void onSliderFoodChange(double value) {
-
+        e.setFoodRate((int)value);
     }
 
     @Override
     protected void onSliderSpawnChange(double value) {
-
+        e.setSpawnRate((int)value);
     }
 
     @Override
