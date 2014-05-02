@@ -53,7 +53,7 @@ public class AntDisplayGL extends SkelLWJGL {
 
         tmap = new TextureMapper();
 
-        tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres_5_1_2014.png"), "PNG");
+        tmap.initSheet(this.getClass().getResource("/colonialimages/spritesheethighres_5_2_2014.png"), "PNG");
         tmap.addSpriteLocation("sand", new Rectangle2D.Float(0f, .625f, .25f, .125f));
         tmap.addSpriteLocation("leaf", new Rectangle2D.Float(.25f, .625f, .25f, .125f));
         tmap.addSpriteLocation("stream", new Rectangle2D.Float(.5f, .5f, .25f, .125f));

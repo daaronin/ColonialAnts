@@ -93,7 +93,7 @@ public class GatheringAnt extends Ant {
                 }
             } else if ((((TerrainLocation) pairs.getValue()).getTerrain() instanceof Stream)) {
                 //ALERT COLONY OF WATER
-                addFear();
+                addPanic();
             } else {
                 
             }

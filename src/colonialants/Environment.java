@@ -38,6 +38,7 @@ public class Environment {
     Random r = new Random();
     double PRODUCTION_RATE = .1;
     private int leavestoset = 0;
+    private boolean streampresent = false;
     private boolean snapMovement = false;
     private int antBalance = 100;
 
@@ -473,7 +474,7 @@ public class Environment {
 
                 if (ants.get(j) instanceof GatheringAnt) {
                     if (ants.get(j).getOrigin().getTerrain() instanceof AntHill) {
-                        ants.get(j).setFear(false);
+                        ants.get(j).removePanic();
                         if (ants.get(j).carryingFood) {
                             ants.get(j).stopCarrying();
                             ants.get(j).resetLevels();
@@ -501,10 +502,10 @@ public class Environment {
                             //if(j==0) o(ants.get(j).getRP_LEVEL());
 
                         }
-                         if (ants.get(j).getFear() == true){
+                         if (ants.get(j).getPanic() == true){
                             ants.get(j).getOrigin().getScent().alterScent("danger", ants.get(j).getDP_LEVEL(), ants.get(j));
                             ants.get(j).decDP_LEVEL();
-                            ants.get(j).stopCarrying();
+                            //ants.get(j).stopCarrying();
                         }
                     }
                 } else if (ants.get(j) instanceof BuilderAnt){
@@ -519,12 +520,27 @@ public class Environment {
             }
         }
         //curr_delta += 1;
-        
+        int count = 0;
         for (TerrainLocation[] terrainrow : terrain) {
             for (TerrainLocation block : terrainrow) {
                 block.onClockTick(delta);
                 createNewLeaves(block);
                 removeWater(block);
+                if (block.getTerrain() instanceof Stream){
+                    count++;
+                    streampresent = true;
+                }
+            }
+        }
+        if (count == 0){
+            streampresent = false;
+        }
+        
+        if (!streampresent){
+            for (TerrainLocation[] terrainrow : terrain) {
+                for (TerrainLocation block : terrainrow) {
+                    block.getScent().setDangerIntensity(0);
+                }
             }
         }
 
@@ -571,6 +587,7 @@ public class Environment {
             for (TerrainLocation location : locationrow) {
                 location.getScent().resetFoodIntensity();
                 location.getScent().resetReturnIntensity();
+                location.getScent().resetDangerIntensity();
             }
         }
     }

@@ -33,7 +33,10 @@ public class Ant implements Serializable{
     private double ANT_SPEED = .08;
     boolean carryingFood = false;
     boolean carryingDirt = true;
-    boolean fear = false;
+    
+    boolean panic = false;
+    int fear = 0;
+    
     private int ANT_LIFESPAN = 2000;
     private double less_lay = .005;
     
@@ -41,8 +44,11 @@ public class Ant implements Serializable{
     Random r = new Random();
     private String[] textures;
     private double RP_LEVEL = 32;
+    private double RP_LEVEL_SLIDE = 32;
     private double FP_LEVEL = 32;
+    private double FP_LEVEL_SLIDE = 32;
     private double DP_LEVEL = 32;
+    private double DP_LEVEL_SLIDE = 32;
 
     public enum State {
         MOVING(0), IDLE(1);
@@ -115,6 +121,7 @@ public class Ant implements Serializable{
     public void update(int delta, boolean snapMovement) {
         //Ant has to stop to think
         if (!isMoving()) {
+            lowerFear(1);
             // Ant contemplates a move
             changeDestination(delta);
                 // Turns in the direction to move;
@@ -331,24 +338,42 @@ public class Ant implements Serializable{
     }
 
     public void resetLevels() {
-        FP_LEVEL = 32;
-        RP_LEVEL = 32;
+        FP_LEVEL = FP_LEVEL_SLIDE;
+        RP_LEVEL = RP_LEVEL_SLIDE;
+        DP_LEVEL = DP_LEVEL_SLIDE;
     }
     
-    public void addFear(){
-        fear = true;
+    public void setFear(int fears){
+        fear = fears;
     }
     
-    public void removeFear(){
-        fear = true;
+    public void lowerFear(int fears){
+        fear -= fears;
+        if (fear <= 0){
+            removePanic();
+        }
     }
     
-    public void setFear(boolean state){
-        fear = state;
+    public int getFear(){
+        return this.fear;
     }
     
-    public boolean getFear(){
-        return fear;
+    public void addPanic(){
+        panic = true;
+        fear = 50;
+    }
+    
+    public void removePanic(){
+        panic = false;
+        fear = 0;
+    }
+    
+    public void setPanic(boolean state){
+        panic = state;
+    }
+    
+    public boolean getPanic(){
+        return panic;
     }
     
     public int getID(){
@@ -393,14 +418,17 @@ public class Ant implements Serializable{
 
     public void setRP_LEVEL(double RP_LEVEL) {
         this.RP_LEVEL = RP_LEVEL;
+        this.RP_LEVEL_SLIDE = RP_LEVEL;
     }
 
     public void setFP_LEVEL(double FP_LEVEL) {
         this.FP_LEVEL = FP_LEVEL;
+        this.FP_LEVEL_SLIDE = FP_LEVEL;
     }
     
     public void setDP_LEVEL(double DP_LEVEL) {
         this.DP_LEVEL = DP_LEVEL;
+        this.DP_LEVEL_SLIDE = DP_LEVEL;
     }
     
     public void setID(int id){
